@@ -1,38 +1,103 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.loginWrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  height: 100vh;
+  /* background-color: yellow; */
+}
+
+.left .disaplyImg {
+  height: 100%;
+  width: 50vw;
+}
+.left .logoImg {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 5%;
+  top: 10%;
+}
+.right {
+  width: 50vw;
+  padding: 10% 10%;
+  /* background-color: aqua; */
+}
+.right .title {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 44px;
+  /* background-color: yellow; */
+  /* line-height: 74px; */
+  /* identical to box height, or 116% */
+
+  letter-spacing: -0.02em;
+}
+.right .subtitle {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  /* line-height: 34px; */
+  /* identical to box height, or 142% */
+
+  letter-spacing: -0.02em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+
+  /* Blue / 100 */
+
+  color: #44A8FF;
+  /* background-color: yellow; */
+}
+.navbar {
+  display: flex;
+  background: #F3F4F7;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  gap: 2em;
+}
+.navTitle {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 36px;
+  /* identical to box height, or 112% */
+
+  letter-spacing: -0.02em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+
+  /* Dark / 100 */
+
+  color: #151F28;
 }
 
-.App-link {
-  color: #61dafb;
+.navbar .logoImg {
+  width: 51.2px;
+  height: 53.92px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.logoutBtn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.content {
+  width: 80vw;
+  /* background-color: yellow; */
+  margin: 0 auto;
+}
+.content .title {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 64px;
+  /* identical to box height, or 133% */
+
+  letter-spacing: -0.02em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+
+  /* Dark / 100 */
+
+  color: #151F28;
 }
