@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import wine from './assets/wine.png'
 import logo from './assets/logo.png'
+import vector1 from './assets/vector1.png'
+import vector2 from './assets/vector2.png'
+import vector3 from './assets/vector3.png'
 import './App.css'
-import { ArrowTopLeftIcon, ArrowTopRightIcon, Button, ChevronForwardIcon, ChevronRightIcon, ExportIcon, LogOutIcon, TextInput, TextInputField } from "evergreen-ui";
+import { ArrowTopLeftIcon, ArrowTopRightIcon, Button, ChevronForwardIcon, ChevronRightIcon, ExportIcon, LogOutIcon, Table, TextInput, TextInputField } from "evergreen-ui";
+import API from "./api";
 
 export default function App() {
   // 1. Create a state to store the user.
@@ -12,6 +16,9 @@ export default function App() {
   const [user, setUser] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [restaurantId, setrestaurantId] = useState('');
+  const [scores, setScores] = useState([]);
+  const [restaurantName, setrestaurantName] = useState('');
 
   useEffect(() => {
     // 2. Add auth state change listener.
@@ -19,6 +26,7 @@ export default function App() {
       if (userData) {
         // 3. Save the user data to the state if it's logged in.
         setUser(userData);
+        getUserProfile(userData?.uid)
       } else {
         // 4. Set the user to null to indicate that it's not logged in.
         setUser(null);
@@ -26,7 +34,46 @@ export default function App() {
     });
   }, []);
 
-  const [songs, setSongs] = useState();
+  const getUserProfile = async (userId) => {
+    const res = await fetch(`${API}/api/v1/getUserProfileInfo/` + userId, {
+      method: 'GET',
+    })
+    const data = await res.json()
+    console.log('get user', data, data?.restaurantId);
+    setrestaurantId(data?.restaurantId)
+    getAllEmployeeScoresForRestaurant(data?.restaurantId)
+    // setProfile(data)
+    // setBio(data?.bio)
+    // setCurrentPosition(data?.currentPosition)
+    // setFullName(user?.displayName)
+  }
+
+  const getAllEmployeeScoresForRestaurant = async (restaurantId) => {
+    const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/bd2d10db-ef3d-4bf0-8835-b3c008c38c0c` , {
+      method: 'GET',
+    })
+    // const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/` + restaurantId, {
+    //   method: 'GET',
+    // })
+    const data = await res.json()
+    console.log('get scores', data?.scores);
+    setScores(data?.scores)
+    setrestaurantName(data?.restaurant_name)
+    // setrestaurantId(data?.restaurantId)
+    // getAllEmployeeScoresForRestaurant(data?.restaurantId)
+    // setProfile(data)
+    // setBio(data?.bio)
+    // setCurrentPosition(data?.currentPosition)
+    // setFullName(user?.displayName)
+  }
+
+
+  useEffect(() => {
+    if(user?.uid) {
+      getUserProfile(user?.uid)
+    }
+  }, [user])
+
 
   if (user === undefined) {
     // 5. Display loading.
@@ -76,15 +123,38 @@ export default function App() {
           </div>
 
           <div className="content">
-            <h1 className="title">Welcome back {user?.email}</h1>
-            <Button className="logoutBtn" size="large" appearance="primary" intent="danger" iconAfter={LogOutIcon}
-              onClick={() => {
-                // Sign out the user
-                firebase.auth().signOut();
-              }}
-            >
-              Sign out
-            </Button>
+            <h1 className="title">Welcome back {restaurantName} 
+              {" "} <Button className="logoutBtn" size="large" appearance="primary" intent="danger" iconAfter={LogOutIcon}
+                onClick={() => {
+                  // Sign out the user
+                  firebase.auth().signOut();
+                }}
+              >
+                Sign out
+              </Button>
+            </h1>
+            <h2 className="subtitle">Test results:</h2>
+
+            <Table height={400}>
+              <Table.Head className="tableHeader">
+                <Table.TextHeaderCell>Employee</Table.TextHeaderCell>
+                <Table.TextHeaderCell>Test</Table.TextHeaderCell>
+                <Table.TextHeaderCell>Score</Table.TextHeaderCell>
+              </Table.Head>
+              <Table.Body>
+                {scores.length && scores?.map((score, idx) => (
+                  <Table.Row key={score?.score_id}>
+                    <Table.TextCell>{idx+1}. {score?.user_id}</Table.TextCell>
+                    <Table.TextCell className="testName">{score?.topic_name}</Table.TextCell>
+                    <Table.TextCell>{score?.score_percentage >= 65 ? <p style={{color: 'green', fontWeight: 'bold'}}>PASS</p> : <p style={{color: 'red', fontWeight: 'bold'}}>FAIL</p>}</Table.TextCell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+
+            <img className="vector1"  src={vector1} alt="design" />
+            <img className="vector2"  src={vector2} alt="design" />
+            <img className="vector3"  src={vector3} alt="design" />
           </div>
         </div>
 

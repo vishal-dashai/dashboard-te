@@ -101,3 +101,39 @@
 
   color: #151F28;
 }
+.tableHeader {
+  background-color: #EFE5FB !important;
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 700 !important;
+  font-size: 18px;
+  line-height: 26px;
+  /* identical to box height, or 144% */
+
+  letter-spacing: -0.02em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+
+  /* Purple / 100 */
+
+  color: #B765E5 !important;
+}
+.testName {
+  text-transform: capitalize;
+}
+.vector1 {
+  position: fixed;
+  left: 0;
+  bottom: 10%;
+}
+
+.vector2 {
+  position: fixed;
+  bottom: 0;
+  right: 20%;
+}
+
+.vector3 {
+  position: absolute;
+  right: 0;
+  top: 1%;
+}
