@@ -141,6 +141,13 @@
   top: 1%;
 }
 .table {
+  font-family: 'Raleway', sans-serif !important;
+  /* font-family: 'Raleway', 'sa' !important; */
   z-index: 10000;
   background-color: #fff;
+}
+
+.ub-fnt-fam_b77syt {
+  font-family: 'Raleway', sans-serif !important;
+  font-weight: 700 !important;
 }

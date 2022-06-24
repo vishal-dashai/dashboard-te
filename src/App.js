@@ -117,7 +117,7 @@ export default function App() {
               Send your weekly content updates here!
             </h3>
 
-            <Button marginRight={12} height={48} iconAfter={ArrowTopRightIcon}>
+            <Button marginRight={12} height={48} iconAfter={ArrowTopRightIcon} onClick={(e) => window.location.href="https://km2tvqrwri0.typeform.com/to/HeCBxjpi"} >
               Go to Weekly Updates
             </Button>
           </div>
