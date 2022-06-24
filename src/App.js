@@ -135,7 +135,7 @@ export default function App() {
             </h1>
             <h2 className="subtitle">Test results:</h2>
 
-            <Table height={400}>
+            <Table height={400} className="table">
               <Table.Head className="tableHeader">
                 <Table.TextHeaderCell>Employee</Table.TextHeaderCell>
                 <Table.TextHeaderCell>Test</Table.TextHeaderCell>
@@ -144,7 +144,7 @@ export default function App() {
               <Table.Body>
                 {scores.length && scores?.map((score, idx) => (
                   <Table.Row key={score?.score_id}>
-                    <Table.TextCell>{idx+1}. {score?.user_id}</Table.TextCell>
+                    <Table.TextCell>{idx+1}. {score?.user_name}</Table.TextCell>
                     <Table.TextCell className="testName">{score?.topic_name}</Table.TextCell>
                     <Table.TextCell>{score?.score_percentage >= 65 ? <p style={{color: 'green', fontWeight: 'bold'}}>PASS</p> : <p style={{color: 'red', fontWeight: 'bold'}}>FAIL</p>}</Table.TextCell>
                   </Table.Row>
