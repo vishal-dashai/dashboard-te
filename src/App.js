@@ -49,7 +49,7 @@ export default function App() {
   }
 
   const getAllEmployeeScoresForRestaurant = async (restaurantId) => {
-    const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/bd2d10db-ef3d-4bf0-8835-b3c008c38c0c` , {
+    const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/${restaurantId}` , {
       method: 'GET',
     })
     // const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/` + restaurantId, {
