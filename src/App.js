@@ -42,29 +42,16 @@ export default function App() {
     console.log('get user', data, data?.restaurantId);
     setrestaurantId(data?.restaurantId)
     getAllEmployeeScoresForRestaurant(data?.restaurantId)
-    // setProfile(data)
-    // setBio(data?.bio)
-    // setCurrentPosition(data?.currentPosition)
-    // setFullName(user?.displayName)
   }
 
   const getAllEmployeeScoresForRestaurant = async (restaurantId) => {
     const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/${restaurantId}` , {
       method: 'GET',
     })
-    // const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/` + restaurantId, {
-    //   method: 'GET',
-    // })
     const data = await res.json()
     console.log('get scores', data?.scores);
     setScores(data?.scores)
     setrestaurantName(data?.restaurant_name)
-    // setrestaurantId(data?.restaurantId)
-    // getAllEmployeeScoresForRestaurant(data?.restaurantId)
-    // setProfile(data)
-    // setBio(data?.bio)
-    // setCurrentPosition(data?.currentPosition)
-    // setFullName(user?.displayName)
   }
 
 
