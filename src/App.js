@@ -1,61 +1,24 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import firebase from "firebase/compat/app";
 import wine from './assets/wine.png'
 import logo from './assets/logo.png'
 import vector1 from './assets/vector1.png'
 import vector2 from './assets/vector2.png'
 import vector3 from './assets/vector3.png'
+import MDEditor, {commands} from '@uiw/react-md-editor';
 import './App.css'
 import {
 	ArrowDownIcon,
-	ArrowTopLeftIcon,
-	ArrowTopRightIcon, ArrowUpIcon,
+	ArrowTopRightIcon,
+	ArrowUpIcon,
 	Button,
-	ChevronForwardIcon,
 	ChevronRightIcon,
-	ExportIcon,
 	LogOutIcon,
 	Table,
-	TextInput,
 	TextInputField
 } from "evergreen-ui";
 import API from "./api";
-
-function ResultsTable({scores, config}) {
-
-	const sortedData = useMemo(() => {
-		let sortableItems = [...scores];
-		if (config !== null) {
-			sortableItems.sort((a, b) => {
-				if (a[config.key] < b[config.key]) {
-					return config.direction === 'asc' ? -1 : 1;
-				}
-				if (a[config.key] > b[config.key]) {
-					return config.direction === 'asc' ? 1 : -1;
-				}
-				return 0;
-			});
-		}
-		return sortableItems;
-	}, [scores, config]);
-
-	return (
-		<Table.Body>
-			{sortedData.length && sortedData?.map((score, idx) => (
-				<div key={score?.score_id}>
-					<Table.Row key={score?.score_id}>
-						<Table.TextCell>{idx + 1}. {score?.user_name}</Table.TextCell>
-						<Table.TextCell className="testName">{score?.topic_name}</Table.TextCell>
-						<Table.TextCell>{score?.score_percentage >= 65 ?
-							<p style={{color: 'green', fontWeight: 'bold'}}>PASS</p> :
-							<p style={{color: 'red', fontWeight: 'bold'}}>FAIL</p>}</Table.TextCell>
-					</Table.Row>
-
-				</div>
-
-			))}
-		</Table.Body>);
-}
+import ResultsTable from "./Components/ResultsTable";
 
 export default function App() {
 	// 1. Create a state to store the user.
@@ -68,6 +31,7 @@ export default function App() {
 	const [scores, setScores] = useState([]);
 	const [restaurantName, setrestaurantName] = useState('');
 	const [sortConfig, setSortConfig] = useState(null);
+	const [theContent, setContent] = useState("**Hello world!!!**");
 
 	useEffect(() => {
 		// 2. Add auth state change listener.
@@ -183,6 +147,24 @@ export default function App() {
 								Sign out
 							</Button>
 						</h1>
+
+						<div className="container">
+							<MDEditor
+								value={theContent}
+								onChange={setContent}
+								preview="edit"
+								commands={[
+									// commands.codeEdit, commands.codePreview
+								]}
+								extraCommands={[]}
+							/>
+
+							<div className='center'>
+								<Button onClick={() => {
+								}}>Update Message</Button>
+							</div>
+						</div>
+
 						<h2 className="subtitle">Test results:</h2>
 
 						<Table minHeight={400} marginBottom={50} className="table">
@@ -194,8 +176,8 @@ export default function App() {
 								</Table.TextHeaderCell>
 								<Table.TextHeaderCell>
 									<Button
-									iconAfter={sortConfig?.key === 'topic_name' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
-									onClick={() => requestSorting('topic_name')}>Test</Button></Table.TextHeaderCell>
+										iconAfter={sortConfig?.key === 'topic_name' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
+										onClick={() => requestSorting('topic_name')}>Test</Button></Table.TextHeaderCell>
 								<Table.TextHeaderCell><Button
 									iconAfter={sortConfig?.key === 'score_percentage' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
 									onClick={() => requestSorting('score_percentage')}>Score</Button></Table.TextHeaderCell>
