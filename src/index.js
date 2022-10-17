@@ -25,7 +25,7 @@ const router = createBrowserRouter([
 		element: <App/>,
 		errorElement: <NotFound/>,
 		children: [
-			{index: true, element: <RequireAuth children={<Home/>}><Home/></RequireAuth>},
+			{index: true, element: <RequireAuth children={<Scores/>}><Scores/></RequireAuth>},
 			{
 				path: "login",
 				element: <Login/>
@@ -35,11 +35,11 @@ const router = createBrowserRouter([
 				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
-			{
+		/*	{
 				path: "landing",
 				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
 				element: (<Landing/>)
-			},
+			},*/
 			{
 				path: "scores",
 				element: (<RequireAuth><Scores/></RequireAuth>)
