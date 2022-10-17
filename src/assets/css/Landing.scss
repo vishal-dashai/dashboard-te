@@ -1,0 +1,55 @@
+.heading {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  flex: 1;
+  padding-top: 40px;
+}
+
+hr.dashed {
+  border-top: 3px dashed #bbb;
+}
+
+hr.solid {
+  border-top: 3px solid #bbb;
+}
+
+.landingMain {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.intro {
+  color: #151f28;
+  font-family: "Raleway", Sans-serif;
+  font-size: 92px;
+  font-weight: 700;
+  line-height: 102px;
+  letter-spacing: -4px;
+}
+
+h3 {
+  font-family: "Raleway", Sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 30px;
+  letter-spacing: -1px;
+}
+
+p {
+  color: #151f28;
+  font-family: "Raleway", Sans-serif;
+}
+
+li {
+  color: #151f28;
+  font-family: "Raleway", Sans-serif;
+  font-weight: 500;
+}
+
+.clippy {
+  clip-path: polygon(100% 39%, 100% 0, 100% 100%, 0% 100%);
+  position: absolute;
+  inset: 0;
+  height: 50vh;
+}
