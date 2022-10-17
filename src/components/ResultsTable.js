@@ -1,5 +1,7 @@
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import {Table} from "evergreen-ui";
+import Fail from '../assets/svg/close-circle.svg';
+import Pass from '../assets/svg/star.svg';
 
 export default function ResultsTable({scores, config}) {
 
@@ -24,12 +26,23 @@ export default function ResultsTable({scores, config}) {
 		<Table.Body>
 			{sortedData.length && sortedData?.map((score, idx) => (
 				<div key={score?.score_id}>
-					<Table.Row key={score?.score_id}>
+					<Table.Row key={score?.score_id} style={{borderBottom: '#E7EAEF solid 2px', width: '100%'}}>
 						<Table.TextCell>{idx + 1}. {score?.user_name}</Table.TextCell>
 						<Table.TextCell className="testName">{score?.topic_name}</Table.TextCell>
-						<Table.TextCell>{score?.score_percentage >= 65 ?
-							<p style={{color: 'green', fontWeight: 'bold'}}>PASS</p> :
-							<p style={{color: 'red', fontWeight: 'bold'}}>FAIL</p>}</Table.TextCell>
+						<Table.TextCell>
+							<div className={'bobble'}
+								 style={{backgroundColor: (score?.score_percentage >= 65 ? '#c3f3e9' : '#fccfd3')}}>
+								<img src={score?.score_percentage >= 65 ? Pass : Fail} alt=""/>
+								<p style={{
+									fontStyle: 'normal',
+									fontWeight: 500,
+									fontSize: 16,
+									lineHeight: 26,
+									marginTop: 10,
+									color: (score?.score_percentage >= 65 ? '#3b7065' : '#6c3b42')
+								}}>{score?.score_percentage >= 65 ? 'Pass' : 'Fail'}</p>
+							</div>
+						</Table.TextCell>
 					</Table.Row>
 
 				</div>
