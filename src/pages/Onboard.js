@@ -70,7 +70,7 @@ const Onboard = () => {
 	const [pageNumber, setPageNumber] = useState(1);
 
 	const acceptedMimeTypes = [MimeType.jpeg, MimeType.png, MimeType.pdf, MimeType.zip, MimeType.doc, MimeType.docx, MimeType.csv, MimeType.ppt, MimeType.pptx, MimeType.mp4]
-	const maxFiles = 20
+	const maxFiles = 50;
 	const maxSizeInBytes = 1000 * 1024 ** 2 // 50 MB
 	const [files, setFiles] = React.useState([])
 	const [fileRejections, setFileRejections] = React.useState([])
