@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import logo from '../assets/logo.png';
 import {
 	Alert,
@@ -9,12 +9,10 @@ import {
 	FileRejectionReason,
 	FileUploader,
 	Icon,
-	Label,
 	majorScale,
 	MimeType,
 	Pane,
-	rebaseFiles,
-	Textarea,
+	rebaseFiles, Spinner,
 	TextInputField
 } from "evergreen-ui";
 
@@ -47,10 +45,19 @@ const Page1 = ({name, setName, email, setEmail, restaurant, setRestaurant}) => {
 	</div>)
 }
 
-const SubmittedPage = () => {
+const SubmittedPage = ({finishedState, isUploading}) => {
 
-	return (<div>
-		<h2>We have received your information and will get back to you as soon as we can! Thank you!</h2>
+	return (<div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+		{isUploading ?
+			<>
+				<Spinner animation="border" role="status">
+					<span className="visually-hidden">Loading...</span>
+				</Spinner>
+			</> :
+			<>
+				<h2>{finishedState ? "We have received your information and will get back to you as soon as we can! Thank you!" : "Failed to send information. Please refresh and try again."}</h2>
+			</>}
+
 	</div>)
 }
 
@@ -62,12 +69,14 @@ const Onboard = () => {
 
 	const [pageNumber, setPageNumber] = useState(1);
 
-	const acceptedMimeTypes = [MimeType.jpeg]
-	const maxFiles = 5
-	const maxSizeInBytes = 50 * 1024 ** 2 // 50 MB
+	const acceptedMimeTypes = [MimeType.jpeg, MimeType.png, MimeType.pdf, MimeType.zip, MimeType.doc, MimeType.docx, MimeType.csv, MimeType.ppt, MimeType.pptx, MimeType.mp4]
+	const maxFiles = 20
+	const maxSizeInBytes = 1000 * 1024 ** 2 // 50 MB
 	const [files, setFiles] = React.useState([])
 	const [fileRejections, setFileRejections] = React.useState([])
-	const values = React.useMemo(() => [...files, ...fileRejections.map((fileRejection) => fileRejection.file)], [
+	const values = React.useMemo(() => {
+		return [...files, ...fileRejections.map((fileRejection) => fileRejection.file)]
+	}, [
 		files,
 		fileRejections,
 	])
@@ -90,9 +99,20 @@ const Onboard = () => {
 	)
 
 	const fileCountOverLimit = files.length + fileRejections.length - maxFiles
-	const fileCountError = `You can upload up to 5 files. Please remove ${fileCountOverLimit} ${
+	const fileCountError = `You can upload up to 10 files. Please remove ${fileCountOverLimit} ${
 		fileCountOverLimit === 1 ? 'file' : 'files'
 	}.`
+
+	const [isUploading, setUploading] = useState(false);
+	const [finishedState, setFinishedState] = useState();
+
+	useEffect(() => {
+		window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			return isUploading ? "We are still uploading your files! If you close we won't receive your information!" : null;
+		}
+	}, [])
 
 	return (
 		<div>
@@ -128,19 +148,20 @@ const Onboard = () => {
 													setEmail={setEmail} name={name} setName={setName}/>}
 
 						{pageNumber === 3 &&
-							<SubmittedPage restaurant={restaurant} setRestaurant={setRestaurant} email={email}
-										   setEmail={setEmail} name={name} setName={setName}/>}
+							<SubmittedPage finishedState={finishedState} isUploading={isUploading}/>}
 
 						{pageNumber === 2 && <>
 							<Pane maxWidth={500} minWidth={200}>
 								<FileUploader
 									acceptedMimeTypes={acceptedMimeTypes}
 									label="Upload Your Content"
-									description="Upload .pdf, .zip, .png, .jpeg files"
+									description="Upload .pdf, .csv, .excel, .ppt, .doc, .docx, .jpeg, .png, .mp4 files. 1GB size limit per file"
 									disabled={files.length + fileRejections.length >= maxFiles}
 									maxSizeInBytes={maxSizeInBytes}
 									maxFiles={maxFiles}
-									onAccepted={setFiles}
+									onAccepted={(file) => {
+										setFiles(a => [...a, ...file])
+									}}
 									onRejected={setFileRejections}
 									renderFile={(file, index) => {
 										const {name, size, type} = file
@@ -172,12 +193,12 @@ const Onboard = () => {
 									values={values}
 								/>
 							</Pane>
-							<Pane maxWidth={500}>
+							{/*	<Pane maxWidth={500}>
 								<Label htmlFor="textarea-2" marginBottom={4} display="block">
 									Or add text
 								</Label>
 								<Textarea id="textarea-2" height={100} placeholder="Type something here"/>
-							</Pane>
+							</Pane>*/}
 						</>}
 
 
@@ -198,36 +219,50 @@ const Onboard = () => {
 									</button>
 								}
 
-								<button className={"fancyButton"} disabled={(name === null || email === null || restaurant === null)} onClick={async () => {
-									setPageNumber(a => {
-										if (a >= 3) return 3;
-										if(name === null || email === null || restaurant === null) return a;
-										return a + 1;
-									});
-									if (pageNumber > 1) {
-										let dat = new FormData();
-										files.forEach(value => {
-											dat.append('files', value);
-										})
+								<button className={"fancyButton"}
+										disabled={(name === null || email === null || restaurant === null)}
+										onClick={async () => {
+											setPageNumber(a => {
+												if (a >= 3) return 3;
+												if (name === null || email === null || restaurant === null) return a;
+												return a + 1;
+											});
+											if (pageNumber > 1) {
+												setUploading(true)
+												let dat = new FormData();
+												files.forEach(value => {
+													dat.append('files', value);
+												})
 
-										await fetch('https://new-customer-onboarding.herokuapp.com/api/v1/upload?' + new URLSearchParams({
-											name: name,
-											email: email,
-											restaurantName: restaurant
-										}), {
-											method: 'POST',
-											cache: 'no-cache',
-											body: dat
-										}).then(i => {
-											console.log(i)
-											return i.json()
-										}).then(dat => {
-											console.log(dat)
-										}).catch((c) => {
-											console.log(c)
-										});
-									}
-								}}>
+												await fetch('https://new-customer-onboarding.herokuapp.com/api/v1/upload?' + new URLSearchParams({
+													name: name,
+													email: email,
+													restaurantName: restaurant
+												}), {
+													method: 'POST',
+													cache: 'no-cache',
+													body: dat
+												}).then(i => {
+													// console.log(i)
+													let a = i.json()
+													/*					console.log("status is below:")
+																		console.log(a)
+																		console.log(a.status)
+																		setFinishedState(a.status)
+																		setUploading(false)
+																		// console.log("BBBBBSDDDDD")
+																		// console.log(a)*/
+													return a
+												}).then(b => {
+													console.log("B is below")
+													console.log(b)
+													setFinishedState(b)
+													setUploading(false)
+												}).catch((c) => {
+													console.log(c)
+												});
+											}
+										}}>
 									{pageNumber === 1 ? "Next" : "Submit"}
 									{<Icon icon={ChevronRightIcon} height={20} width={20} marginTop={3}/>}
 								</button>
