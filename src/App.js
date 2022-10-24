@@ -6,10 +6,8 @@ import Manager from "./Manager";
 
 export default function App() {
 	return (
-		<div>
-			<AuthenticatedUserProvider>
-				<Manager/>
-			</AuthenticatedUserProvider>
-		</div>
+		<AuthenticatedUserProvider>
+			<Manager/>
+		</AuthenticatedUserProvider>
 	)
 }

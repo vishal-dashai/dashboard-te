@@ -7,6 +7,11 @@
 .left .disaplyImg {
   height: 100%;
   width: 50vw;
+
+  @media screen and (max-width: 950px) {
+	width: 0px;
+  }
+
 }
 
 .left .logoImg {
@@ -21,6 +26,9 @@
   width: 50vw;
   padding: 10% 10%;
   /* background-color: aqua; */
+  @media screen and (max-width: 950px) {
+	padding-top: 30vh;
+  }
 }
 
 .right .title {
@@ -337,21 +345,43 @@
   background: linear-gradient(180deg, #44A8FF 0%, #44A8FF 0.01%, #448FFF 100%);
   border-radius: 110px;
   border: none;
-  color: #E7EAEF;
+  color: #ffffff;
   font-family: 'Raleway', serif;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
+  min-width: 100px;
+  max-width: fit-content;
 
   &Prev {
 	@extend .fancyButton;
 	background: #E7EAEF;
 	color: #151F28;
   }
+
+  &Full {
+	@extend .fancyButton;
+	max-width: none;
+	width: 100%;
+  }
+
+  &Fullish {
+	@extend .fancyButton;
+	max-width: 300px;
+	width: 100%;
+  }
 }
 
-.fancyButton:disabled{
+#purple {
+  background: linear-gradient(180deg, #C466F9 0%, #C482E9 0.01%, #B04FC9 100%);
+}
+
+#purple:hover {
+  background: linear-gradient(180deg, #d388ff 0%, #cb97ee 0.01%, #c876de 100%);
+}
+
+.fancyButton:disabled {
   background: #c2c2c2;
 }
 

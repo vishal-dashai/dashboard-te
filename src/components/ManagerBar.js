@@ -41,12 +41,12 @@ export default function ManagerBar() {
 								<p className={"linkerText"} id={location.pathname === '/updates' ? 'green' : ''} >Instant Updates</p>
 							</div>
 						</Nav.Link>
-				{/*		<Nav.Link href="quizeditor">
+						<Nav.Link href="quizeditor">
 							<div className={'linker'} id={location.pathname === '/quizeditor' ? 'purple' : ''}>
 								<img src={EditIcon} id={location.pathname === '/quizeditor' ? 'purple' : ''} alt=""/>
 								<p className={"linkerText"} id={location.pathname === '/quizeditor' ? 'purple' : ''} >Instant Updates</p>
 							</div>
-						</Nav.Link>*/}
+						</Nav.Link>
 					</Nav>
 					<Nav>
 						{user && <button className={"fancyButtonPrev"} onClick={() => {

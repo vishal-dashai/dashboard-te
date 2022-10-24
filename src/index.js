@@ -35,23 +35,23 @@ const router = createBrowserRouter([
 				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
-		/*	{
+			{
 				path: "landing",
 				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
 				element: (<Landing/>)
-			},*/
+			},
 			{
 				path: "scores",
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
-		/*	{
+			{
 				path: "quizeditor",
 				element: (<RequireElevated><QuizEditor/></RequireElevated>)
 			},
 			{
 				path: "updates",
 				element: (<RequireElevated><Updates/></RequireElevated>)
-			},*/
+			},
 			{
 				path: "onboard",
 				element: (<Onboard/>)
