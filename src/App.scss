@@ -536,19 +536,31 @@ img#purple {
   filter: invert(78%) sepia(60%) saturate(7420%) hue-rotate(241deg) brightness(96%) contrast(86%);
 }
 
-
 .bobble {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 5px 13px 6px 9px;
-  gap: 8px;
-  width: 89px;
+  gap: 8%;
+  max-width: 89px;
   height: 37px;
   border-radius: 60px;
-
   flex: none;
   order: 1;
   flex-grow: 0;
+
+  p {
+	font-style: normal;
+	font-weight: 500;
+	font-max-size: 16px;
+	line-height: 26;
+	margin-top: 10px;
+  }
+
+  img {
+	max-width: 24px;
+	height: auto;
+  }
+
 }

@@ -33,8 +33,8 @@ export default function ResultsTable({scores, config, searchKey}) {
 	return (
 		<Table.Body>
 			{sortedData.length && sortedData?.filter(a => {
-				if(searchKey != null && searchKey !== ''){
-					return a?.user_name?.toLowerCase().includes(searchKey) || a?.topic_name?.toLowerCase().includes(searchKey);
+				if (searchKey != null && searchKey !== '') {
+					return a?.user_name?.toLowerCase().includes(searchKey.toLowerCase()) || a?.topic_name?.toLowerCase().includes(searchKey.toLowerCase());
 				}
 				return true;
 			}).map((score, idx) => (
@@ -48,11 +48,6 @@ export default function ResultsTable({scores, config, searchKey}) {
 								 style={{backgroundColor: (score?.score_percentage >= 65 ? '#c3f3e9' : '#fccfd3')}}>
 								<img src={score?.score_percentage >= 65 ? Pass : Fail} alt=""/>
 								<p style={{
-									fontStyle: 'normal',
-									fontWeight: 500,
-									fontSize: 16,
-									lineHeight: 26,
-									marginTop: 10,
 									color: (score?.score_percentage >= 65 ? '#3b7065' : '#6c3b42')
 								}}>{score?.score_percentage >= 65 ? 'Pass' : 'Fail'}</p>
 							</div>

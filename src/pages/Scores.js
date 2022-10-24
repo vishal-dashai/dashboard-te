@@ -15,7 +15,7 @@ export default function Scores() {
 	const [restaurantId, setrestaurantId] = useState('');
 	const [scores, setScores] = useState([]);
 	const [restaurantName, setrestaurantName] = useState('');
-	const [sortConfig, setSortConfig] = useState(null);
+	const [sortConfig, setSortConfig] = useState({key: "user_id", direction: "asc"});
 	const [theContent, setContent] = useState("**Hello world!!!**");
 
 	const [searchKey, setSearchKey] = useState(null);
@@ -64,7 +64,7 @@ export default function Scores() {
 				<div className="dashboard">
 					<div className="content">
 						<div className={'searchArea'}>
-							<h2 className="subtitle" style={{marginTop: 15}}>Quiz Results:</h2>
+							<h2 className="subtitle">Quiz Results:</h2>
 							<SearchInput placeholder="Search quiz or employee" value={searchKey}
 										 onChange={(e) => {
 											 // console.log(e)
@@ -75,18 +75,18 @@ export default function Scores() {
 
 						<Table minHeight={'100%'} marginBottom={50} className="table">
 							<Table.Head className="tableHeader">
-								<Table.TextHeaderCell>
+								<Table.TextHeaderCell className={'headerCell'}>
 									<Button
 										iconAfter={sortConfig?.key === 'user_id' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
 										onClick={() => requestSorting('user_id')}>Employee</Button>
 								</Table.TextHeaderCell>
-								<Table.TextHeaderCell>
+								<Table.TextHeaderCell className={'headerCell'}>
 									<Button
 										iconAfter={sortConfig?.key === 'topic_name' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
 										onClick={() => requestSorting('topic_name')}>Quiz</Button></Table.TextHeaderCell>
-								<Table.TextHeaderCell><Button
+								<Table.TextHeaderCell className={'headerCell'}><Button
 									iconAfter={sortConfig?.key === 'score_percentage' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
-									onClick={() => requestSorting('score_percentage')}>Score</Button></Table.TextHeaderCell>
+									onClick={() => requestSorting('score_percentage')} margin={0}>Score</Button></Table.TextHeaderCell>
 							</Table.Head>
 							<ResultsTable scores={scores} config={sortConfig} searchKey={searchKey}/>
 						</Table>

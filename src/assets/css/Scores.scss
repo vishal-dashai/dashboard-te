@@ -1,8 +1,10 @@
 .searchArea {
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
   flex: 1;
   justify-content: space-between;
+  align-items: center;
   width: 80%;
   @media screen and (max-width: 850px) {
 	flex-direction: column;
@@ -18,8 +20,20 @@
 
 .tableHeader {
   border-radius: 20px;
+  @media screen and (max-width: 850px) {
+	align-content: center;
+	justify-content: center;
+  }
 }
 
 .tableRow {
-  color: red;
+}
+
+.headerCell {
+  @media screen and (max-width: 850px) {
+	width: fit-content;
+	max-width: fit-content;
+	margin: 0;
+	padding: 0;
+  }
 }
