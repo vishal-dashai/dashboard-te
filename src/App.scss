@@ -101,6 +101,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 100%;
 }
 
 .content .title {
@@ -563,4 +564,19 @@ img#purple {
 	height: auto;
   }
 
+}
+
+.nextButton {
+  padding: 18px 14px;
+  width: 213px;
+  height: 56px;
+  background: #151F28;
+  border-radius: 14px;
+  font-family: 'Raleway', serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 20px;
+  text-align: center;
+  color: #FFFFFF;
 }

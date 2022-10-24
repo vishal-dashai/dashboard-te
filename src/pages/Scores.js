@@ -86,7 +86,8 @@ export default function Scores() {
 										onClick={() => requestSorting('topic_name')}>Quiz</Button></Table.TextHeaderCell>
 								<Table.TextHeaderCell className={'headerCell'}><Button
 									iconAfter={sortConfig?.key === 'score_percentage' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
-									onClick={() => requestSorting('score_percentage')} margin={0}>Score</Button></Table.TextHeaderCell>
+									onClick={() => requestSorting('score_percentage')}
+									margin={0}>Score</Button></Table.TextHeaderCell>
 							</Table.Head>
 							<ResultsTable scores={scores} config={sortConfig} searchKey={searchKey}/>
 						</Table>
