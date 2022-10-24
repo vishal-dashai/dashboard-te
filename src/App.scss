@@ -145,25 +145,9 @@
   top: 1%;
 }
 
-.table {
-  font-family: 'Raleway', sans-serif !important;
-  background: rgba(243, 244, 247);
-  border: #C2C9D6 solid 2px;
-  width: 80%;
-}
-
-.tableHeader {
-  border-radius: 20px;
-}
-
 .ub-fnt-fam_b77syt {
   font-family: 'Raleway', sans-serif !important;
   font-weight: 700 !important;
-}
-
-.container {
-  /*margin: 0 auto;*/
-  height: 60px;
 }
 
 .center {
@@ -373,11 +357,11 @@
   }
 }
 
-#purple {
+#purpleButton {
   background: linear-gradient(180deg, #C466F9 0%, #C482E9 0.01%, #B04FC9 100%);
 }
 
-#purple:hover {
+#purpleButton:hover {
   background: linear-gradient(180deg, #d388ff 0%, #cb97ee 0.01%, #c876de 100%);
 }
 
@@ -545,7 +529,7 @@ img#green {
 }
 
 .linkerText#purple {
-  color: #B765E5;
+  color: #9b56c2;
 }
 
 img#purple {

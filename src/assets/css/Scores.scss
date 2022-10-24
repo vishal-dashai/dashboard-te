@@ -1,0 +1,25 @@
+.searchArea {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: space-between;
+  width: 80%;
+  @media screen and (max-width: 850px) {
+	flex-direction: column;
+  }
+}
+
+.table {
+  font-family: 'Raleway', sans-serif !important;
+  background: rgba(243, 244, 247);
+  border: #C2C9D6 solid 2px;
+  width: 100%;
+}
+
+.tableHeader {
+  border-radius: 20px;
+}
+
+.tableRow {
+  color: red;
+}

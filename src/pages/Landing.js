@@ -134,7 +134,7 @@ const Landing = () => {
 						<li>Real-time content like never before</li>
 						<li>Simple and convenient.</li>
 					</ul>
-					<button className={"fancyButtonFullish"} id={'purple'} onClick={() => {
+					<button className={"fancyButtonFullish"} id={'purpleButton'} onClick={() => {
 						window.location.href = "login";
 					}}>
 						{"Merchant Login"}

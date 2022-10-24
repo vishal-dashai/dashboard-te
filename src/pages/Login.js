@@ -2,10 +2,9 @@ import wine from '../assets/wine.png'
 import logo from '../assets/logo.png'
 import {Button, ChevronRightIcon, TextInputField} from "evergreen-ui";
 import React, {useContext, useState} from "react";
-import firebase from "firebase/compat/app";
-import {getAuth, setPersistence, signInWithEmailAndPassword, browserSessionPersistence} from "firebase/auth";
+import {browserSessionPersistence, getAuth, setPersistence, signInWithEmailAndPassword} from "firebase/auth";
 import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
-import {Navigate, useLocation} from "react-router";
+import {Navigate} from "react-router";
 
 export default function Login() {
 	const [email, setEmail] = useState("");
@@ -26,10 +25,10 @@ export default function Login() {
 			<div className="right">
 				<h1 className="title">Login</h1>
 				<h2 className="subtitle">Training & Education</h2>
-				<TextInputField inputHeight={50} inputWidth={376} label="Email Address" type="email"
+				<TextInputField inputHeight={50} inputWidth={'276'} label="Email Address" type="email"
 								value={email} onChange={(e) => setEmail(e.target.value)}
 								placeholder="Enter your email"/>
-				<TextInputField inputHeight={50} inputWidth={376} label="Password" type="password"
+				<TextInputField inputHeight={50} inputWidth={'276'} label="Password" type="password"
 								value={password} onChange={(e) => setPassword(e.target.value)}
 								placeholder="Enter your password"/>
 				<Button size="large" appearance="primary" intent="success" iconAfter={ChevronRightIcon}
