@@ -36,7 +36,7 @@ export default function ManagerBar() {
 									Scores</p>
 							</div>
 						</Nav.Link>
-						<Nav.Link href="updates">
+						{/*<Nav.Link href="updates">
 							<div className={'linker'} id={location.pathname === '/updates' ? 'green' : ''}>
 								<img src={SendSquare} id={location.pathname === '/updates' ? 'green' : ''} alt=""/>
 								<p className={"linkerText"} id={location.pathname === '/updates' ? 'green' : ''}>Instant
@@ -50,6 +50,13 @@ export default function ManagerBar() {
 								   id={location.pathname === '/quizeditor' ? 'purple' : ''}>Quiz Editor</p>
 							</div>
 						</Nav.Link>
+						<Nav.Link href="quizeditor">
+							<div className={'linker'} id={location.pathname === '/quizeditor' ? 'purple' : ''}>
+								<img src={EditIcon} id={location.pathname === '/quizeditor' ? 'purple' : ''} alt=""/>
+								<p className={"linkerText"}
+								   id={location.pathname === '/quizeditor' ? 'purple' : ''}>Submit Content</p>
+							</div>
+						</Nav.Link>*/}
 					</Nav>
 					<Nav>
 						<br/>

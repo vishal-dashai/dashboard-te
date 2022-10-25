@@ -10,6 +10,8 @@ export default function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
+	const [isWrong, setWrong] = useState(false);
+
 	const {user} = useContext(AuthenticatedUserContext);
 
 	if (user || localStorage.getItem("signedIn")) {
@@ -25,6 +27,14 @@ export default function Login() {
 			<div className="right">
 				<h1 className="title">Login</h1>
 				<h2 className="subtitle">Training & Education</h2>
+
+				{isWrong ? <>
+					<h3 className={'subError'}>Username or password is wrong!</h3>
+					<a href={'forgot'}>Forgot Password?</a>
+					<br/>
+					<br/>
+				</> : null}
+
 				<TextInputField inputHeight={50} inputWidth={'276'} label="Email Address" type="email"
 								value={email} onChange={(e) => setEmail(e.target.value)}
 								placeholder="Enter your email"/>
@@ -33,31 +43,17 @@ export default function Login() {
 								placeholder="Enter your password"/>
 				<Button size="large" appearance="primary" intent="success" iconAfter={ChevronRightIcon}
 						onClick={() => {
-							// TODO: Add the sign in handler.
-							// 1. Create the Google auth provider
-							// const provider = new firebase.auth.EmailAuthProvider();
-							// 2. Sign in
-
 							const auth = getAuth();
 
 							setPersistence(auth, browserSessionPersistence).then(() => {
-								// Existing and future Auth states are now persisted in the current
-								// session only. Closing the window would clear any existing state even
-								// if a user forgets to sign out.
-								// ...
-								// New sign-in will be persisted with session persistence.
-								return signInWithEmailAndPassword(auth, email, password);
-							})
-								.catch((error) => {
-									// Handle Errors here.
-									const errorCode = error.code;
-									const errorMessage = error.message;
+								return signInWithEmailAndPassword(auth, email, password).catch((error) => {
+									setWrong(true)
 								});
+							}).catch((error) => {
+								const errorCode = error.code;
+								const errorMessage = error.message;
 
-
-							// firebase.auth().signInWithEmailAndPassword( email, password);
-
-
+							});
 						}}
 				>
 					Login
