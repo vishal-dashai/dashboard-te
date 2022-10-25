@@ -30,11 +30,10 @@ export default function Login() {
 
 				{isWrong ? <>
 					<h3 className={'subError'}>Username or password is wrong!</h3>
-					<a href={'forgot'}>Forgot Password?</a>
-					<br/>
-					<br/>
 				</> : null}
-
+				<a href={'forgot'}>Forgot Password?</a>
+				<br/>
+				<br/>
 				<TextInputField inputHeight={50} inputWidth={'276'} label="Email Address" type="email"
 								value={email} onChange={(e) => setEmail(e.target.value)}
 								placeholder="Enter your email"/>
