@@ -54,9 +54,10 @@ export default function Manager() {
 	}, [location])*/
 
 	return (
-		<div>
-			{/*{isBar && <NavigationBar/>}*/}
+		<Outlet/>
+/*		<div>
+			{/!*{isBar && <NavigationBar/>}*!/}
 			<Outlet/>
-		</div>
+		</div>*/
 	)
 }

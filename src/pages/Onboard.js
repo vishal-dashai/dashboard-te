@@ -1,20 +1,9 @@
 import React, {useEffect, useState} from "react";
 import logo from '../assets/logo.png';
-import {
-	Alert,
-	ChevronDownIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	FileCard,
-	FileRejectionReason,
-	FileUploader,
-	Icon,
-	majorScale,
-	MimeType,
-	Pane,
-	rebaseFiles, Spinner,
-	TextInputField
-} from "evergreen-ui";
+import {ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, Icon, Pane, Spinner, TextInputField} from "evergreen-ui";
+import {FileUpload} from "../components/FileUpload";
+import axios from "axios";
+import {v4 as uuidv4} from 'uuid';
 
 const Page1 = ({name, setName, email, setEmail, restaurant, setRestaurant}) => {
 	return (<div>
@@ -50,6 +39,7 @@ const SubmittedPage = ({finishedState, isUploading}) => {
 	return (<div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
 		{isUploading ?
 			<>
+				<h3>Uploading your content. Please do not close the tab!</h3>
 				<Spinner animation="border" role="status">
 					<span className="visually-hidden">Loading...</span>
 				</Spinner>
@@ -57,10 +47,8 @@ const SubmittedPage = ({finishedState, isUploading}) => {
 			<>
 				<h2>{finishedState ? "We have received your information and will get back to you as soon as we can! Thank you!" : "Failed to send information. Please refresh and try again."}</h2>
 			</>}
-
 	</div>)
 }
-
 
 const Onboard = () => {
 	const [name, setName] = useState(null);
@@ -69,42 +57,11 @@ const Onboard = () => {
 
 	const [pageNumber, setPageNumber] = useState(1);
 
-	const acceptedMimeTypes = [MimeType.jpeg, MimeType.png, MimeType.pdf, MimeType.zip, MimeType.doc, MimeType.docx, MimeType.csv, MimeType.ppt, MimeType.pptx, MimeType.mp4]
-	const maxFiles = 50;
-	const maxSizeInBytes = 1000 * 1024 ** 2 // 50 MB
 	const [files, setFiles] = React.useState([])
-	const [fileRejections, setFileRejections] = React.useState([])
-	const values = React.useMemo(() => {
-		return [...files, ...fileRejections.map((fileRejection) => fileRejection.file)]
-	}, [
-		files,
-		fileRejections,
-	])
-	const handleRemove = React.useCallback(
-		(file) => {
-			const updatedFiles = files.filter((existingFile) => existingFile !== file)
-			const updatedFileRejections = fileRejections.filter((fileRejection) => fileRejection.file !== file)
-
-			// Call rebaseFiles to ensure accepted + rejected files are in sync (some might have previously been
-			// rejected for being over the file count limit, but might be under the limit now!)
-			const {accepted, rejected} = rebaseFiles(
-				[...updatedFiles, ...updatedFileRejections.map((fileRejection) => fileRejection.file)],
-				{acceptedMimeTypes, maxFiles, maxSizeInBytes}
-			)
-
-			setFiles(accepted)
-			setFileRejections(rejected)
-		},
-		[acceptedMimeTypes, files, fileRejections, maxFiles, maxSizeInBytes]
-	)
-
-	const fileCountOverLimit = files.length + fileRejections.length - maxFiles
-	const fileCountError = `You can upload up to 10 files. Please remove ${fileCountOverLimit} ${
-		fileCountOverLimit === 1 ? 'file' : 'files'
-	}.`
 
 	const [isUploading, setUploading] = useState(false);
 	const [finishedState, setFinishedState] = useState();
+	const chunkSize = 1048576 * 3;
 
 	useEffect(() => {
 		window.onbeforeunload = confirmExit;
@@ -112,7 +69,70 @@ const Onboard = () => {
 		function confirmExit() {
 			return isUploading ? "We are still uploading your files! If you close we won't receive your information!" : null;
 		}
+
 	}, [])
+
+	const uploadFiles = async () => {
+
+
+		let file = files[0];
+		let dat = new FormData();
+
+		dat.append("files", file)
+		/*		files.forEach(value => {
+					dat.append('files', value);
+				})*/
+
+		const chunkCount = file.size % chunkSize === 0 ? file.size / chunkSize : Math.floor(file.size / chunkSize) + 1;
+		const fileID = uuidv4() + "." + file.name.split('.').pop();
+
+		for (let i = 0; i < chunkCount; i++) {
+			let start = i * chunkSize;
+			let end = start + chunkSize;
+			await uploadChunk(file, file.slice(start, end), fileID, i)
+
+			/*			var percentage = (counter / chunkCount) * 100;
+						setProgress(percentage);*/
+		}
+
+		await fetch('https://new-customer-onboarding.herokuapp.com/api/v1/upload?' + new URLSearchParams({
+			name: name,
+			email: email,
+			restaurantName: restaurant
+		}), {
+			method: 'POST',
+			cache: 'no-cache',
+			body: dat
+		}).then(i => i.json()).then(b => {
+			console.log("B is below")
+			console.log(b)
+			setFinishedState(b)
+			setUploading(false)
+		}).catch((c) => {
+			console.log(c)
+		});
+	}
+
+	const uploadChunk = async (file, chunk, guid, index) => {
+		try {
+			const response = await axios.post("", chunk, {
+				params: {
+					id: index,
+					fileName: guid,
+				},
+				headers: {'Content-Type': 'application/json'}
+			});
+			const data = response.data;
+			if (data.isSuccess) {
+
+			} else {
+				console.log('Error Occurred:', data.errorMessage)
+			}
+
+		} catch (error) {
+			console.log('error', error)
+		}
+	}
 
 	return (
 		<div>
@@ -152,46 +172,7 @@ const Onboard = () => {
 
 						{pageNumber === 2 && <>
 							<Pane maxWidth={500} minWidth={200}>
-								<FileUploader
-									acceptedMimeTypes={acceptedMimeTypes}
-									label="Upload Your Content"
-									description="Upload .pdf, .csv, .excel, .ppt, .doc, .docx, .jpeg, .png, .mp4 files. 1GB size limit per file"
-									disabled={files.length + fileRejections.length >= maxFiles}
-									maxSizeInBytes={maxSizeInBytes}
-									maxFiles={maxFiles}
-									onAccepted={(file) => {
-										setFiles(a => [...a, ...file])
-									}}
-									onRejected={setFileRejections}
-									renderFile={(file, index) => {
-										const {name, size, type} = file
-										const renderFileCountError = index === 0 && fileCountOverLimit > 0
-
-										// We're displaying an <Alert /> component to aggregate files rejected for being over the maxFiles limit,
-										// so don't show those errors individually on each <FileCard />
-										const fileRejection = fileRejections.find(
-											(fileRejection) => fileRejection.file === file && fileRejection.reason !== FileRejectionReason.OverFileLimit
-										)
-										const {message} = fileRejection || {}
-
-										return (
-											<React.Fragment key={`${file.name}-${index}`}>
-												{renderFileCountError &&
-													<Alert intent="danger" marginBottom={majorScale(2)}
-														   title={fileCountError}/>}
-												<FileCard
-													isInvalid={fileRejection != null}
-													name={name}
-													onRemove={() => handleRemove(file)}
-													sizeInBytes={size}
-													type={type}
-													validationMessage={message}
-												/>
-											</React.Fragment>
-										)
-									}}
-									values={values}
-								/>
+								<FileUpload files={files} setFiles={setFiles}/>
 							</Pane>
 							{/*	<Pane maxWidth={500}>
 								<Label htmlFor="textarea-2" marginBottom={4} display="block">
@@ -230,6 +211,7 @@ const Onboard = () => {
 											if (pageNumber > 1) {
 												setUploading(true)
 												let dat = new FormData();
+
 												files.forEach(value => {
 													dat.append('files', value);
 												})
@@ -242,18 +224,7 @@ const Onboard = () => {
 													method: 'POST',
 													cache: 'no-cache',
 													body: dat
-												}).then(i => {
-													// console.log(i)
-													let a = i.json()
-													/*					console.log("status is below:")
-																		console.log(a)
-																		console.log(a.status)
-																		setFinishedState(a.status)
-																		setUploading(false)
-																		// console.log("BBBBBSDDDDD")
-																		// console.log(a)*/
-													return a
-												}).then(b => {
+												}).then(i => i.json()).then(b => {
 													console.log("B is below")
 													console.log(b)
 													setFinishedState(b)

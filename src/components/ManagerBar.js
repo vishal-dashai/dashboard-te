@@ -32,24 +32,35 @@ export default function ManagerBar() {
 						<Nav.Link href="scores">
 							<div className={'linker'} id={location.pathname === '/scores' ? 'red' : ''}>
 								<img id={location.pathname === '/scores' ? 'red' : ''} src={DeviceMessage} alt=""/>
-								<p id={location.pathname === '/scores' ? 'red' : ''} className={"linkerText"}>Quiz Scores</p>
+								<p id={location.pathname === '/scores' ? 'red' : ''} className={"linkerText"}>Quiz
+									Scores</p>
 							</div>
 						</Nav.Link>
-						<Nav.Link href="https://km2tvqrwri0.typeform.com/to/HeCBxjpi">
+						{/*<Nav.Link href="updates">
 							<div className={'linker'} id={location.pathname === '/updates' ? 'green' : ''}>
 								<img src={SendSquare} id={location.pathname === '/updates' ? 'green' : ''} alt=""/>
-								<p className={"linkerText"} id={location.pathname === '/updates' ? 'green' : ''} >Instant Updates</p>
+								<p className={"linkerText"} id={location.pathname === '/updates' ? 'green' : ''}>Instant
+									Updates</p>
 							</div>
 						</Nav.Link>
-				{/*		<Nav.Link href="quizeditor">
+						<Nav.Link href="quizeditor">
 							<div className={'linker'} id={location.pathname === '/quizeditor' ? 'purple' : ''}>
 								<img src={EditIcon} id={location.pathname === '/quizeditor' ? 'purple' : ''} alt=""/>
-								<p className={"linkerText"} id={location.pathname === '/quizeditor' ? 'purple' : ''} >Instant Updates</p>
+								<p className={"linkerText"}
+								   id={location.pathname === '/quizeditor' ? 'purple' : ''}>Quiz Editor</p>
+							</div>
+						</Nav.Link>
+						<Nav.Link href="quizeditor">
+							<div className={'linker'} id={location.pathname === '/quizeditor' ? 'purple' : ''}>
+								<img src={EditIcon} id={location.pathname === '/quizeditor' ? 'purple' : ''} alt=""/>
+								<p className={"linkerText"}
+								   id={location.pathname === '/quizeditor' ? 'purple' : ''}>Submit Content</p>
 							</div>
 						</Nav.Link>*/}
 					</Nav>
 					<Nav>
-						{user && <button className={"fancyButtonPrev"} onClick={() => {
+						<br/>
+						{user && <button className={"fancyButtonPrev fancyButtonFull"} onClick={() => {
 							getAuth().signOut().then(r => window.location.href = "login")
 						}}>
 							Sign Out

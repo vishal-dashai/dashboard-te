@@ -1,11 +1,9 @@
 import React, {useContext, useEffect, useState} from "react";
-import {ArrowDownIcon, ArrowUpIcon, Button, LogOutIcon, Table} from "evergreen-ui";
-import firebase from "firebase/compat/app";
+import {ArrowDownIcon, ArrowUpIcon, Button, SearchInput, Table} from "evergreen-ui";
 import vector1 from '../assets/vector1.png'
 import vector2 from '../assets/vector2.png'
 import vector3 from '../assets/vector3.png'
-import MDEditor from '@uiw/react-md-editor';
-import '../App.scss'
+import '../assets/css/Scores.scss'
 import ResultsTable from "../components/ResultsTable";
 import API from "../api";
 import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
@@ -17,8 +15,10 @@ export default function Scores() {
 	const [restaurantId, setrestaurantId] = useState('');
 	const [scores, setScores] = useState([]);
 	const [restaurantName, setrestaurantName] = useState('');
-	const [sortConfig, setSortConfig] = useState(null);
+	const [sortConfig, setSortConfig] = useState({key: "user_id", direction: "asc"});
 	const [theContent, setContent] = useState("**Hello world!!!**");
+
+	const [searchKey, setSearchKey] = useState(null);
 
 	const getUserProfile = async (userId) => {
 		const res = await fetch(`${API}/api/v1/getUserProfileInfo/` + userId, {
@@ -63,42 +63,33 @@ export default function Scores() {
 			<div className="App">
 				<div className="dashboard">
 					<div className="content">
-						<div style={{
-							display: 'flex',
-							flexDirection: 'row',
-							flex: 1,
-							justifyContent: 'space-between',
-							alignItems: 'space-between',
-							width: '80%',
-						}}>
-							<h2 className="subtitle" style={{marginTop: 15}}>Quiz Results:</h2>
-						{/*	<Form className="d-flex">
-								<Form.Control
-									type="search"
-									placeholder="Search"
-									className="me-2"
-									aria-label="Search"
-								/>
-								<Button variant="outline-success">Search</Button>
-							</Form>*/}
+						<div className={'searchArea'}>
+							<h2 className="subtitle">Quiz Results:</h2>
+							<SearchInput placeholder="Search quiz or employee" value={searchKey}
+										 onChange={(e) => {
+											 // console.log(e)
+											 setSearchKey(e?.target?.value ?? null)
+										 }}
+							/>
 						</div>
 
-						<Table minHeight={400} marginBottom={50} className="table">
+						<Table minHeight={'100%'} marginBottom={50} className="table">
 							<Table.Head className="tableHeader">
-								<Table.TextHeaderCell>
+								<Table.TextHeaderCell className={'headerCell'}>
 									<Button
 										iconAfter={sortConfig?.key === 'user_id' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
 										onClick={() => requestSorting('user_id')}>Employee</Button>
 								</Table.TextHeaderCell>
-								<Table.TextHeaderCell>
+								<Table.TextHeaderCell className={'headerCell'}>
 									<Button
 										iconAfter={sortConfig?.key === 'topic_name' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
 										onClick={() => requestSorting('topic_name')}>Quiz</Button></Table.TextHeaderCell>
-								<Table.TextHeaderCell><Button
+								<Table.TextHeaderCell className={'headerCell'}><Button
 									iconAfter={sortConfig?.key === 'score_percentage' ? sortConfig.direction === 'asc' ? ArrowUpIcon : ArrowDownIcon : null}
-									onClick={() => requestSorting('score_percentage')}>Score</Button></Table.TextHeaderCell>
+									onClick={() => requestSorting('score_percentage')}
+									margin={0}>Score</Button></Table.TextHeaderCell>
 							</Table.Head>
-							<ResultsTable scores={scores} config={sortConfig}/>
+							<ResultsTable scores={scores} config={sortConfig} searchKey={searchKey}/>
 						</Table>
 
 						<img className="vector1" src={vector1} alt="design"/>
