@@ -42,3 +42,14 @@
   border-style: none;
   overflow: hidden;
 }
+
+.changesArea {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-bottom: 20px;
+}
+
+.confirmationModal{
+  background: #FFFFFF;
+  border-radius: 20px;
+}

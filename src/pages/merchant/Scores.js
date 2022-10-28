@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from "react";
 import {ArrowDownIcon, ArrowUpIcon, Button, SearchInput, Table} from "evergreen-ui";
-import vector1 from '../assets/vector1.png'
-import vector2 from '../assets/vector2.png'
-import vector3 from '../assets/vector3.png'
-import '../assets/css/Scores.scss'
-import ResultsTable from "../components/ResultsTable";
-import API from "../api";
-import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
-import ManagerBar from "../components/ManagerBar";
+import vector1 from '../../assets/vector1.png'
+import vector2 from '../../assets/vector2.png'
+import vector3 from '../../assets/vector3.png'
+import '../../assets/css/Scores.scss'
+import ResultsTable from "../../components/ResultsTable";
+import API from "../../api";
+import {AuthenticatedUserContext} from "../../provider/AuthenticatedUserProvider";
+import ManagerBar from "../../components/ManagerBar";
 import {Form} from "react-bootstrap";
 
 export default function Scores() {
@@ -21,7 +21,7 @@ export default function Scores() {
 	const [searchKey, setSearchKey] = useState(null);
 
 	const getUserProfile = async (userId) => {
-		const res = await fetch(`${API}/api/v1/getUserProfileInfo/` + userId, {
+		const res = await fetch(`${API}/getUserProfileInfo/` + userId, {
 			method: 'GET',
 		})
 		const data = await res.json()
@@ -31,7 +31,7 @@ export default function Scores() {
 	}
 
 	const getAllEmployeeScoresForRestaurant = async (restaurantId) => {
-		const res = await fetch(`${API}/api/v1/getAllEmployeeScoresForRestaurant/${restaurantId}`, {
+		const res = await fetch(`${API}/getAllEmployeeScoresForRestaurant/${restaurantId}`, {
 			method: 'GET',
 		})
 		const data = await res.json()

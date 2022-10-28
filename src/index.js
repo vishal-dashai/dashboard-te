@@ -7,8 +7,7 @@ import "firebase/compat/auth";
 import App from "./App";
 import {createBrowserRouter} from "react-router-dom";
 import NotFound from "./pages/NotFound";
-import Home from "./pages/Home";
-import Scores from "./pages/Scores";
+import Scores from "./pages/merchant/Scores";
 import {RouterProvider} from "react-router";
 import FIREBASE_CONFIG from "./firebaseconfig";
 import Login from "./pages/Login";
@@ -19,6 +18,7 @@ import Onboard from "./pages/Onboard";
 import Landing from "./pages/Landing";
 import Updates from "./pages/Updates";
 import Forgot from "./pages/Forgot";
+import QuizViewer from "./pages/merchant/quiz/QuizViewer";
 
 const router = createBrowserRouter([
 	{
@@ -36,23 +36,27 @@ const router = createBrowserRouter([
 				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
-/*			{
+			{
 				path: "landing",
 				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
 				element: (<Landing/>)
-			},*/
+			},
 			{
-				path: "scores",
+				path: "merchant/scores",
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
-			/*{
-				path: "quizeditor",
+			{
+				path: "merchant/quizeditor",
 				element: (<RequireElevated><QuizEditor/></RequireElevated>)
 			},
 			{
-				path: "updates",
+				path: "merchant/quizviewer",
+				element: (<RequireElevated><QuizViewer/></RequireElevated>)
+			},
+			{
+				path: "merchant/updates",
 				element: (<RequireElevated><Updates/></RequireElevated>)
-			},*/
+			},
 			{
 				path: "onboard",
 				element: (<Onboard/>)

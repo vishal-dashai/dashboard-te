@@ -58,7 +58,7 @@ function Choices({choices, setChoices}) {
 					onClick={() => {
 						setChoices(r => {
 							setNextID(a => a + 1)
-							return [...r, {text: "", choiceID: nextID}]
+							return [...r, {text: "", choiceID: nextID, isCorrect: r.length === 0}]
 						})
 					}}
 					size={'large'}

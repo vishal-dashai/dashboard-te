@@ -29,34 +29,40 @@ export default function ManagerBar() {
 				<Navbar.Toggle aria-controls="responsive-navbar-nav"/>
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav className="me-auto">
-						<Nav.Link href="scores">
-							<div className={'linker'} id={location.pathname === '/scores' ? 'red' : ''}>
-								<img id={location.pathname === '/scores' ? 'red' : ''} src={DeviceMessage} alt=""/>
-								<p id={location.pathname === '/scores' ? 'red' : ''} className={"linkerText"}>Quiz
+						<Nav.Link href="/merchant/scores">
+							<div className={'linker'} id={location.pathname === '/merchant/scores' ? 'red' : ''}>
+								<img id={location.pathname === '/merchant/scores' ? 'red' : ''} src={DeviceMessage}
+									 alt=""/>
+								<p id={location.pathname === '/merchant/scores' ? 'red' : ''}
+								   className={"linkerText"}>Quiz
 									Scores</p>
 							</div>
 						</Nav.Link>
-						{/*<Nav.Link href="updates">
-							<div className={'linker'} id={location.pathname === '/updates' ? 'green' : ''}>
-								<img src={SendSquare} id={location.pathname === '/updates' ? 'green' : ''} alt=""/>
-								<p className={"linkerText"} id={location.pathname === '/updates' ? 'green' : ''}>Instant
+						<Nav.Link href="/merchant/updates">
+							<div className={'linker'} id={location.pathname === '/merchant/updates' ? 'green' : ''}>
+								<img src={SendSquare} id={location.pathname === '/merchant/updates' ? 'green' : ''}
+									 alt=""/>
+								<p className={"linkerText"}
+								   id={location.pathname === '/merchant/updates' ? 'green' : ''}>Instant
 									Updates</p>
 							</div>
 						</Nav.Link>
-						<Nav.Link href="quizeditor">
-							<div className={'linker'} id={location.pathname === '/quizeditor' ? 'purple' : ''}>
-								<img src={EditIcon} id={location.pathname === '/quizeditor' ? 'purple' : ''} alt=""/>
+						<Nav.Link href="/merchant/quizviewer">
+							<div className={'linker'} id={location.pathname.includes('quiz') ? 'purple' : ''}>
+								<img src={EditIcon} id={location.pathname.includes('quiz') ? 'purple' : ''}
+									 alt=""/>
 								<p className={"linkerText"}
-								   id={location.pathname === '/quizeditor' ? 'purple' : ''}>Quiz Editor</p>
+								   id={location.pathname.includes('quiz') ? 'purple' : ''}>Quizzes</p>
 							</div>
 						</Nav.Link>
-						<Nav.Link href="quizeditor">
-							<div className={'linker'} id={location.pathname === '/quizeditor' ? 'purple' : ''}>
-								<img src={EditIcon} id={location.pathname === '/quizeditor' ? 'purple' : ''} alt=""/>
+						<Nav.Link href="upload">
+							<div className={'linker'} id={location.pathname === '/merchant/upload' ? 'purple' : ''}>
+								<img src={EditIcon} id={location.pathname === '/merchant/upload' ? 'purple' : ''}
+									 alt=""/>
 								<p className={"linkerText"}
-								   id={location.pathname === '/quizeditor' ? 'purple' : ''}>Submit Content</p>
+								   id={location.pathname === '/merchant/upload' ? 'purple' : ''}>Submit Content</p>
 							</div>
-						</Nav.Link>*/}
+						</Nav.Link>
 					</Nav>
 					<Nav>
 						<br/>
