@@ -78,6 +78,9 @@
 .modal-header {
   border: none;
   align-self: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .modal-title {
@@ -121,7 +124,7 @@
   padding: 10px;
   gap: 10px;
   width: 455px;
-  height: 176px;
+  min-height: 176px;
   background: #F3F4F7;
   border-radius: 11px;
 

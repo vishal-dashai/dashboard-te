@@ -68,7 +68,7 @@ export default function ManagerBar() {
 					<Nav>
 						<br/>
 						{user && <button className={"fancyButtonPrev fancyButtonFull"} onClick={() => {
-							getAuth().signOut().then(r => window.location.href = "login")
+							getAuth().signOut().then(r => window.location.href = "/login")
 						}}>
 							Sign Out
 							{<Icon icon={LogOutIcon} height={20} width={20} marginTop={3} marginLeft={3}/>}

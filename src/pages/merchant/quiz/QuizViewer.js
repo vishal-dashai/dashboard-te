@@ -7,12 +7,13 @@ import {AuthenticatedUserContext} from "../../../provider/AuthenticatedUserProvi
 import API from "../../../api";
 import TopicInfo from "../../../api/TopicInfo";
 import ManagerBar from "../../../components/ManagerBar";
-import {Button, ChevronRightIcon, Icon, Spinner} from "evergreen-ui";
+import {Button, ChevronRightIcon, CrossIcon, Icon, LogOutIcon, Spinner} from "evergreen-ui";
 import TaskSquare from '../../../assets/svg/task-square.svg';
 import EditIcon from '../../../assets/svg/edit-2.svg';
 import {Modal} from "react-bootstrap";
 import QuizFieldEditor, {alphabet} from "../../../components/quiz/QuizFieldEditor";
 import {useMediaQuery} from "react-responsive";
+import {getAuth} from "firebase/auth";
 
 export default function QuizViewer() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
@@ -128,8 +129,14 @@ export default function QuizViewer() {
 
 				<Modal show={show} onHide={handleClose} dialogClassName={'ex'}>
 					{viewing ? <>
-						<Modal.Header closeButton>
+						<Modal.Header>
 							<Modal.Title>{viewing.name}</Modal.Title>
+							<button className={"fancyButtonPrev"} onClick={() => {
+								handleClose()
+							}}>
+								Close
+								{<Icon icon={CrossIcon} height={20} width={20} marginTop={3} marginLeft={3}/>}
+							</button>
 						</Modal.Header>
 						<div className={'viewBody'}>
 							{viewing.questions.map((a, i) => {
