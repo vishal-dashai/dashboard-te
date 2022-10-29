@@ -74,8 +74,6 @@ export default function QuizEditor() {
 	const [loading, setLoading] = useState(true);
 	const [uploading, setUploading] = useState(false);
 
-	let {id} = useParams();
-
 	const loadQuiz = async () => {
 		setLoading(true)
 		await fetch(`${API}/getQuizByRestTopic?` + new URLSearchParams({
@@ -143,7 +141,7 @@ export default function QuizEditor() {
 				body: JSON.stringify({
 					restaurantId: profile.restaurantId,
 					topicId: searchParams.get('id'),
-					name: quizName,
+					name: decodeURIComponent(searchParams.get('n')) + 'Quiz',
 					totalQuestions: list.length,
 					totalScore: list.length
 				})
@@ -205,7 +203,6 @@ export default function QuizEditor() {
 		if (user !== null && profile !== null)
 			loadQuiz()
 		console.log("ID IS ")
-		console.log(id)
 		console.log(searchParams.get('id'))
 	}, [user, profile])
 

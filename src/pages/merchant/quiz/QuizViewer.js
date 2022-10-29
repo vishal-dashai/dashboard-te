@@ -114,7 +114,7 @@ export default function QuizViewer() {
 
 									{!isSmaller ?
 										<button className={"fancyButtonFull"} onClick={() => {
-											window.open('quizeditor?id=' + a.topicID, '_self')
+											window.open('quizeditor?id=' + a.topicID + '&n=' + encodeURIComponent(a.name), '_self')
 										}}>
 											{"Edit Quiz"}
 											<img src={EditIcon} alt=""/>

@@ -56,10 +56,8 @@ export default function EditableList({setSelectedID, selectedID, list, setList, 
 
 	return (
 		<div className="questionBox">
-			<textarea className={"quizNameEditor"} placeholder={"Enter quiz name here."}
-					  value={quizName} onChange={(event) => {
-				setQuizName(event.target.value)
-			}}/>
+			<p className={'quizNameEditor'}>{quizName}</p>
+
 			<div style={{
 				overflowY: 'auto',
 				flex: 1,

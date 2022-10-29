@@ -8,23 +8,17 @@ export default function ResultsTable({scores, config, searchKey}) {
 	const sortedData = useMemo(() => {
 		let sortableItems = [...scores];
 		if (config !== null) {
-			sortableItems.sort((a, b) => {
+			sortableItems = sortableItems.sort((a, b) => {
+				const v1 = a[config.key];
+				const v2 = b[config.key];
+
 				if (config.key === 'score_percentage') {
-					if (a[config.key] > b[config.key]) {
-						return config.direction === 'asc' ? -1 : 1;
-					} else if (a[config.key] < b[config.key]) {
-						return config.direction === 'asc' ? 1 : -1;
-					}
+					return config.direction === 'asc' ? v1 - v2 : v2 - v1;
+				} else {
+					if (v1 < v2) return config.direction === 'asc' ? -1 : 1;
+					if (v1 > v2) return config.direction === 'asc' ? 1 : -1;
 					return 0;
 				}
-
-				if (a[config.key].localeCompare(b[config.key]) <= 1) {
-					return config.direction === 'asc' ? -1 : 1;
-				}
-				if (a[config.key].localeCompare(b[config.key]) >= 1) {
-					return config.direction === 'asc' ? 1 : -1;
-				}
-				return 0;
 			});
 		}
 		return sortableItems;
