@@ -19,6 +19,8 @@ import Landing from "./pages/Landing";
 import Updates from "./pages/Updates";
 import Forgot from "./pages/Forgot";
 import QuizViewer from "./pages/merchant/quiz/QuizViewer";
+import './App.scss';
+import Upload from "./pages/merchant/Upload";
 
 const router = createBrowserRouter([
 	{
@@ -56,6 +58,10 @@ const router = createBrowserRouter([
 			{
 				path: "merchant/updates",
 				element: (<RequireElevated><Updates/></RequireElevated>)
+			},
+			{
+				path: "merchant/upload",
+				element: (<RequireElevated><Upload/></RequireElevated>)
 			},
 			{
 				path: "onboard",

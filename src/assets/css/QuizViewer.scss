@@ -17,11 +17,16 @@
   padding: 16px;
   gap: 20px;
 
-  width: 1080px;
+  width: 70%;
   height: 78px;
 
   background: #F3F4F7;
   border-radius: 13px;
+
+  @media screen and (max-width: 850px) {
+	flex-direction: column;
+	height: auto;
+  }
 
   h3 {
 	font-family: 'Raleway', serif;
@@ -47,6 +52,12 @@
   margin-bottom: 0;
   min-width: 80%;
   min-height: 80%;
+
+  @media screen and (max-width: 850px) {
+	left: 0;
+	top: 0;
+	right: 0;
+  }
 }
 
 .modal-body {

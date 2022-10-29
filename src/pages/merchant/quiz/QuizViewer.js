@@ -12,6 +12,7 @@ import TaskSquare from '../../../assets/svg/task-square.svg';
 import EditIcon from '../../../assets/svg/edit-2.svg';
 import {Modal} from "react-bootstrap";
 import QuizFieldEditor, {alphabet} from "../../../components/quiz/QuizFieldEditor";
+import {useMediaQuery} from "react-responsive";
 
 export default function QuizViewer() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
@@ -75,6 +76,8 @@ export default function QuizViewer() {
 			loadTopics()
 	}, [user, profile])
 
+	const isSmaller = useMediaQuery({query: '(max-width: 1200px)'})
+
 	return (
 		<>
 			<ManagerBar/>
@@ -109,12 +112,14 @@ export default function QuizViewer() {
 										<Icon icon={ChevronRightIcon} height={15} width={15}/>
 									</button>
 
-									<button className={"fancyButtonFull"} onClick={() => {
-										window.open('quizeditor?id=' + a.topicID, '_self')
-									}}>
-										{"Edit Quiz"}
-										<img src={EditIcon} alt=""/>
-									</button>
+									{!isSmaller ?
+										<button className={"fancyButtonFull"} onClick={() => {
+											window.open('quizeditor?id=' + a.topicID, '_self')
+										}}>
+											{"Edit Quiz"}
+											<img src={EditIcon} alt=""/>
+										</button> : <></>
+									}
 								</div>
 							</div>
 						)

@@ -10,12 +10,12 @@ import QuizFieldEditor from "../components/quiz/QuizFieldEditor";
 import ManagerBar from "../components/ManagerBar";
 import API from "../api";
 import {useParams} from "react-router";
-import {ChevronUpIcon, CrossIcon, Icon, TickIcon} from "evergreen-ui";
+import {ChevronUpIcon, CrossIcon, Icon, Spinner, TickIcon} from "evergreen-ui";
 import {useSearchParams} from "react-router-dom";
 import {Modal} from "react-bootstrap";
 import QuizUploader from "../api/quiz/QuizUploader";
 
-function ConfirmationPopup({show, onHide, publish, quizName}) {
+function ConfirmationPopup({show, onHide, publish, quizName, isUploading}) {
 	return (
 		<Modal
 			show={show}
@@ -24,37 +24,40 @@ function ConfirmationPopup({show, onHide, publish, quizName}) {
 			aria-labelledby="contained-modal-title-vcenter"
 			centered
 			contentClassName={'confirmationModal'}
+			backdrop="static"
+			keyboard={false}
 		>
-			<Modal.Header>
+			{!isUploading ? <> <Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
 					Publish {quizName}?
 				</Modal.Title>
 			</Modal.Header>
-			<Modal.Body>
-				<p>Are you sure you want to publish this quiz? It will be visible to all employees.</p>
-			</Modal.Body>
-			<Modal.Footer>
-				<button
-					className="prevButton"
-					onClick={() => {
-						onHide()
-					}}
-				>
-					No, cancel
-					{<Icon icon={CrossIcon}/>}
-				</button>
+				<Modal.Body>
+					<p>Are you sure you want to publish this quiz? It will be visible to all employees.</p>
+				</Modal.Body>
+				<Modal.Footer>
+					<button
+						className="prevButton"
+						onClick={() => {
+							onHide()
+						}}
+					>
+						No, cancel
+						{<Icon icon={CrossIcon}/>}
+					</button>
 
-				<button
-					className="nextButton"
-					onClick={() => {
-						onHide()
-						publish()
-					}}
-				>
-					Yes, publish quiz
-					{<Icon icon={TickIcon}/>}
-				</button>
-			</Modal.Footer>
+					<button
+						className="nextButton"
+						onClick={() => {
+							// onHide()
+							publish()
+						}}
+					>
+						Yes, publish quiz
+						{<Icon icon={TickIcon}/>}
+					</button>
+				</Modal.Footer></> : <div className={'centerContent'}><h2>Publishing changes</h2>
+				<Spinner/></div>}
 		</Modal>
 	);
 }
@@ -67,9 +70,14 @@ export default function QuizEditor() {
 	const [modalShow, setModalShow] = React.useState(false);
 	const [searchParams] = useSearchParams();
 	const [liveQuizData, setLiveQuizData] = useState();
+
+	const [loading, setLoading] = useState(true);
+	const [uploading, setUploading] = useState(false);
+
 	let {id} = useParams();
 
 	const loadQuiz = async () => {
+		setLoading(true)
 		await fetch(`${API}/getQuizByRestTopic?` + new URLSearchParams({
 			restaurantId: profile.restaurantId,
 			topicId: searchParams.get('id')
@@ -91,7 +99,11 @@ export default function QuizEditor() {
 						let i = 0;
 						let opts = [];
 						ele.answerOptions.forEach((opt) => {
-							opts.push({text: opt.answerOptionText, choiceID: ++i, isCorrect: opt.answerOptionId === ele.correctAnswerId})
+							opts.push({
+								text: opt.answerOptionText,
+								choiceID: ++i,
+								isCorrect: opt.answerOptionId === ele.correctAnswerId
+							})
 						})
 						quest.push({title: ele.questionText, choices: opts, questionId: ele.questionId})
 					})
@@ -102,6 +114,7 @@ export default function QuizEditor() {
 			console.log("Quiz error")
 			console.log("ERROR: " + e)
 		})
+		setLoading(false)
 	}
 
 	const publish = async () => {
@@ -111,6 +124,7 @@ export default function QuizEditor() {
 
 		console.log("LIVE DATA")
 		console.log(liveQuizData)
+		setUploading(true)
 		if (liveQuizData !== null && liveQuizData !== undefined) {
 			const result = QuizUploader.compareAndBuildData(liveQuizData, list)
 			await fetch(`${API}/updateQuestions/` + liveQuizData.quizId, {
@@ -169,7 +183,7 @@ export default function QuizEditor() {
 				}).then(e => e.json()).then(r => {
 					console.log({"questions": totalData})
 					console.log(r)
-					alert("Quiz was uploaded!")
+					// alert("Quiz was uploaded!")
 				}).catch(err => {
 					console.log("error")
 					console.log(err)
@@ -179,6 +193,9 @@ export default function QuizEditor() {
 				console.log("error")
 			})
 		}
+		await loadQuiz()
+		setUploading(false)
+		setModalShow(false)
 	}
 
 	useEffect(() => {
@@ -195,44 +212,48 @@ export default function QuizEditor() {
 	return (
 		<>
 			<ManagerBar/>
-			<>
-				<div className="quizEditor">
-					<EditableList
-						setSelectedID={setSelectedID}
-						selectedID={selectedID}
-						list={list}
-						setList={setList}
-						quizName={quizName}
-						setQuizName={setQuizName}
-					/>
-
-					<div className="viewArea">
-						<QuizFieldEditor
+			{!loading ?
+				<>
+					<div className="quizEditor">
+						<EditableList
 							setSelectedID={setSelectedID}
 							selectedID={selectedID}
 							list={list}
-							setList={setList}/>
+							setList={setList}
+							quizName={quizName}
+							setQuizName={setQuizName}
+						/>
+
+						<div className="viewArea">
+							<QuizFieldEditor
+								setSelectedID={setSelectedID}
+								selectedID={selectedID}
+								list={list}
+								setList={setList}/>
+						</div>
+
+						<div className={"changesArea"}>
+							<button className={"fancyButtonFull"} onClick={() => {
+								// window.location.href = "onboard";
+								setModalShow(true)
+							}}>
+								{"Publish Quiz"}
+								{<Icon icon={ChevronUpIcon} height={20} width={20} marginTop={3}/>}
+							</button>
+
+						</div>
+
+						<img className="vector1" src={vector1} alt="design"/>
+						<img className="vector2" src={vector2} alt="design"/>
+						<img className="vector3" src={vector3} alt="design"/>
 					</div>
 
-					<div className={"changesArea"}>
-						<button className={"fancyButtonFull"} onClick={() => {
-							// window.location.href = "onboard";
-							setModalShow(true)
-						}}>
-							{"Publish Quiz"}
-							{<Icon icon={ChevronUpIcon} height={20} width={20} marginTop={3}/>}
-						</button>
-
-					</div>
-
-					<img className="vector1" src={vector1} alt="design"/>
-					<img className="vector2" src={vector2} alt="design"/>
-					<img className="vector3" src={vector3} alt="design"/>
-				</div>
-
-				<ConfirmationPopup show={modalShow} onHide={() => setModalShow(false)} quizName={quizName}
-								   publish={publish}/>
-			</>
+					<ConfirmationPopup show={modalShow} onHide={() => setModalShow(false)} quizName={quizName}
+									   publish={publish} isUploading={uploading}/>
+				</> :
+				<div className={'centerContent'}><h2>Loading Quiz</h2>
+					<Spinner/></div>
+			}
 		</>
 
 	);

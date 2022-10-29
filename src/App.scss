@@ -602,6 +602,13 @@ img#purple {
   background: #565a62;
 }
 
+#warning {
+  background: #c24063;
+}
+
+#warning:hover {
+  background: #d05e7d;
+}
 
 .prevButton {
   padding: 18px 14px;
@@ -627,5 +634,37 @@ img#purple {
 
 .prevButton:hover {
   background: #b4b4b4;
+
+}
+
+
+.coloredHeading {
+  background-image: url("assets/img/Frame 1.png");
+  height: 200px;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-position: center;
+  background-size: cover;
+
+  h1 {
+	font-family: 'Raleway', serif;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 64px;
+	line-height: 75px;
+	font-feature-settings: 'pnum' on, 'lnum' on;
+	color: #FFFFFF;
+  }
+}
+
+
+.centerContent {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 10px;
 
 }

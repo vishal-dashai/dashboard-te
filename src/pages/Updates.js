@@ -15,6 +15,10 @@ export default function Updates() {
 			<ManagerBar/>
 
 			<div className="App">
+				<div className={'coloredHeading'}>
+					<h1>Instant Updates</h1>
+				</div>
+
 				<div className="content">
 					<div style={{marginTop: 10}}>
 						<h3>Enter any new or urgent training updates here!</h3>
@@ -29,7 +33,8 @@ export default function Updates() {
 							marginTop: 20,
 						}}>
 
-							<Textarea name="textarea-1" placeholder="Type something here" minHeight={'50vh'} style={{marginBottom: 20}}/>
+							<Textarea name="textarea-1" placeholder="Type something here" minHeight={'50vh'}
+									  style={{marginBottom: 20}}/>
 
 							<Button iconAfter={TickIcon}
 									className="nextButton"
