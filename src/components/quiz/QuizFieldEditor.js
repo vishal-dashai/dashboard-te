@@ -3,7 +3,7 @@ import './quiz_field_editor.scss';
 import {AddIcon, Button, ChevronLeftIcon, ChevronRightIcon, CrossIcon, Icon, TickIcon} from "evergreen-ui";
 import Bubble from "../elements/Bubble";
 
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 function Choices({choices, setChoices}) {
 	const [nextID, setNextID] = useState(0)

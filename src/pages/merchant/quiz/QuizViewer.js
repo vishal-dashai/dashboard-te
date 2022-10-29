@@ -11,6 +11,7 @@ import {Button, ChevronRightIcon, Icon, Spinner} from "evergreen-ui";
 import TaskSquare from '../../../assets/svg/task-square.svg';
 import EditIcon from '../../../assets/svg/edit-2.svg';
 import {Modal} from "react-bootstrap";
+import QuizFieldEditor, {alphabet} from "../../../components/quiz/QuizFieldEditor";
 
 export default function QuizViewer() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
@@ -125,15 +126,22 @@ export default function QuizViewer() {
 						<Modal.Header closeButton>
 							<Modal.Title>{viewing.name}</Modal.Title>
 						</Modal.Header>
-						<Modal.Body>AAAAAAAAAAAAAAA</Modal.Body>
-						<Modal.Footer>
-							<Button variant="secondary" onClick={handleClose}>
-								Close
-							</Button>
-							<Button variant="primary" onClick={handleClose}>
-								Save Changes
-							</Button>
-						</Modal.Footer>
+						<div className={'viewBody'}>
+							{viewing.questions.map((a, i) => {
+
+								return (<div className={'infoSection'} key={i}>
+									<h1>{(i + 1) + ". " + a.questionText}</h1>
+									{a.answerOptions.map((r, b) => {
+											return (
+												a.correctAnswerId === r.answerOptionId ? <p className={'strong'}
+																							key={b}>{alphabet[b] + ". " + r.answerOptionText}</p> :
+													<p key={b}>{alphabet[b] + ". " + r.answerOptionText}</p>
+											)
+										}
+									)}
+								</div>)
+							})}
+						</div>
 					</> : <Spinner/>
 					}
 				</Modal>

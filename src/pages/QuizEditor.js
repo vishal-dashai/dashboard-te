@@ -111,7 +111,7 @@ export default function QuizEditor() {
 
 		console.log("LIVE DATA")
 		console.log(liveQuizData)
-		if (liveQuizData !== null) {
+		if (liveQuizData !== null && liveQuizData !== undefined) {
 			const result = QuizUploader.compareAndBuildData(liveQuizData, list)
 			await fetch(`${API}/updateQuestions/` + liveQuizData.quizId, {
 				method: 'POST',
@@ -134,6 +134,7 @@ export default function QuizEditor() {
 					totalScore: list.length
 				})
 			}).then(e => e.json()).then(async r => {
+				console.log('RESULT FROM ADDING')
 				console.log(r)
 				let quizId = r.quiz_id
 
@@ -154,7 +155,12 @@ export default function QuizEditor() {
 					}
 				});
 
-				await fetch(`${API}/api/v1/createAllQuestions/${quizId}`, {
+				console.log('CREATE QUESTIONS TO BE UPLOADED')
+				console.log(list)
+				console.log("TOTAL DATA")
+				console.log(totalData)
+
+				await fetch(`${API}/createAllQuestions/${quizId}`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -166,6 +172,7 @@ export default function QuizEditor() {
 					alert("Quiz was uploaded!")
 				}).catch(err => {
 					console.log("error")
+					console.log(err)
 				})
 
 			}).catch(err => {
