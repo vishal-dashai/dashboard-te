@@ -15,13 +15,12 @@ import RequireAuth from "./components/RequireAuth";
 import QuizEditor from "./pages/QuizEditor";
 import RequireElevated from "./components/RequireElevated";
 import Onboard from "./pages/Onboard";
-import Landing from "./pages/Landing";
 import Updates from "./pages/Updates";
 import Forgot from "./pages/Forgot";
 import QuizViewer from "./pages/merchant/quiz/QuizViewer";
 import './App.scss';
 import Upload from "./pages/merchant/Upload";
-import QuizView from "./pages/merchant/quiz/QuizView";
+import QuizEdit from "./pages/QuizEdit";
 
 const router = createBrowserRouter([
 	{
@@ -36,14 +35,12 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "home",
-				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
-			{
-				path: "landing",
-				// element: (<RequireAuth children={<Home/>}><Home/></RequireAuth>)
-				element: (<Landing/>)
-			},
+			/*			{
+							path: "landing",
+							element: (<Landing/>)
+						},*/
 			{
 				path: "merchant/scores",
 				element: (<RequireAuth><Scores/></RequireAuth>)
@@ -83,8 +80,7 @@ root.render(
 	<React.StrictMode>
 		<RouterProvider router={router}/>
 	</React.StrictMode>
-)
-;
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

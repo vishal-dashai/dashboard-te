@@ -43,7 +43,8 @@ export default function QuizView() {
 		await fetch(`${API}/getAllTopics/${profile.restaurantId}`).then(e => e.json()).then(data => {
 			for (let i in data) {
 				let top: TopicInfo = JSON.parse(JSON.stringify(data[i]));
-				tops.push(top);
+				if (top.name !== 'daily notes')
+					tops.push(top);
 			}
 		});
 		setTopics(tops)

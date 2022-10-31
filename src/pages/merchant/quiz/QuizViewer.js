@@ -19,16 +19,25 @@ export default function QuizViewer() {
 	const [topics, setTopics] = useState([]);
 	const [viewing, setViewing] = useState();
 	const [show, setShow] = useState(false);
+	const [nothingThere, setNothingThere] = useState(false);
 
 	const handleClose = () => {
 		setShow(false)
 		setViewing(null)
 	};
+
 	const handleShow = async (topic) => {
+		setNothingThere(false)
 		setShow(true)
 		await loadQuiz(topic).then((r) => {
 			setViewing(r)
+			if (r?.status !== 200) {
+				setNothingThere(true)
+				setViewing(null)
+			}
 			console.log(viewing)
+		}).catch((e) => {
+			setNothingThere(true)
 		});
 	};
 
@@ -37,7 +46,7 @@ export default function QuizViewer() {
 		await fetch(`${API}/getAllTopics/${profile.restaurantId}`).then(e => e.json()).then(data => {
 			for (let i in data) {
 				let r = data[i];
-				if(r.name !== 'daily notes') {
+				if (r.name !== 'daily notes') {
 					let top = new TopicInfo(r.name, r.restaurant_id, r.topicId);
 					tops.push(top);
 				}
@@ -129,34 +138,35 @@ export default function QuizViewer() {
 				</div>
 
 				<Modal show={show} onHide={handleClose} dialogClassName={'ex'}>
-					{viewing ? <>
-						<Modal.Header>
-							<Modal.Title>{viewing.name}</Modal.Title>
-							<button className={"fancyButtonPrev"} onClick={() => {
-								handleClose()
-							}}>
-								Close
-								{<Icon icon={CrossIcon} height={20} width={20} marginTop={3} marginLeft={3}/>}
-							</button>
-						</Modal.Header>
-						<div className={'viewBody'}>
-							{viewing.questions.map((a, i) => {
+					{nothingThere ? <h2>No quiz here yet! Close this pop-up and click 'Edit Quiz' to add one!</h2> :
+						viewing ? <>
+							<Modal.Header>
+								<Modal.Title>{viewing.name}</Modal.Title>
+								<button className={"fancyButtonPrev"} onClick={() => {
+									handleClose()
+								}}>
+									Close
+									{<Icon icon={CrossIcon} height={20} width={20} marginTop={3} marginLeft={3}/>}
+								</button>
+							</Modal.Header>
+							<div className={'viewBody'}>
+								{viewing.questions.map((a, i) => {
 
-								return (<div className={'infoSection'} key={i}>
-									<h1>{(i + 1) + ". " + a.questionText}</h1>
-									{a.answerOptions.map((r, b) => {
-											return (
-												a.correctAnswerId === r.answerOptionId ? <p className={'strong'}
-																							key={b}>{alphabet[b] + ". " + r.answerOptionText}</p> :
-													<p key={b}>{alphabet[b] + ". " + r.answerOptionText}</p>
-											)
-										}
-									)}
-								</div>)
-							})}
-						</div>
-					</> : <Spinner/>
-					}
+									return (<div className={'infoSection'} key={i}>
+										<h1>{(i + 1) + ". " + a.questionText}</h1>
+										{a.answerOptions.map((r, b) => {
+												return (
+													a.correctAnswerId === r.answerOptionId ? <p className={'strong'}
+																								key={b}>{alphabet[b] + ". " + r.answerOptionText}</p> :
+														<p key={b}>{alphabet[b] + ". " + r.answerOptionText}</p>
+												)
+											}
+										)}
+									</div>)
+								})}
+							</div>
+						</> : <Spinner/>}
+
 				</Modal>
 
 				<img className="vector1" src={vector1} alt="design"/>

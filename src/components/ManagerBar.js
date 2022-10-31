@@ -58,8 +58,7 @@ export default function ManagerBar() {
 								<img src={Flash} id={location.pathname === '/merchant/updates' ? 'green' : ''}
 									 alt=""/>
 								<p className={"linkerText"}
-								   id={location.pathname === '/merchant/updates' ? 'green' : ''}>Instant
-									Updates</p>
+								   id={location.pathname === '/merchant/updates' ? 'green' : ''}>Daily Notes</p>
 							</div>
 						</Nav.Link>
 						<Nav.Link href="/merchant/upload">

@@ -1,4 +1,4 @@
-import {IQuestion, LiveQuestion, Question} from "./Question";
+import {ILiveQuestion, IQuestion, LiveQuestion, Question} from "./Question";
 
 export class Quiz implements IQuiz {
 
@@ -11,9 +11,10 @@ export class Quiz implements IQuiz {
 		this.topicId = topicId;
 		this.questions = questions;
 	}
+
 }
 
-export class LiveQuiz implements IQuiz {
+export class LiveQuiz implements ILiveQuiz {
 
 	public name: string;
 	quizId: string;
@@ -21,21 +22,35 @@ export class LiveQuiz implements IQuiz {
 	topicId: string;
 	numQuestions: number;
 	totalScore: number;
-	questions: LiveQuestion[];
+	questions: ILiveQuestion[];
 
-	constructor(name: string, quizId: string, restaurantId: string, topicId: string, numQuestions: number, totalScore: number, questions: LiveQuestion[]) {
-		this.name = name;
-		this.quizId = quizId;
-		this.restaurantId = restaurantId;
-		this.topicId = topicId;
-		this.numQuestions = numQuestions;
-		this.totalScore = totalScore;
-		this.questions = questions;
+	constructor(private data: ILiveQuiz) {
+		this.name = data.name;
+		this.quizId = data.quizId;
+		this.restaurantId = data.restaurantId;
+		this.topicId = data.topicId;
+		this.numQuestions = data.numQuestions;
+		this.totalScore = data.totalScore;
+		this.questions = data.questions;
 	}
 
 	public toEditable(): Quiz {
-		return new Quiz(this.name, this.topicId, this.questions.map((a) => a.toQuestion()));
+		return new Quiz(this.name, this.topicId, this.questions.map((a) => {
+			return new LiveQuestion(a).toQuestion();//TODO lets skip the middleman at some point
+		}));
 	}
+}
+
+export interface ILiveQuiz {
+
+	name: string;
+	quizId: string;
+	restaurantId: string;
+	topicId: string;
+	numQuestions: number;
+	totalScore: number;
+	questions: ILiveQuestion[];
+
 }
 
 export interface IQuiz {

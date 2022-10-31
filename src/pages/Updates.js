@@ -5,13 +5,13 @@ import vector3 from '../assets/vector3.png'
 import '../App.scss'
 import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
 import ManagerBar from "../components/ManagerBar";
-import {Alert, Button, Textarea, TickIcon} from "evergreen-ui";
+import {Alert, Button, Spinner, Textarea, TickIcon} from "evergreen-ui";
 import API from "../api";
-import TopicInfo from "../api/TopicInfo";
 
 export default function Updates() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
 	const [uploaded, setUploaded] = useState();
+	const [uploading, setUploading] = useState();
 
 	const [text, setText] = useState();
 
@@ -29,6 +29,7 @@ export default function Updates() {
 	}
 
 	const postNode = async () => {
+		setUploading(true)
 		setUploaded(false)
 		console.log(profile.restaurantId)
 
@@ -48,6 +49,7 @@ export default function Updates() {
 			body: JSON.stringify({note: ht})
 		}).catch((c) => console.log(c))
 		await delay(3000)
+		setUploading(false)
 		setUploaded(true)
 	}
 
@@ -64,7 +66,7 @@ export default function Updates() {
 
 			<div className="App">
 				<div className={'coloredHeading'}>
-					<h1>Instant Updates</h1>
+					<h1>Daily Notes</h1>
 				</div>
 
 				<div className="content">
@@ -72,6 +74,7 @@ export default function Updates() {
 						<h3>Enter any new or urgent training updates here!</h3>
 
 						{uploaded && <Alert intent={'success'} title={'Message uploaded successfully!'}/>}
+						{uploading && <center><Spinner/><strong>Uploading note...</strong></center>}
 
 						<div style={{
 							display: 'flex',
@@ -84,7 +87,7 @@ export default function Updates() {
 						}}>
 							<p>Enter each point on a new line.</p>
 
-							<Textarea name="textarea-1" placeholder="Type something here" minHeight={'50vh'}
+							<Textarea name="textarea-1" placeholder="Type something here" minHeight={'40vh'}
 									  style={{marginBottom: 20}} value={text}
 									  onChange={(e) => setText(e.target.value)}/>
 

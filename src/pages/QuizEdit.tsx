@@ -15,6 +15,7 @@ import {IQuiz, LiveQuiz, Quiz} from "../api/quiz/Quiz";
 import TopicInfo from "../api/TopicInfo";
 import {Question} from "../api/quiz/Question";
 import {QuizConnection} from "../api/quiz/QuizConnection";
+import QuizFieldEdit from "../components/quiz/QuizFieldEdit";
 
 type ConfirmationProps = {
 	quiz: IQuiz;
@@ -93,74 +94,74 @@ export default function QuizEdit() {
 		console.log("LIVE DATA")
 		console.log(liveQuizData)
 		setUploading(true)
-	/*	if (liveQuizData !== null && liveQuizData !== undefined) {
-			const result = QuizUploader.compareAndBuildData(liveQuizData, list)
-			await fetch(`${API}/updateQuestions/` + liveQuizData.quizId, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(result)
-			})
-		} else {
-			await fetch(`${API}/addQuizByRestTopic?restaurantId=${profile.restaurantId}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					restaurantId: profile.restaurantId,
-					topicId: searchParams.get('id'),
-					name: decodeURIComponent(searchParams.get('n')) + 'Quiz',
-					totalQuestions: list.length,
-					totalScore: list.length
-				})
-			}).then(e => e.json()).then(async r => {
-				console.log('RESULT FROM ADDING')
-				console.log(r)
-				let quizId = r.quiz_id
-
-				let totalData = []
-
-				list.forEach((ele) => {
-					let options = []
-					ele.choices.forEach((cho) => options.push({
-						answerOptionText: cho.text,
-						isCorrect: cho?.isCorrect ?? false
-					}))
-
-					if (options.length !== 0) {
-						totalData.push({
-							questionText: ele.title,
-							answerOptions: options
-						})
-					}
-				});
-
-				console.log('CREATE QUESTIONS TO BE UPLOADED')
-				console.log(list)
-				console.log("TOTAL DATA")
-				console.log(totalData)
-
-				await fetch(`${API}/createAllQuestions/${quizId}`, {
+		/*	if (liveQuizData !== null && liveQuizData !== undefined) {
+				const result = QuizUploader.compareAndBuildData(liveQuizData, list)
+				await fetch(`${API}/updateQuestions/` + liveQuizData.quizId, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({"questions": totalData})
-				}).then(e => e.json()).then(r => {
-					console.log({"questions": totalData})
+					body: JSON.stringify(result)
+				})
+			} else {
+				await fetch(`${API}/addQuizByRestTopic?restaurantId=${profile.restaurantId}`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						restaurantId: profile.restaurantId,
+						topicId: searchParams.get('id'),
+						name: decodeURIComponent(searchParams.get('n')) + 'Quiz',
+						totalQuestions: list.length,
+						totalScore: list.length
+					})
+				}).then(e => e.json()).then(async r => {
+					console.log('RESULT FROM ADDING')
 					console.log(r)
-					// alert("Quiz was uploaded!")
+					let quizId = r.quiz_id
+
+					let totalData = []
+
+					list.forEach((ele) => {
+						let options = []
+						ele.choices.forEach((cho) => options.push({
+							answerOptionText: cho.text,
+							isCorrect: cho?.isCorrect ?? false
+						}))
+
+						if (options.length !== 0) {
+							totalData.push({
+								questionText: ele.title,
+								answerOptions: options
+							})
+						}
+					});
+
+					console.log('CREATE QUESTIONS TO BE UPLOADED')
+					console.log(list)
+					console.log("TOTAL DATA")
+					console.log(totalData)
+
+					await fetch(`${API}/createAllQuestions/${quizId}`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({"questions": totalData})
+					}).then(e => e.json()).then(r => {
+						console.log({"questions": totalData})
+						console.log(r)
+						// alert("Quiz was uploaded!")
+					}).catch(err => {
+						console.log("error")
+						console.log(err)
+					})
+
 				}).catch(err => {
 					console.log("error")
-					console.log(err)
 				})
-
-			}).catch(err => {
-				console.log("error")
-			})
-		}*/
+			}*/
 		loadQuizData();
 		setUploading(false)
 		setModalShow(false)
@@ -195,11 +196,7 @@ export default function QuizEdit() {
 						<EditList quiz={quiz} setSelectedId={setSelectedID} selectedId={selectedID}/>
 
 						<div className="viewArea">
-							<QuizFieldEditor
-								setSelectedID={setSelectedID}
-								selectedID={selectedID}
-								list={quiz.questions}
-								setList={(a: Question[]) => {quiz.questions = a}}/>
+							<QuizFieldEdit quiz={quiz} selectedId={selectedID} setSelectId={setSelectedID}/>
 						</div>
 
 						<div className={"changesArea"}>

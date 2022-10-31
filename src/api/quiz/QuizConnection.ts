@@ -1,11 +1,11 @@
 import TopicInfo from "../TopicInfo";
-import {LiveQuiz, Quiz} from "./Quiz";
+import {ILiveQuiz, LiveQuiz, Quiz} from "./Quiz";
 import API from "../../api";
 
 export class QuizConnection {
 
 	static async loadQuizByTopic(topic: TopicInfo): Promise<LiveQuiz> {
-		let quiz: LiveQuiz = null;
+		let quiz: ILiveQuiz = null;
 		await fetch(`${API}/getQuizByRestTopic?` + new URLSearchParams({
 			restaurantId: (topic.restaurant_id.toString()),
 			topicId: topic.topicId.toString()
@@ -14,7 +14,7 @@ export class QuizConnection {
 		}).then(e => e.json()).then(data => {
 				console.log("QUIZ DATA IS HERE")
 				console.log(data)
-				if (!(data?.status === 404 || data?.status === 500 || data?.status === 400)) {
+				if (data?.status !== 404 && data?.status !== 500 && data?.status !== 400) {
 					quiz = JSON.parse(JSON.stringify(data));
 				}
 			}
@@ -22,7 +22,7 @@ export class QuizConnection {
 			console.log("Quiz loading error")
 			console.log("ERROR: " + e)
 		})
-		return quiz;
+		return new LiveQuiz(quiz);
 	}
 
 	static compareAndBuildData(live: LiveQuiz, edited: Quiz) {

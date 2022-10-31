@@ -1,10 +1,14 @@
+import {Dispatch} from "react";
+
 export class Answer implements IAnswer {
 
 	isCorrect: boolean;
 	answerOptionText: string;
+	choiceId: number;
 
-	constructor(answerOptionText: string, isCorrect: boolean) {
+	constructor(answerOptionText: string, isCorrect: boolean, choiceId: number) {
 		this.isCorrect = isCorrect;
+		this.choiceId = choiceId;
 		this.answerOptionText = answerOptionText;
 	}
 
