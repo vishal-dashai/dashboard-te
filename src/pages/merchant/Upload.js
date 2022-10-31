@@ -26,7 +26,7 @@ export default function Upload() {
 		await fetch('https://new-customer-onboarding.herokuapp.com/api/v1/upload?' + new URLSearchParams({
 			name: profile.name,
 			email: profile.email,
-			restaurantName: profile.currentPosition
+			restaurantName: profile.restaurantName
 		}), {
 			method: 'POST',
 			cache: 'no-cache',

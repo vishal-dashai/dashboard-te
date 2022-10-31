@@ -8,6 +8,7 @@ export default class User {
 			this.profileImageURL = json.profileImageURL;
 			this.restaurantId = json.restaurantId;
 			this.userId = json.userId;
+			this.restaurantName = json.restaurantName;
 		}
 	}
 }
