@@ -335,7 +335,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 26px 20px;
+  padding: 20px 20px;
   gap: 5px;
   height: 42px;
   background: linear-gradient(180deg, #44A8FF 0%, #44A8FF 0.01%, #448FFF 100%);
@@ -590,4 +590,81 @@ img#purple {
   line-height: 20px;
   text-align: center;
   color: #FFFFFF;
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  justify-content: center;
+  gap: 5px;
+  transition: 0.2s;
+}
+
+.nextButton:hover {
+  background: #565a62;
+}
+
+#warning {
+  background: #c24063;
+}
+
+#warning:hover {
+  background: #d05e7d;
+}
+
+.prevButton {
+  padding: 18px 14px;
+  width: 213px;
+  height: 56px;
+  background: #E7EAEF;
+  border-radius: 14px;
+  font-family: 'Raleway', serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 20px;
+  text-align: center;
+  color: #151F28;
+  border: none;
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  justify-content: center;
+  gap: 5px;
+  transition: 0.2s;
+}
+
+.prevButton:hover {
+  background: #b4b4b4;
+
+}
+
+
+.coloredHeading {
+  background-image: url("assets/img/Frame 1.png");
+  height: 200px;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-position: center;
+  background-size: cover;
+
+  h1 {
+	font-family: 'Raleway', serif;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 64px;
+	line-height: 75px;
+	font-feature-settings: 'pnum' on, 'lnum' on;
+	color: #FFFFFF;
+  }
+}
+
+
+.centerContent {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 10px;
+
 }

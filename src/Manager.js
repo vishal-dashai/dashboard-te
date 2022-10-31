@@ -1,16 +1,13 @@
 import {AuthenticatedUserContext} from "./provider/AuthenticatedUserProvider";
-import {Navigate, Outlet} from "react-router";
-import React, {useContext, useEffect, useState} from "react";
-import Login from "./pages/Login";
+import {Outlet} from "react-router";
+import React, {useContext, useEffect} from "react";
 import firebase from "firebase/compat/app";
-import NavigationBar from "./components/NavigationBar";
-import {useLocation} from 'react-router-dom'
+import API from "./api";
+import User from "./api/User";
 
 export default function Manager() {
-	const {user, setUser} = useContext(AuthenticatedUserContext);
-	/*const location = useLocation();
-	const [isBar, setIsBar] = useState(false);
-*/
+	const {user, setUser, setProfile} = useContext(AuthenticatedUserContext);
+
 	useEffect(() => {
 		const unsubscribeAuth = firebase.auth().onAuthStateChanged(async authenticatedUser => {
 			try {
@@ -32,32 +29,25 @@ export default function Manager() {
 	}, []);
 
 	useEffect(() => {
-		console.log("BBBBBBBBBBB")
-		console.log(user)
-		if (user === null) {
-			// <Navigate to='/login' replace state={{from: location}}/>
+		async function fetchData() {
+			console.log("BBBBBBBBBBB")
+			console.log(user)
+			if (user !== null) {
+				await fetch(`${API}/getUserProfileInfo/` + user.uid, {
+					method: 'GET',
+				}).then(e => e.json()).then(data => {
+					const theUser = new User(data);
+					setProfile(theUser);
+				}).catch((e) => {
+					console.log(e)
+				})
+			}
 		}
 
+		fetchData()
 	}, [user])
-
-/*	useEffect(() => {
-		console.log(location)
-		switch (location.pathname) {
-			default:
-				setIsBar(false);
-				break;
-			case '/landing':
-				setIsBar(true)
-				break;
-		}
-
-	}, [location])*/
 
 	return (
 		<Outlet/>
-/*		<div>
-			{/!*{isBar && <NavigationBar/>}*!/}
-			<Outlet/>
-		</div>*/
 	)
 }

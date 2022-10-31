@@ -5,8 +5,21 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "outFile": "../../built/local/tsc.js",
-    "sourceMap": true
+    "sourceMap": true,
+    "jsx": "react",
+    "moduleResolution": "Node16",
+
+
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }
