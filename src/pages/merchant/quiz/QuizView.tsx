@@ -13,64 +13,40 @@ import EditIcon from '../../../assets/svg/edit-2.svg';
 import {Modal} from "react-bootstrap";
 import {alphabet} from "../../../components/quiz/QuizFieldEditor";
 import {useMediaQuery} from "react-responsive";
+import {LiveQuiz} from "../../../api/quiz/Quiz";
+import {QuizConnection} from "../../../api/quiz/QuizConnection";
+// import {QuizConnection} from "../../../api/quiz/QuizConnection";
+// import {QuizConnection} from "../../../api/quiz/QuizConnection";
+// import loadQuizByTopic = QuizConnection.loadQuizByTopic;
 
-export default function QuizViewer() {
+export default function QuizView() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
-	const [topics, setTopics] = useState([]);
-	const [viewing, setViewing] = useState();
+	const [topics, setTopics] = useState<Array<TopicInfo>>([]);
+	const [viewing, setViewing] = useState<LiveQuiz>();
 	const [show, setShow] = useState(false);
 
 	const handleClose = () => {
 		setShow(false)
 		setViewing(null)
 	};
-	const handleShow = async (topic) => {
+
+	const handleShow = async (topic: TopicInfo) => {
 		setShow(true)
-		await loadQuiz(topic).then((r) => {
+		await QuizConnection.loadQuizByTopic(topic).then((r: LiveQuiz) => {
 			setViewing(r)
 			console.log(viewing)
 		});
 	};
 
 	const loadTopics = async () => {
-		let tops = []
+		let tops: TopicInfo[] = []
 		await fetch(`${API}/getAllTopics/${profile.restaurantId}`).then(e => e.json()).then(data => {
 			for (let i in data) {
-				let r = data[i];
-				if(r.name !== 'daily notes') {
-					let top = new TopicInfo(r.name, r.restaurant_id, r.topicId);
-					tops.push(top);
-				}
+				let top: TopicInfo = JSON.parse(JSON.stringify(data[i]));
+				tops.push(top);
 			}
 		});
 		setTopics(tops)
-	}
-
-	const loadQuiz = async (topic) => {
-		let dat = null;
-		await fetch(`${API}/getQuizByRestTopic?` + new URLSearchParams({
-			restaurantId: topic.restaurantID,
-			topicId: topic.topicID
-		}), {
-			method: 'GET',
-		}).then(e => e.json()).then(data => {
-				console.log("QUIZ DATA IS HERE")
-				console.log(data)
-				if (data?.status === 404 || data?.status === 500 || data?.status === 400) {
-					//setQuiz(null)
-					// alert("No quiz for this topic!")
-				} else {
-					console.log(data)
-					dat = data;
-				}
-				// let quiz = new LiveQuiz();
-
-			}
-		).catch(e => {
-			console.log("Quiz error")
-			console.log("ERROR: " + e)
-		})
-		return dat;
 	}
 
 	useEffect(() => {
@@ -116,7 +92,7 @@ export default function QuizViewer() {
 
 									{!isSmaller ?
 										<button className={"fancyButtonFull"} onClick={() => {
-											window.open('quizeditor?id=' + a.topicID + '&n=' + encodeURIComponent(a.name), '_self')
+											window.open('quizeditor?id=' + a.topicId + '&n=' + encodeURIComponent(a.name), '_self')
 										}}>
 											{"Edit Quiz"}
 											<img src={EditIcon} alt=""/>

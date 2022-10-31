@@ -5,19 +5,26 @@ import vector3 from '../assets/vector3.png'
 import '../App.scss'
 import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
 import '../../src/assets/css/quiz_editor.scss'
-import EditableList from "../components/quiz/EditableList";
 import QuizFieldEditor from "../components/quiz/QuizFieldEditor";
 import ManagerBar from "../components/ManagerBar";
-import API from "../api";
 import {ChevronUpIcon, CrossIcon, Icon, Spinner, TickIcon} from "evergreen-ui";
 import {useSearchParams} from "react-router-dom";
 import {Modal} from "react-bootstrap";
-import QuizUploader from "../api/quiz/QuizUploader";
 import {EditList} from "../components/quiz/EditList";
+import {IQuiz, LiveQuiz, Quiz} from "../api/quiz/Quiz";
+import TopicInfo from "../api/TopicInfo";
+import {Question} from "../api/quiz/Question";
+import {QuizConnection} from "../api/quiz/QuizConnection";
 
-// import EditList from "src/components/quiz/EditList.tsx";
+type ConfirmationProps = {
+	quiz: IQuiz;
+	show: boolean;
+	onHide: Function;
+	publish: Function;
+	isUploading: boolean;
+};
 
-function ConfirmationPopup({show, onHide, publish, quizName, isUploading}) {
+function ConfirmationPopup({show, onHide, publish, quiz, isUploading}: ConfirmationProps) {
 	return (
 		<Modal
 			show={show}
@@ -31,7 +38,7 @@ function ConfirmationPopup({show, onHide, publish, quizName, isUploading}) {
 		>
 			{!isUploading ? <> <Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					Publish {quizName}?
+					Publish {quiz.name}?
 				</Modal.Title>
 			</Modal.Header>
 				<Modal.Body>
@@ -64,68 +71,29 @@ function ConfirmationPopup({show, onHide, publish, quizName, isUploading}) {
 	);
 }
 
-export default function QuizEditor() {
+export default function QuizEdit() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
-	const [selectedID, setSelectedID] = useState(0)
-	const [list, setList] = useState([]);
-	const [quizName, setQuizName] = useState('');
+
 	const [modalShow, setModalShow] = React.useState(false);
+
 	const [searchParams] = useSearchParams();
-	const [liveQuizData, setLiveQuizData] = useState();
+
+	const [selectedID, setSelectedID] = useState(0)
+	const [liveQuizData, setLiveQuizData] = useState<LiveQuiz>(null);
+	const [quiz, setEditingQuiz] = useState<Quiz>(null);
 
 	const [loading, setLoading] = useState(true);
 	const [uploading, setUploading] = useState(false);
 
-	const loadQuiz = async () => {
-		setLoading(true)
-		await fetch(`${API}/getQuizByRestTopic?` + new URLSearchParams({
-			restaurantId: profile.restaurantId,
-			topicId: searchParams.get('id')
-		}), {
-			method: 'GET',
-		}).then(e => e.json()).then(data => {
-				console.log("QUIZ DATA IS HERE")
-				console.log(data)
-				if (data?.status === 404 || data?.status === 500 || data?.status === 400) {
-					//setQuiz(null)
-					// alert("No quiz for this topic!")
-				} else {
-					console.log(data)
-					setQuizName(data.name)
-					setLiveQuizData(data)
-
-					let quest = [];
-					data.questions.forEach((ele) => {
-						let i = 0;
-						let opts = [];
-						ele.answerOptions.forEach((opt) => {
-							opts.push({
-								text: opt.answerOptionText,
-								choiceID: ++i,
-								isCorrect: opt.answerOptionId === ele.correctAnswerId
-							})
-						})
-						quest.push({title: ele.questionText, choices: opts, questionId: ele.questionId})
-					})
-					setList(quest);
-				}
-			}
-		).catch(e => {
-			console.log("Quiz error")
-			console.log("ERROR: " + e)
-		})
-		setLoading(false)
-	}
-
 	const publish = async () => {
 		console.log("DATA IS AS FOLLOWS")
-		console.log(quizName)
-		console.log(list)
+		console.log(quiz.name)
+		console.log(quiz.questions)
 
 		console.log("LIVE DATA")
 		console.log(liveQuizData)
 		setUploading(true)
-		if (liveQuizData !== null && liveQuizData !== undefined) {
+	/*	if (liveQuizData !== null && liveQuizData !== undefined) {
 			const result = QuizUploader.compareAndBuildData(liveQuizData, list)
 			await fetch(`${API}/updateQuestions/` + liveQuizData.quizId, {
 				method: 'POST',
@@ -192,18 +160,28 @@ export default function QuizEditor() {
 			}).catch(err => {
 				console.log("error")
 			})
-		}
-		await loadQuiz()
+		}*/
+		loadQuizData();
 		setUploading(false)
 		setModalShow(false)
+	}
+
+	const loadQuizData = async () => {
+		setLoading(true)
+		QuizConnection.loadQuizByTopic(new TopicInfo(searchParams.get('n'), profile.restaurantId, searchParams.get('id'))).then((a) => {
+			setLiveQuizData(a);
+			setEditingQuiz(a.toEditable());
+			setLoading(false)
+		})
 	}
 
 	useEffect(() => {
 		console.log('THE USER')
 		console.log(user)
 		console.log(profile)
-		if (user !== null && profile !== null)
-			loadQuiz()
+		if (user !== null && profile !== null) {
+			loadQuizData();
+		}
 		console.log("ID IS ")
 		console.log(searchParams.get('id'))
 	}, [user, profile])
@@ -214,23 +192,14 @@ export default function QuizEditor() {
 			{!loading ?
 				<>
 					<div className="quizEditor">
-						<EditableList
-							setSelectedID={setSelectedID}
-							selectedID={selectedID}
-							list={list}
-							setList={setList}
-							quizName={quizName}
-							setQuizName={setQuizName}
-						/>
-
-						{/*<EditList quiz={null} setSelectedId={setSelectedID} selectedId={selectedID}/>*/}
+						<EditList quiz={quiz} setSelectedId={setSelectedID} selectedId={selectedID}/>
 
 						<div className="viewArea">
 							<QuizFieldEditor
 								setSelectedID={setSelectedID}
 								selectedID={selectedID}
-								list={list}
-								setList={setList}/>
+								list={quiz.questions}
+								setList={(a: Question[]) => {quiz.questions = a}}/>
 						</div>
 
 						<div className={"changesArea"}>
@@ -249,7 +218,7 @@ export default function QuizEditor() {
 						<img className="vector3" src={vector3} alt="design"/>
 					</div>
 
-					<ConfirmationPopup show={modalShow} onHide={() => setModalShow(false)} quizName={quizName}
+					<ConfirmationPopup show={modalShow} onHide={() => setModalShow(false)} quiz={quiz}
 									   publish={publish} isUploading={uploading}/>
 				</> :
 				<div className={'centerContent'}><h2>Loading Quiz</h2>

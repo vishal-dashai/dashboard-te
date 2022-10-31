@@ -1,13 +1,13 @@
-import {IQuestion} from "./Question";
+import {IQuestion, LiveQuestion, Question} from "./Question";
 
 export class Quiz implements IQuiz {
 
-	title: string;
+	public name: string;
 	topicId: string;
-	questions: IQuestion[];
+	questions: Question[];
 
-	constructor(title: string, topicId: string, questions: IQuestion[]) {
-		this.title = title;
+	constructor(name: string, topicId: string, questions: Question[]) {
+		this.name = name;
 		this.topicId = topicId;
 		this.questions = questions;
 	}
@@ -15,16 +15,16 @@ export class Quiz implements IQuiz {
 
 export class LiveQuiz implements IQuiz {
 
-	title: string;
+	public name: string;
 	quizId: string;
 	restaurantId: string;
 	topicId: string;
 	numQuestions: number;
 	totalScore: number;
-	questions: IQuestion[];
+	questions: LiveQuestion[];
 
-	constructor(title: string, quizId: string, restaurantId: string, topicId: string, numQuestions: number, totalScore: number, questions: IQuestion[]) {
-		this.title = title;
+	constructor(name: string, quizId: string, restaurantId: string, topicId: string, numQuestions: number, totalScore: number, questions: LiveQuestion[]) {
+		this.name = name;
 		this.quizId = quizId;
 		this.restaurantId = restaurantId;
 		this.topicId = topicId;
@@ -32,11 +32,15 @@ export class LiveQuiz implements IQuiz {
 		this.totalScore = totalScore;
 		this.questions = questions;
 	}
+
+	public toEditable(): Quiz {
+		return new Quiz(this.name, this.topicId, this.questions.map((a) => a.toQuestion()));
+	}
 }
 
 export interface IQuiz {
 
-	title: string;
+	name: string;
 	questions: IQuestion[];
 
 }

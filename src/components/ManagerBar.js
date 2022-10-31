@@ -19,8 +19,14 @@ export default function ManagerBar() {
 	return (
 		<Navbar collapseOnSelect expand="xxl">
 			<Container>
-				<Navbar.Brand href="home">
-					<Nav.Link href="home"><img
+				<Navbar.Brand>
+					{/*<Nav.Link href="home"><img
+						src={logo}
+						width="50"
+						height="50"
+						className="d-inline-block align-top"
+						alt=''/></Nav.Link>*/}
+					<Nav.Link><img
 						src={logo}
 						width="50"
 						height="50"

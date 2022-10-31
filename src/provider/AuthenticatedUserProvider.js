@@ -2,7 +2,7 @@ import React, {useState, createContext} from 'react';
 import User from "../api/User";
 import API from "../api";
 
-export const AuthenticatedUserContext = createContext({});
+export const AuthenticatedUserContext = createContext({user: null, profile: null});
 
 export const AuthenticatedUserProvider = ({children}) => {
 	const [user, setUser] = useState(null);

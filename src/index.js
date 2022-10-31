@@ -21,6 +21,7 @@ import Forgot from "./pages/Forgot";
 import QuizViewer from "./pages/merchant/quiz/QuizViewer";
 import './App.scss';
 import Upload from "./pages/merchant/Upload";
+import QuizView from "./pages/merchant/quiz/QuizView";
 
 const router = createBrowserRouter([
 	{

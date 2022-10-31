@@ -1,13 +1,11 @@
 export class Answer implements IAnswer {
 
 	isCorrect: boolean;
-	text: string;
-	id: string;
+	answerOptionText: string;
 
-	constructor(text: string, isCorrect: boolean, id: string) {
+	constructor(answerOptionText: string, isCorrect: boolean) {
 		this.isCorrect = isCorrect;
-		this.text = text;
-		this.id = id;
+		this.answerOptionText = answerOptionText;
 	}
 
 }
@@ -15,19 +13,19 @@ export class Answer implements IAnswer {
 export class LiveAnswer implements IAnswer {
 
 	isCorrect: boolean;
-	text: string;
-	optionId: string;
+	answerOptionText: string;
+	answerOptionId: string;
 
-	constructor(text: string, isCorrect: boolean, optionId: string) {
+	constructor(answerOptionText: string, isCorrect: boolean, optionId: string) {
 		this.isCorrect = isCorrect;
-		this.text = text;
-		this.optionId = optionId;
+		this.answerOptionText = answerOptionText;
+		this.answerOptionId = optionId;
 	}
 }
 
 export interface IAnswer {
 
-	text: string;
+	answerOptionText: string;
 	isCorrect: boolean;
 
 }
