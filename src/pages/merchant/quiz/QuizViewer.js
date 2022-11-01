@@ -31,7 +31,9 @@ export default function QuizViewer() {
 		setShow(true)
 		await loadQuiz(topic).then((r) => {
 			setViewing(r)
-			if (r?.status !== 200) {
+			console.log('status is ')
+			console.log(r?.status)
+			if (r?.status && r?.status !== 200) {
 				setNothingThere(true)
 				setViewing(null)
 			}
@@ -58,8 +60,8 @@ export default function QuizViewer() {
 	const loadQuiz = async (topic) => {
 		let dat = null;
 		await fetch(`${API}/getQuizByRestTopic?` + new URLSearchParams({
-			restaurantId: topic.restaurantID,
-			topicId: topic.topicID
+			restaurantId: topic.restaurant_id,
+			topicId: topic.topicId
 		}), {
 			method: 'GET',
 		}).then(e => e.json()).then(data => {
@@ -68,6 +70,7 @@ export default function QuizViewer() {
 				if (data?.status === 404 || data?.status === 500 || data?.status === 400) {
 					//setQuiz(null)
 					// alert("No quiz for this topic!")
+					dat = {status: 400}
 				} else {
 					console.log(data)
 					dat = data;
@@ -138,7 +141,14 @@ export default function QuizViewer() {
 				</div>
 
 				<Modal show={show} onHide={handleClose} dialogClassName={'ex'}>
-					{nothingThere ? <h2>No quiz here yet! Close this pop-up and click 'Edit Quiz' to add one!</h2> :
+					{nothingThere ? <><h2>No quiz here yet! Close this pop-up and click 'Edit Quiz' to add one!</h2>
+							<button className={"fancyButtonPrev"} onClick={() => {
+								handleClose()
+							}}>
+								Close
+								{<Icon icon={CrossIcon} height={20} width={20} marginTop={3} marginLeft={3}/>}
+							</button>
+						</> :
 						viewing ? <>
 							<Modal.Header>
 								<Modal.Title>{viewing.name}</Modal.Title>
@@ -165,7 +175,7 @@ export default function QuizViewer() {
 									</div>)
 								})}
 							</div>
-						</> : <Spinner/>}
+						</> : <><Spinner/></>}
 
 				</Modal>
 
