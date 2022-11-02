@@ -600,25 +600,47 @@ img#purple {
 
   &:hover {
 	background: #565a62;
+  }
 
+  &#warning {
+	background: #c24063;
+
+	&:hover {
+	  background: #d05e7d;
+	}
+  }
+
+  &#go {
+	background: #52BD95;
+
+	&:hover {
+	  background: #419676;
+	}
+  }
+
+  &#blue {
+	background: #44A8FF;
+
+	&:hover {
+	  background: #2a91ec;
+	}
+  }
+
+  &#prev {
+	background: #E7EAEF;
+	color: #151F28;
+
+	&:hover:not(&:disabled) {
+	  background: #b4b4b4;
+	}
+
+	&:disabled{
+	  color: #5b5b5d;
+	  cursor: not-allowed;
+	}
   }
 }
 
-#warning {
-  background: #c24063;
-
-  &:hover {
-	background: #d05e7d;
-  }
-}
-
-#go {
-  background: #52BD95;
-
-  &:hover {
-	background: #419676;
-  }
-}
 
 .prevButton {
   padding: 18px 14px;

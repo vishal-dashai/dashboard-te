@@ -63,6 +63,8 @@ hr.solid {
   align-items: center;
   width: 240px;
   transition: 0.2ms;
+  cursor: pointer;
+
   &:hover {
 	box-shadow: 0px 10px 35px -3px rgba(22, 23, 28, 0.3);
   }
@@ -115,5 +117,7 @@ hr.solid {
   padding-left: 20px;
   padding-top: 5px;
   flex: 1 1 auto;
+  height: 400px;
+  overflow-y: auto;
 }
 

@@ -105,7 +105,7 @@ export const DeletePopup = ({
 					}}
 				>
 					No, cancel
-					{<Icon icon={ChevronLeftIcon}/>}
+					{<Icon icon={ChevronLeftIcon} height={20} width={20} marginTop={3}/>}
 				</button>
 
 				<button
@@ -118,7 +118,7 @@ export const DeletePopup = ({
 					}}
 				>
 					Yes, delete
-					{<Icon icon={CrossIcon}/>}
+					{<Icon icon={CrossIcon} height={20} width={20} marginTop={3}/>}
 				</button>
 			</Modal.Footer>
 		</Modal>

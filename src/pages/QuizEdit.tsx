@@ -47,24 +47,26 @@ function ConfirmationPopup({show, onHide, publish, quiz, isUploading}: Confirmat
 				</Modal.Body>
 				<Modal.Footer>
 					<button
-						className="prevButton"
+						className="nextButton"
+						id={'prev'}
 						onClick={() => {
 							onHide()
 						}}
 					>
 						No, cancel
-						{<Icon icon={CrossIcon}/>}
+						{<Icon icon={CrossIcon} height={20} width={20} marginTop={3}/>}
 					</button>
 
 					<button
 						className="nextButton"
+						id={'go'}
 						onClick={() => {
 							// onHide()
 							publish()
 						}}
 					>
 						Yes, publish quiz
-						{<Icon icon={TickIcon}/>}
+						{<Icon icon={TickIcon} height={20} width={20} marginTop={3}/>}
 					</button>
 				</Modal.Footer></> : <div className={'centerContent'}><h2>Publishing changes</h2>
 				<Spinner/></div>}
@@ -223,14 +225,14 @@ export default function QuizEdit() {
 						</div>
 
 						<div className={"changesArea"}>
-							<button className={"fancyButtonFull"} onClick={() => {
+							<button className={"nextButton"} id={'blue'} onClick={() => {
 								// window.location.href = "onboard";
 								setModalShow(true)
 							}}>
 								{"Publish Quiz"}
 								{<Icon icon={ChevronUpIcon} height={20} width={20} marginTop={3}/>}
 							</button>
-
+							{/*<p>Autosaved 20 minutes ago...</p>*/}
 						</div>
 
 						<img className="vector1" src={vector1} alt="design"/>
