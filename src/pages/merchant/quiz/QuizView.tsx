@@ -68,7 +68,8 @@ export default function QuizView() {
 									display: 'flex',
 									flexDirection: 'row',
 									alignItems: 'center',
-									gap: 20
+									gap: 20,
+									width: '100%'
 								}}>
 									<img src={TaskSquare} alt=""/>
 									<h3>{a.name}</h3>
