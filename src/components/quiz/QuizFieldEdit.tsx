@@ -1,36 +1,29 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
 import './quiz_field_editor.scss';
-import {
-	AddIcon,
-	Button,
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	ChevronUpIcon,
-	CrossIcon,
-	Icon,
-	TickIcon
-} from "evergreen-ui";
+import {AddIcon, Button, ChevronLeftIcon, ChevronRightIcon, CrossIcon, Icon, TickIcon} from "evergreen-ui";
 import Bubble from "../elements/Bubble";
 import {Quiz} from "../../api/quiz/Quiz";
 import {Answer} from "../../api/quiz/Answer";
 import {Question} from "../../api/quiz/Question";
+import {Alert} from "react-bootstrap";
 
 export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 type ChoicesProps = {
 	quiz: Quiz;
-	setQuiz: Dispatch<SetStateAction<Quiz>>;
+	updateQuiz: Function;
 	selectedId: number;
 };
 
 type QuizFieldEditProps = {
 	quiz: Quiz;
-	setQuiz: Dispatch<SetStateAction<Quiz>>;
+	updateQuiz: Function;
 	selectedId: number;
 	setSelectId: Dispatch<SetStateAction<number>>;
+	errors: { message: string, errorQuestion: Question };
 };
 
-function Choices({quiz, selectedId, setQuiz}: ChoicesProps) {
+function Choices({quiz, selectedId, updateQuiz}: ChoicesProps) {
 	const [nextID, setNextID] = useState(quiz.questions[selectedId].answerOptions.length)
 
 	return (
@@ -48,7 +41,7 @@ function Choices({quiz, selectedId, setQuiz}: ChoicesProps) {
 									  value={ele.answerOptionText} onChange={(event) => {
 
 								quiz.questions[selectedId].answerOptions[idx].answerOptionText = event.target.value
-								setQuiz(q => ({...q}))
+								updateQuiz()
 							}}/>
 							<Icon icon={CrossIcon}
 								  onClick={() => {
@@ -57,7 +50,7 @@ function Choices({quiz, selectedId, setQuiz}: ChoicesProps) {
 										  a.choiceId !== quiz.questions[selectedId].answerOptions[idx].choiceId
 									  )
 
-									  setQuiz(q => ({...q}))
+									  updateQuiz()
 								  }
 								  }/>
 						</div>
@@ -66,7 +59,7 @@ function Choices({quiz, selectedId, setQuiz}: ChoicesProps) {
 							quiz.questions[selectedId].answerOptions.forEach((a) => {
 								a.isCorrect = a.choiceId === ele.choiceId
 							})
-							setQuiz(q => ({...q}))
+							updateQuiz()
 						}}>
 							{ele.isCorrect && <Icon icon={TickIcon} style={{
 								color: 'white',
@@ -84,7 +77,7 @@ function Choices({quiz, selectedId, setQuiz}: ChoicesProps) {
 					onClick={() => {
 						setNextID(a => a + 1)
 						quiz.questions[selectedId].answerOptions.push(new Answer("", quiz.questions[selectedId].answerOptions.length === 0, nextID))
-						setQuiz(q => ({...q}));
+						updateQuiz()
 					}}
 					size={'large'}
 			>
@@ -94,10 +87,12 @@ function Choices({quiz, selectedId, setQuiz}: ChoicesProps) {
 	);
 }
 
-export default function QuizFieldEdit({selectedId, setSelectId, quiz, setQuiz}: QuizFieldEditProps) {
+export default function QuizFieldEdit({selectedId, setSelectId, quiz, updateQuiz, errors}: QuizFieldEditProps) {
 
 	return (
 		<div>
+			{errors && errors.errorQuestion === quiz.questions[selectedId] && <Alert variant={'danger'}>{errors.message}</Alert>}
+
 			{(selectedId < quiz.questions.length && quiz.questions.length !== 0) &&
 				<div style={{
 					marginLeft: 20,
@@ -108,7 +103,7 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz, setQuiz}: 
 					<textarea className={"titleEdit"} placeholder={"Enter question here."}
 							  value={quiz.questions[selectedId].questionText} onChange={(event) => {
 						quiz.questions[selectedId].questionText = event.target.value;
-						setQuiz(q => ({...q}))
+						updateQuiz()
 					}}/>
 					<hr className="solid"/>
 
@@ -122,7 +117,7 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz, setQuiz}: 
 						<p className={"headerText"}>Correct Answer</p>
 					</div>
 
-					<Choices quiz={quiz} selectedId={selectedId} setQuiz={setQuiz}/>
+					<Choices quiz={quiz} selectedId={selectedId} updateQuiz={updateQuiz}/>
 
 					<div style={{
 						marginTop: 'auto',
@@ -143,14 +138,15 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz, setQuiz}: 
 							onClick={() => {
 								if (selectedId === quiz.questions.length - 1) {
 									quiz.questions.push(new Question("", []))
-									setQuiz(q => ({...q}))
+									updateQuiz()
 									setSelectId(r => r + 1);
 								} else {
 									setSelectId(r => r + 1);
 								}
 							}}
-						>{selectedId === quiz.questions.length - 1 ? 'New Question' : 'Next Question'}{<Icon icon={ChevronRightIcon} height={20} width={20}
-																											 marginTop={3}/>}</button>
+						>{selectedId === quiz.questions.length - 1 ? 'New Question' : 'Next Question'}{<Icon
+							icon={ChevronRightIcon} height={20} width={20}
+							marginTop={3}/>}</button>
 					</div>
 				</div>
 			}

@@ -5,19 +5,17 @@ import vector3 from '../assets/vector3.png'
 import '../App.scss'
 import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
 import '../../src/assets/css/quiz_editor.scss'
-import QuizFieldEditor from "../components/quiz/QuizFieldEditor";
 import ManagerBar from "../components/ManagerBar";
 import {ChevronUpIcon, CrossIcon, Icon, Spinner, TickIcon} from "evergreen-ui";
 import {useSearchParams} from "react-router-dom";
-import {Modal} from "react-bootstrap";
+import {Alert, Modal} from "react-bootstrap";
 import {EditList} from "../components/quiz/EditList";
 import {IQuiz, LiveQuiz, Quiz} from "../api/quiz/Quiz";
 import TopicInfo from "../api/TopicInfo";
-import {Question} from "../api/quiz/Question";
 import {QuizConnection} from "../api/quiz/QuizConnection";
 import QuizFieldEdit from "../components/quiz/QuizFieldEdit";
-import QuizUploader from "../api/quiz/QuizUploader";
 import API from "../api";
+import {Question} from "../api/quiz/Question";
 
 type ConfirmationProps = {
 	quiz: IQuiz;
@@ -87,8 +85,29 @@ export default function QuizEdit() {
 
 	const [loading, setLoading] = useState(true);
 	const [uploading, setUploading] = useState(false);
+	const [errors, setErrors] = useState<{ message: string, errorQuestion: Question }>(null);
+
+	const updateQuiz = () => {
+		setEditingQuiz(q => {
+			let err = QuizConnection.validateQuiz(q)
+			if (err !== errors) {
+				setErrors(null)
+			}
+			return ({...q})
+		})
+	}
 
 	const publish = async () => {
+		let errors = QuizConnection.validateQuiz(quiz)
+
+		console.log(errors)
+		if (errors !== null) {
+			setModalShow(false)
+			setErrors(errors)
+			console.log(errors.message)
+			return;
+		}
+
 		console.log("DATA IS AS FOLLOWS")
 		console.log(quiz.name)
 		console.log(quiz.questions)
@@ -195,12 +214,12 @@ export default function QuizEdit() {
 			{!loading ?
 				<>
 					<div className="quizEditor">
-						<EditList quiz={quiz} setQuiz={setEditingQuiz} setSelectedId={setSelectedID}
-								  selectedId={selectedID}/>
+						<EditList quiz={quiz} updateQuiz={updateQuiz} setSelectedId={setSelectedID}
+								  selectedId={selectedID} errors={errors !== null ? errors.errorQuestion : null}/>
 
 						<div className="viewArea">
-							<QuizFieldEdit quiz={quiz} setQuiz={setEditingQuiz} selectedId={selectedID}
-										   setSelectId={setSelectedID}/>
+							<QuizFieldEdit quiz={quiz} updateQuiz={updateQuiz} selectedId={selectedID}
+										   setSelectId={setSelectedID} errors={errors} />
 						</div>
 
 						<div className={"changesArea"}>

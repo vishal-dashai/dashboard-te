@@ -1,6 +1,7 @@
 import TopicInfo from "../TopicInfo";
 import {ILiveQuiz, LiveQuiz, Quiz} from "./Quiz";
 import API from "../../api";
+import {Question} from "./Question";
 
 export class QuizConnection {
 
@@ -23,6 +24,42 @@ export class QuizConnection {
 			console.log("ERROR: " + e)
 		})
 		return new LiveQuiz(quiz);
+	}
+
+	static validateQuiz(edited: Quiz): { message: string, errorQuestion: Question } | null {
+		// let error: { message: string; errorQuestion: Question; } = null;
+
+		for (let question of edited.questions) {
+			if (!question.questionText) {
+				return {
+					message: "No question text! Please give this question a title or delete the question. Then publish again.",
+					errorQuestion: question
+				}
+			}
+
+			let hasAnswer = false;
+
+			for (let answer of question.answerOptions) {
+				if (answer.isCorrect) {
+					hasAnswer = true;
+				}
+				if (!answer.answerOptionText) {
+					return {
+						message: "One or more answers does not have text. Please add text and then publish again.",
+						errorQuestion: question
+					}
+				}
+			}
+
+			if (!hasAnswer) {
+				return {
+					message: "This question does not have an answer! Please add a correct answer or delete the question. Then publish again.",
+					errorQuestion: question
+				}
+			}
+
+		}
+		return null;
 	}
 
 	static compareAndBuildData(live: LiveQuiz, edited: Quiz) {
@@ -56,10 +93,14 @@ export class QuizConnection {
 
 			if (type === 'CREATE') {
 				let options: { answerOptionText: string; isCorrect: boolean; }[] = []
-				ele.answerOptions.forEach((cho) => options.push({
-					answerOptionText: cho.answerOptionText,
-					isCorrect: cho?.isCorrect ?? false
-				}))
+				ele.answerOptions.forEach((cho) => {
+					if (cho.answerOptionText !== '') {
+						options.push({
+							answerOptionText: cho.answerOptionText,
+							isCorrect: cho?.isCorrect ?? false
+						})
+					}
+				})
 
 				if (options.length !== 0) {
 					newQuestions.push({
@@ -69,10 +110,14 @@ export class QuizConnection {
 				}
 			} else if (type === 'UPDATE') {
 				let options: { answerOptionText: string; isCorrect: boolean; }[] = []
-				ele.answerOptions.forEach((cho) => options.push({
-					answerOptionText: cho.answerOptionText,
-					isCorrect: cho?.isCorrect ?? false
-				}))
+				ele.answerOptions.forEach((cho) => {
+					if (cho.answerOptionText !== '') {
+						options.push({
+							answerOptionText: cho.answerOptionText,
+							isCorrect: cho?.isCorrect ?? false
+						})
+					}
+				})
 
 				updateQuestions.push({
 					actionType: "UPDATE",

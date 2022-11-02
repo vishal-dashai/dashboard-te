@@ -29,6 +29,18 @@
   color: #44A8FF;
 }
 
+.angryText {
+  margin-left: 5px;
+  font-family: 'Raleway', serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+  color: #ff4444;
+}
+
 .questionArea {
   flex-direction: column;
   justify-content: flex-start;

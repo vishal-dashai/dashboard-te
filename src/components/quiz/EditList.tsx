@@ -7,20 +7,21 @@ import {Modal} from "react-bootstrap";
 
 type EditableListProps = {
 	quiz: IQuiz;
-	setQuiz: Dispatch<SetStateAction<IQuiz>>;
+	updateQuiz: Function;
 	setSelectedId: Dispatch<SetStateAction<number>>;
 	selectedId: number;
+	errors: Question;
 };
 
 type DeleteModalProps = {
 	quiz: IQuiz;
-	setQuiz: Dispatch<SetStateAction<IQuiz>>;
+	updateQuiz: Function;
 	modalShow: boolean;
 	onHide: Function;
 	selectedDelete: number;
 };
 
-export const EditList = ({quiz, setQuiz, selectedId, setSelectedId}: EditableListProps) => {
+export const EditList = ({quiz, updateQuiz, selectedId, setSelectedId, errors}: EditableListProps) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [selectedDelete, setSelectedDelete] = useState(-1);
 
@@ -40,7 +41,10 @@ export const EditList = ({quiz, setQuiz, selectedId, setSelectedId}: EditableLis
 						border: (selectedId === inx ? '2px solid #44A8FF' : 'none'),
 					}}>
 						<div className="questionArea">
-							<p className="questionNumber">Q {inx + 1}.</p>
+							<div style={{display: 'flex', flexDirection: 'row'}}>
+								<p className="questionNumber">Q {inx + 1}.</p> {errors && errors === ele &&
+								<p className={'angryText'}>This question has errors.</p>}
+							</div>
 							<p className="questionPreview">{ele.questionText}</p>
 						</div>
 						<div>
@@ -55,13 +59,13 @@ export const EditList = ({quiz, setQuiz, selectedId, setSelectedId}: EditableLis
 
 				<button className="addButtonArea" onClick={() => {
 					quiz.questions.push(new Question("", []))
-					setQuiz(q => ({...q}));
+					updateQuiz()
 				}}>
 					<Icon icon={AddIcon}/>
 					New Question
 				</button>
 			</div>
-			<DeletePopup modalShow={modalShow} setQuiz={setQuiz} onHide={() => setModalShow(false)} quiz={quiz}
+			<DeletePopup modalShow={modalShow} updateQuiz={updateQuiz} onHide={() => setModalShow(false)} quiz={quiz}
 						 selectedDelete={selectedDelete}/>
 		</div>
 	)
@@ -69,7 +73,7 @@ export const EditList = ({quiz, setQuiz, selectedId, setSelectedId}: EditableLis
 
 export const DeletePopup = ({
 								quiz,
-								setQuiz,
+								updateQuiz,
 								modalShow,
 								onHide,
 								selectedDelete,
@@ -109,7 +113,7 @@ export const DeletePopup = ({
 					id={'warning'}
 					onClick={() => {
 						quiz.questions = quiz.questions.filter((b, i) => i !== selectedDelete)
-						setQuiz(q => ({...q}));
+						updateQuiz()
 						onHide()
 					}}
 				>
