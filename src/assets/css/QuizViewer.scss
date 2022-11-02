@@ -6,7 +6,7 @@
   justify-content: flex-start;
   height: 80vh;
   gap: 20px;
-
+  overflow: auto;
 }
 
 .topicSection {
@@ -40,6 +40,10 @@
 	flex: none;
 	order: 1;
 	flex-grow: 1;
+	width: 60%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
   }
 }
 
@@ -81,8 +85,8 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding-left: 65px;
-  padding-right: 65px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .modal-title {
@@ -91,9 +95,13 @@
   font-weight: 700;
   font-size: 32px;
   line-height: 60px;
-  text-align: center;
+  text-align: left;
   font-feature-settings: 'tnum' on, 'lnum' on;
   color: #151F28;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 60%;
 }
 
 .modal-body p {
@@ -117,6 +125,7 @@
   flex-direction: row;
   gap: 20px;
   align-content: flex-start;
+  overflow: auto;
 }
 
 .infoSection {

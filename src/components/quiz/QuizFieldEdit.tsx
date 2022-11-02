@@ -125,7 +125,7 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz, updateQuiz
 						flexDirection: 'row',
 						gap: '20px',
 					}}>
-						<button className="prevButton" onClick={() => {
+						<button className="nextButton" id={'prev'} onClick={() => {
 							setSelectId(r => (r === 0 ? 0 : r - 1))
 						}
 						} disabled={selectedId <= 0}>
