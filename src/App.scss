@@ -596,18 +596,19 @@ img#purple {
   justify-content: center;
   gap: 5px;
   transition: 0.2s;
-}
 
-.nextButton:hover {
-  background: #565a62;
+  &:hover {
+	background: #565a62;
+
+  }
 }
 
 #warning {
   background: #c24063;
-}
 
-#warning:hover {
-  background: #d05e7d;
+  &:hover {
+	background: #d05e7d;
+  }
 }
 
 .prevButton {
@@ -634,7 +635,6 @@ img#purple {
 
 .prevButton:hover {
   background: #b4b4b4;
-
 }
 
 

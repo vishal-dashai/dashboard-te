@@ -1,24 +1,26 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
 import './editable_list.scss';
-import {IQuiz} from "../../api/quiz/Quiz";
+import {IQuiz, Quiz} from "../../api/quiz/Quiz";
 import {AddIcon, ChevronLeftIcon, CrossIcon, Icon} from 'evergreen-ui';
 import {Question} from "../../api/quiz/Question";
 import {Modal} from "react-bootstrap";
 
 type EditableListProps = {
 	quiz: IQuiz;
+	setQuiz: Dispatch<SetStateAction<IQuiz>>;
 	setSelectedId: Dispatch<SetStateAction<number>>;
 	selectedId: number;
 };
 
 type DeleteModalProps = {
 	quiz: IQuiz;
+	setQuiz: Dispatch<SetStateAction<IQuiz>>;
 	modalShow: boolean;
 	onHide: Function;
 	selectedDelete: number;
 };
 
-export const EditList = ({quiz, selectedId, setSelectedId}: EditableListProps) => {
+export const EditList = ({quiz, setQuiz, selectedId, setSelectedId}: EditableListProps) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [selectedDelete, setSelectedDelete] = useState(-1);
 
@@ -52,14 +54,14 @@ export const EditList = ({quiz, selectedId, setSelectedId}: EditableListProps) =
 				))}
 
 				<button className="addButtonArea" onClick={() => {
-					// setList(r => [...r, {title: "", choices: []}])
-					quiz.questions.push(new Question("", [], 0));
+					quiz.questions.push(new Question("", []))
+					setQuiz(q => ({...q}));
 				}}>
 					<Icon icon={AddIcon}/>
 					New Question
 				</button>
 			</div>
-			<DeletePopup modalShow={modalShow} onHide={() => setModalShow(false)} quiz={quiz}
+			<DeletePopup modalShow={modalShow} setQuiz={setQuiz} onHide={() => setModalShow(false)} quiz={quiz}
 						 selectedDelete={selectedDelete}/>
 		</div>
 	)
@@ -67,6 +69,7 @@ export const EditList = ({quiz, selectedId, setSelectedId}: EditableListProps) =
 
 export const DeletePopup = ({
 								quiz,
+								setQuiz,
 								modalShow,
 								onHide,
 								selectedDelete,
@@ -106,6 +109,7 @@ export const DeletePopup = ({
 					id={'warning'}
 					onClick={() => {
 						quiz.questions = quiz.questions.filter((b, i) => i !== selectedDelete)
+						setQuiz(q => ({...q}));
 						onHide()
 					}}
 				>

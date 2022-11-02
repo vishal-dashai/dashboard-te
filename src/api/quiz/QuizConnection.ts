@@ -29,7 +29,14 @@ export class QuizConnection {
 		let result = []
 		let editIds: string[] = []
 		let newQuestions: { questionText: any; answerOptions: any[]; }[] = []
-		let updateQuestions: string[] = []
+		let updateQuestions: {
+			actionType: string,
+			questionId: string,
+			updateQuestion: {
+				questionText: string,
+				answerOptions: any[]
+			}
+		}[] = []
 		let deletes: { actionType: string, questionId: string }[] = []
 
 		edited.questions.forEach((ele) => {
@@ -48,35 +55,33 @@ export class QuizConnection {
 			let type = id === undefined || id === null ? 'CREATE' : 'UPDATE'
 
 			if (type === 'CREATE') {
-				/*let options = []
-				ele.choices.forEach((cho) => options.push({
-					answerOptionText: cho.text,
+				let options: { answerOptionText: string; isCorrect: boolean; }[] = []
+				ele.answerOptions.forEach((cho) => options.push({
+					answerOptionText: cho.answerOptionText,
 					isCorrect: cho?.isCorrect ?? false
 				}))
 
 				if (options.length !== 0) {
 					newQuestions.push({
-						questionText: ele.title,
+						questionText: ele.questionText,
 						answerOptions: options
 					})
-				}*/
+				}
 			} else if (type === 'UPDATE') {
-			/*	let options = []
-				ele.choices.forEach((cho) => options.push({
-					answerOptionText: cho.text,
+				let options: { answerOptionText: string; isCorrect: boolean; }[] = []
+				ele.answerOptions.forEach((cho) => options.push({
+					answerOptionText: cho.answerOptionText,
 					isCorrect: cho?.isCorrect ?? false
 				}))
 
-				let toBe = {
+				updateQuestions.push({
 					actionType: "UPDATE",
 					questionId: id,
 					updateQuestion: {
-						questionText: ele.title,
+						questionText: ele.questionText,
 						answerOptions: options
 					}
-				}*/
-
-				// updateQuestions.push(JSON.stringify(toBe))
+				})
 			}
 		});
 
