@@ -15,9 +15,6 @@ import {alphabet} from "../../../components/quiz/QuizFieldEditor";
 import {useMediaQuery} from "react-responsive";
 import {LiveQuiz} from "../../../api/quiz/Quiz";
 import {QuizConnection} from "../../../api/quiz/QuizConnection";
-// import {QuizConnection} from "../../../api/quiz/QuizConnection";
-// import {QuizConnection} from "../../../api/quiz/QuizConnection";
-// import loadQuizByTopic = QuizConnection.loadQuizByTopic;
 
 export default function QuizView() {
 	const {user, profile} = useContext(AuthenticatedUserContext);

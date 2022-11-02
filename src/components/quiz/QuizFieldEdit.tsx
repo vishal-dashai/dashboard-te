@@ -2,23 +2,29 @@ import React, {Dispatch, SetStateAction, useState} from "react";
 import './quiz_field_editor.scss';
 import {AddIcon, Button, ChevronLeftIcon, ChevronRightIcon, CrossIcon, Icon, TickIcon} from "evergreen-ui";
 import Bubble from "../elements/Bubble";
-import {IQuiz, Quiz} from "../../api/quiz/Quiz";
+import {Quiz} from "../../api/quiz/Quiz";
+import {Answer} from "../../api/quiz/Answer";
+import {Question} from "../../api/quiz/Question";
+import {Alert} from "react-bootstrap";
 
 export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 type ChoicesProps = {
 	quiz: Quiz;
+	updateQuiz: Function;
 	selectedId: number;
 };
 
 type QuizFieldEditProps = {
 	quiz: Quiz;
+	updateQuiz: Function;
 	selectedId: number;
 	setSelectId: Dispatch<SetStateAction<number>>;
+	errors: { message: string, errorQuestion: Question };
 };
 
-function Choices({quiz, selectedId}: ChoicesProps) {
-	const [nextID, setNextID] = useState(0)
+function Choices({quiz, selectedId, updateQuiz}: ChoicesProps) {
+	const [nextID, setNextID] = useState(quiz.questions[selectedId].answerOptions.length)
 
 	return (
 		<div className="choicesDiv">
@@ -34,26 +40,26 @@ function Choices({quiz, selectedId}: ChoicesProps) {
 							<textarea wrap={"off"} placeholder={"Enter answer here"} className={"choiceEdit"}
 									  value={ele.answerOptionText} onChange={(event) => {
 
-								quiz.questions[selectedId].updateOptions(b => {
-									return b.map((n) => {
-										if (n.choiceId === ele.choiceId) {
-											return {...n, text: event.target.value}
-										}
-										return n;
-									})
-								})
+								quiz.questions[selectedId].answerOptions[idx].answerOptionText = event.target.value
+								updateQuiz()
 							}}/>
 							<Icon icon={CrossIcon}
-								  onClick={() => quiz.questions[selectedId].updateOptions(q => q.filter(b => b.choiceId !== q[idx].choiceId))
+								  onClick={() => {
+
+									  quiz.questions[selectedId].answerOptions = quiz.questions[selectedId].answerOptions.filter((a) =>
+										  a.choiceId !== quiz.questions[selectedId].answerOptions[idx].choiceId
+									  )
+
+									  updateQuiz()
+								  }
 								  }/>
 						</div>
 
 						<div className="checkArea" onClick={() => {
-
-							quiz.questions[selectedId].updateOptions(b => b.map((n) => ({
-								...n,
-								isCorrect: n.choiceId === ele.choiceId
-							})))
+							quiz.questions[selectedId].answerOptions.forEach((a) => {
+								a.isCorrect = a.choiceId === ele.choiceId
+							})
+							updateQuiz()
 						}}>
 							{ele.isCorrect && <Icon icon={TickIcon} style={{
 								color: 'white',
@@ -69,11 +75,9 @@ function Choices({quiz, selectedId}: ChoicesProps) {
 					appearance='minimal'
 					iconBefore={AddIcon}
 					onClick={() => {
-
-						quiz.questions[selectedId].updateOptions(r => {
-							setNextID(a => a + 1)
-							return [...r, {text: "", choiceID: nextID, isCorrect: r.length === 0}]
-						})
+						setNextID(a => a + 1)
+						quiz.questions[selectedId].answerOptions.push(new Answer("", quiz.questions[selectedId].answerOptions.length === 0, nextID))
+						updateQuiz()
 					}}
 					size={'large'}
 			>
@@ -83,10 +87,12 @@ function Choices({quiz, selectedId}: ChoicesProps) {
 	);
 }
 
-export default function QuizFieldEdit({selectedId, setSelectId, quiz}: QuizFieldEditProps) {
+export default function QuizFieldEdit({selectedId, setSelectId, quiz, updateQuiz, errors}: QuizFieldEditProps) {
 
 	return (
 		<div>
+			{errors && errors.errorQuestion === quiz.questions[selectedId] && <Alert variant={'danger'}>{errors.message}</Alert>}
+
 			{(selectedId < quiz.questions.length && quiz.questions.length !== 0) &&
 				<div style={{
 					marginLeft: 20,
@@ -97,6 +103,7 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz}: QuizField
 					<textarea className={"titleEdit"} placeholder={"Enter question here."}
 							  value={quiz.questions[selectedId].questionText} onChange={(event) => {
 						quiz.questions[selectedId].questionText = event.target.value;
+						updateQuiz()
 					}}/>
 					<hr className="solid"/>
 
@@ -110,7 +117,7 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz}: QuizField
 						<p className={"headerText"}>Correct Answer</p>
 					</div>
 
-					<Choices quiz={quiz} selectedId={selectedId}/>
+					<Choices quiz={quiz} selectedId={selectedId} updateQuiz={updateQuiz}/>
 
 					<div style={{
 						marginTop: 'auto',
@@ -118,23 +125,28 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz}: QuizField
 						flexDirection: 'row',
 						gap: '20px',
 					}}>
-						<Button iconBefore={ChevronLeftIcon} className="prevButton" onClick={() => {
+						<button className="prevButton" onClick={() => {
 							setSelectId(r => (r === 0 ? 0 : r - 1))
 						}
-						} disabled={selectedId <= 0}>Prev. Question</Button>
-						<Button iconAfter={ChevronRightIcon}
-								className="nextButton"
-								onClick={() => {
-									if (selectedId === quiz.questions.length - 1) {
-										quiz.questions[selectedId].updateOptions(r => {
-											return [...r, {title: "", choices: []}]
-										});
-										setSelectId(r => r + 1);
-									} else {
-										setSelectId(r => r + 1);
-									}
-								}}
-						>{selectedId === quiz.questions.length - 1 ? 'New Question' : 'Next Question'}</Button>
+						} disabled={selectedId <= 0}>
+							{<Icon icon={ChevronLeftIcon} height={20} width={20}
+								   marginTop={3}/>}
+							Prev. Question
+						</button>
+						<button
+							className="nextButton"
+							onClick={() => {
+								if (selectedId === quiz.questions.length - 1) {
+									quiz.questions.push(new Question("", []))
+									updateQuiz()
+									setSelectId(r => r + 1);
+								} else {
+									setSelectId(r => r + 1);
+								}
+							}}
+						>{selectedId === quiz.questions.length - 1 ? 'New Question' : 'Next Question'}{<Icon
+							icon={ChevronRightIcon} height={20} width={20}
+							marginTop={3}/>}</button>
 					</div>
 				</div>
 			}

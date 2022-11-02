@@ -1,5 +1,3 @@
-import {Dispatch} from "react";
-
 export class Answer implements IAnswer {
 
 	isCorrect: boolean;

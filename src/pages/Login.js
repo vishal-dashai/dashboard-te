@@ -1,6 +1,6 @@
 import wine from '../assets/wine.png'
 import logo from '../assets/logo.png'
-import {Button, ChevronRightIcon, TextInputField} from "evergreen-ui";
+import {Button, ChevronRightIcon, CrossIcon, FormField, Icon, TextInputField} from "evergreen-ui";
 import React, {useContext, useState} from "react";
 import {browserSessionPersistence, getAuth, setPersistence, signInWithEmailAndPassword} from "firebase/auth";
 import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
@@ -34,29 +34,38 @@ export default function Login() {
 				<a href={'forgot'}>Forgot Password?</a>
 				<br/>
 				<br/>
-				<TextInputField inputHeight={50} inputWidth={'276'} label="Email Address" type="email"
-								value={email} onChange={(e) => setEmail(e.target.value)}
-								placeholder="Enter your email"/>
-				<TextInputField inputHeight={50} inputWidth={'276'} label="Password" type="password"
-								value={password} onChange={(e) => setPassword(e.target.value)}
-								placeholder="Enter your password"/>
-				<Button size="large" appearance="primary" intent="success" iconAfter={ChevronRightIcon}
-						onClick={() => {
-							const auth = getAuth();
 
-							setPersistence(auth, browserSessionPersistence).then(() => {
-								return signInWithEmailAndPassword(auth, email, password).catch((error) => {
-									setWrong(true)
-								});
-							}).catch((error) => {
-								const errorCode = error.code;
-								const errorMessage = error.message;
+				<form onSubmit={(a) => {
+					a.preventDefault()
+					console.log('submitted')
+					const auth = getAuth();
 
-							});
-						}}
-				>
-					Login
-				</Button>
+					setPersistence(auth, browserSessionPersistence).then(() => {
+						return signInWithEmailAndPassword(auth, email, password).catch((error) => {
+							setWrong(true)
+						});
+					}).catch((error) => {
+						const errorCode = error.code;
+						const errorMessage = error.message;
+					});
+				}}  action={''} >
+					<TextInputField inputHeight={50} inputWidth={'276'} label="Email Address" type="email"
+									value={email} onChange={(e) => setEmail(e.target.value)}
+									placeholder="Enter your email"/>
+					<TextInputField inputHeight={50} inputWidth={'276'} label="Password" type="password"
+									value={password} onChange={(e) => setPassword(e.target.value)}
+									placeholder="Enter your password"/>
+
+					<button
+						type="submit"
+						className="nextButton"
+						id={'go'}
+					>
+						Login
+						{<Icon icon={ChevronRightIcon}/>}
+					</button>
+
+				</form>
 			</div>
 		</div>
 	</div>);

@@ -21,6 +21,7 @@ import QuizViewer from "./pages/merchant/quiz/QuizViewer";
 import './App.scss';
 import Upload from "./pages/merchant/Upload";
 import QuizEdit from "./pages/QuizEdit";
+import QuizView from "./pages/merchant/quiz/QuizView";
 
 const router = createBrowserRouter([
 	{
@@ -47,11 +48,11 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "merchant/quizeditor",
-				element: (<RequireElevated><QuizEditor/></RequireElevated>)
+				element: (<RequireElevated><QuizEdit/></RequireElevated>)
 			},
 			{
 				path: "merchant/quizviewer",
-				element: (<RequireElevated><QuizViewer/></RequireElevated>)
+				element: (<RequireElevated><QuizView/></RequireElevated>)
 			},
 			{
 				path: "merchant/updates",

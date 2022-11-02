@@ -6,15 +6,15 @@ export class Question implements IQuestion {
 	answerOptions: Answer[];
 	questionId: string;
 	questionText: string;
-	id: number;
+	// id: number;
 
-	constructor(questionText: string, answerOptions: Answer[], id: number) {
+	constructor(questionText: string, answerOptions: Answer[]/*, id: number*/) {
 		this.answerOptions = answerOptions;
-		this.id = id;
+		// this.id = id;
 		this.questionText = questionText;
 	}
 
-	updateOptions(a: Dispatch<Answer[]>): string {
+	updateOptions(a: Dispatch<Answer[]>): Answer[] {
 		return a.call(this.answerOptions);
 	}
 
@@ -36,11 +36,10 @@ export class LiveQuestion implements ILiveQuestion {
 
 	public toQuestion(): Question {
 		let t: Answer[] = [];
-		let i: number = 0;
 		let n = 0;
 		let ans = this.answerOptions;
 		ans.forEach((r) => t.push(new Answer(r.answerOptionText, r.answerOptionId === this.correctAnswerId, n++)))
-		let quest = new Question(this.questionText, t, i++);
+		let quest = new Question(this.questionText, t);
 		quest.questionId = this.questionId ?? null;
 		return quest;
 	}
