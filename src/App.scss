@@ -596,6 +596,7 @@ img#purple {
   justify-content: center;
   gap: 5px;
   transition: 0.2s;
+  border: none;
 
   &:hover {
 	background: #565a62;
@@ -608,6 +609,14 @@ img#purple {
 
   &:hover {
 	background: #d05e7d;
+  }
+}
+
+#go {
+  background: #52BD95;
+
+  &:hover {
+	background: #419676;
   }
 }
 
