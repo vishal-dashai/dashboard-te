@@ -21,6 +21,7 @@ export default function QuizView() {
 	const [topics, setTopics] = useState<Array<TopicInfo>>([]);
 	const [viewing, setViewing] = useState<LiveQuiz>();
 	const [show, setShow] = useState(false);
+	const [isLoading, setLoading] = useState(false);
 
 	const handleClose = () => {
 		setShow(false)
@@ -48,8 +49,14 @@ export default function QuizView() {
 	}
 
 	useEffect(() => {
-		if (user !== null && profile !== null)
-			loadTopics()
+		if (user !== null && profile !== null) {
+			const a = async () => {
+				setLoading(true)
+				await loadTopics()
+				setLoading(false)
+			}
+			a()
+		}
 	}, [user, profile])
 
 	const isSmaller = useMediaQuery({query: '(max-width: 1200px)'})
@@ -61,7 +68,8 @@ export default function QuizView() {
 
 				<div className={'topics'}>
 
-					{topics.map((a, i) => {
+					{isLoading ? <div className={'centerContent'}><h2>Loading</h2>
+						<Spinner/></div> : topics.map((a, i) => {
 						return (
 							<div className={'topicSection'} key={i}>
 								<div style={{
@@ -130,7 +138,8 @@ export default function QuizView() {
 								</div>)
 							})}
 						</div>
-					</> : <Spinner/>
+					</> : <div className={'centerContent'}><h2>Loading Quiz</h2>
+						<Spinner/></div>
 					}
 				</Modal>
 
