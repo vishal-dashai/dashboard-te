@@ -7,30 +7,17 @@ import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
 import ManagerBar from "../components/ManagerBar";
 import {Alert, Button, Spinner, Textarea, TickIcon} from "evergreen-ui";
 import API from "../api";
+import {ContentRequest} from "../api/ContentRequest";
 
 export default function Updates() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
 	const [uploaded, setUploaded] = useState();
 	const [uploading, setUploading] = useState();
 
-	const [text, setText] = useState();
-
-	const loadNote = async () => {
-		await fetch(`${API}/getDailyNote/${profile.restaurantId}`).then(e => e.json()).then(data => {
-			let note = data.note.replaceAll('<ul>', '')
-			note = note.replaceAll('</ul>', '')
-			let q = '';
-			note.split('</li>').forEach((e) => {
-				q += e.substring(4) + '\n';
-			})
-
-			setText(q)
-		});
-	}
+	const [text, setText] = useState('' | null);
 
 	const postNode = async () => {
 		setUploading(true)
-		setUploaded(false)
 		console.log(profile.restaurantId)
 
 		let q = text.split('\n');
@@ -50,14 +37,17 @@ export default function Updates() {
 		}).catch((c) => console.log(c))
 		await delay(3000)
 		setUploading(false)
-		setUploaded(true)
 	}
 
 	const delay = ms => new Promise(res => setTimeout(res, ms));
 
 	useEffect(() => {
-		if (user !== null && profile !== null)
-			loadNote()
+		if (user !== null && profile !== null) {
+			const ar = async () => {
+				setText(await ContentRequest.getAndStripNote(profile.restaurantId));
+			}
+			ar()
+		}
 	}, [user, profile])
 
 	return (
@@ -87,10 +77,11 @@ export default function Updates() {
 						}}>
 							<p>Enter each point on a new line.</p>
 
-							<Textarea name="textarea-1" placeholder="Type something here" minHeight={'40vh'}
-									  style={{marginBottom: 20}} value={text}
-									  onChange={(e) => setText(e.target.value)}/>
-
+							<label title={'daily note update'} style={{minWidth: '100%'}}>
+								<Textarea name="textarea-1" placeholder="Type something here" minHeight={'40vh'}
+										  style={{marginBottom: 20, minWidth: '100%'}} value={text}
+										  onChange={(e) => setText(e.target.value)}/>
+							</label>
 							<Button iconAfter={TickIcon}
 									className="nextButton"
 									style={{background: '#44A8FF'}}

@@ -1,22 +1,3 @@
-.box {
-  margin-left: 15px;
-  margin-right: 15px;
-  margin-bottom: 15px;
-  height: 72px;
-  background: #FFFFFF;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  padding: 10px;
-  cursor: pointer;
-
-  &:hover {
-	background: #E7EAEF;
-  }
-
-}
-
 .questionNumber {
   margin-left: 5px;
   font-family: 'Raleway', serif;
@@ -26,7 +7,7 @@
   line-height: 20px;
   letter-spacing: 0.01em;
   font-feature-settings: 'tnum' on, 'lnum' on;
-  color: #44A8FF;
+  color: #329dfd;
 }
 
 .angryText {
@@ -60,6 +41,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left;
 }
 
 .addButtonArea {
@@ -82,11 +64,33 @@
   font-size: 15px;
   line-height: 20px;
   letter-spacing: 0.01em;
+
+  &:hover {
+	background: #E7EAEF;
+
+  }
 }
 
-.addButtonArea:hover {
-  background: #E7EAEF;
+.box {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  height: 72px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 10px;
+  cursor: pointer;
+  width: 90%;
+
+  &:hover {
+	background: #E7EAEF;
+  }
+
 }
+
 
 p {
   margin-bottom: 0.5rem;

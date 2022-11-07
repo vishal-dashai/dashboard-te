@@ -1,14 +1,17 @@
 import {AuthenticatedUserContext} from "./provider/AuthenticatedUserProvider";
-import {Outlet} from "react-router";
+import {Navigate, Outlet} from "react-router";
 import React, {useContext, useEffect} from "react";
 import firebase from "firebase/compat/app";
-import API from "./api";
-import User from "./api/User";
 import {Modal} from "react-bootstrap";
 import {CrossIcon, Icon, Spinner, TickIcon} from "evergreen-ui";
+import {User} from "./api/Data";
+import {ContentRequest} from "./api/ContentRequest";
+import Login from "./pages/Login";
+import {useLocation} from "react-router-dom";
 
 export default function Manager() {
 	const {user, setUser, setProfile} = useContext(AuthenticatedUserContext);
+	const location = useLocation();
 
 	useEffect(() => {
 		const unsubscribeAuth = firebase.auth().onAuthStateChanged(async authenticatedUser => {
@@ -19,6 +22,13 @@ export default function Manager() {
 					localStorage.setItem("signedIn", "true")
 				} else {
 					localStorage.removeItem("signedIn")
+
+					/*
+										if (location.pathname !== '/login') {
+											window.location.href = "/login"
+										}
+										console.log(window.location.href)*/
+
 				}
 
 				// setIsLoading(false);
@@ -32,25 +42,26 @@ export default function Manager() {
 
 	useEffect(() => {
 		async function fetchData() {
-			console.log("BBBBBBBBBBB")
 			console.log(user)
 			if (user !== null) {
-				await fetch(`${API}/getUserProfileInfo/` + user.uid, {
-					method: 'GET',
-				}).then(e => e.json()).then(data => {
-					const theUser = new User(data);
-					setProfile(theUser);
-				}).catch((e) => {
-					console.log(e)
-				})
+				setProfile(new User(await ContentRequest.getUserProfile(user.uid)))
 			}
 		}
 
 		fetchData()
 	}, [user])
 
+	/*
+		if(!user && localStorage.getItem("signedIn")){
+			localStorage.removeItem("signedIn")
+		}
+	*/
+
 	return (
-		<Outlet/>
+		<>
+			{/*{!user && localStorage.getItem("signedIn") ? <Login/> :*/}
+			<Outlet/>
+		</>
 	)
 }
 

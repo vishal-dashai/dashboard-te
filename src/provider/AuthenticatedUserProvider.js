@@ -1,6 +1,4 @@
-import React, {useState, createContext} from 'react';
-import User from "../api/User";
-import API from "../api";
+import React, {createContext, useState} from 'react';
 
 export const AuthenticatedUserContext = createContext({user: null, profile: null});
 
@@ -15,17 +13,3 @@ export const AuthenticatedUserProvider = ({children}) => {
 		</AuthenticatedUserContext.Provider>
 	);
 };
-
-export const getOrUpdateProfile = async (user, setProfile) => {
-	if (user !== null) {
-		await fetch(`${API}/getUserProfileInfo/` + user.uid, {
-			method: 'GET',
-		}).then(e => e.json()).then(data => {
-			const theUser = new User(data);
-			setProfile(theUser);
-			return theUser;
-		}).catch((e) => {
-			console.log(e)
-		})
-	}
-}

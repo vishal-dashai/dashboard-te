@@ -35,7 +35,7 @@ export const EditList = ({quiz, updateQuiz, selectedId, setSelectedId, errors}: 
 			}}>
 
 				{quiz.questions.map((ele, inx) => (
-					<div className="box" key={inx} onClick={() => {
+					<button className="box" key={inx} onClick={() => {
 						setSelectedId(inx);
 					}} style={{
 						border: (selectedId === inx ? '2px solid #44A8FF' : 'none'),
@@ -54,7 +54,7 @@ export const EditList = ({quiz, updateQuiz, selectedId, setSelectedId, errors}: 
 								// setList((q) => q.filter((b, i) => i !== inx))
 							}}/>
 						</div>
-					</div>
+					</button>
 				))}
 
 				<button className="addButtonArea" onClick={() => {

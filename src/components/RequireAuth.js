@@ -11,5 +11,10 @@ export default function RequireAuth({children}) {
 			return <Navigate to='/login' replace state={{from: location}}/>
 	}
 
+/*
+	if(localStorage.getItem("signedIn") === null)
+		return <Navigate to='/login' replace state={{from: location}}/>
+*/
+
 	return children;
 }

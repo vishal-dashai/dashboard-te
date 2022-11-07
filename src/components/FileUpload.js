@@ -34,7 +34,9 @@ export const FileUpload = ({files, setFiles}) => {
 	const fileCountOverLimit = files.length + fileRejections.length - maxFiles
 	const fileCountError = `You can upload up to ${maxFiles} files. Please remove ${fileCountOverLimit} ${fileCountOverLimit === 1 ? 'file' : 'files'}.`
 
-	return (<FileUploader
+	return (
+		<label title={'upload files'}>
+		<FileUploader
 		acceptedMimeTypes={acceptedMimeTypes}
 		label="Upload Your Content"
 		description="Upload .pdf, .csv, .excel, .ppt, .doc, .docx, .jpeg, .png, .mp4 files. 1GB size limit per file"
@@ -69,5 +71,5 @@ export const FileUpload = ({files, setFiles}) => {
 			)
 		}}
 		values={values}
-	/>)
+		/></label>)
 }

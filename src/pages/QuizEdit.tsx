@@ -185,7 +185,7 @@ export default function QuizEdit() {
 				console.log("error")
 			})
 		}
-		loadQuizData();
+		await loadQuizData();
 		setUploading(false)
 		setModalShow(false)
 	}
@@ -210,6 +210,16 @@ export default function QuizEdit() {
 		console.log(searchParams.get('id'))
 	}, [user, profile])
 
+	useEffect(() => {
+		const unloadCallback = (event: BeforeUnloadEvent) => {
+			event.preventDefault();
+			event.returnValue = "";
+			return "";
+		};
+		window.addEventListener("beforeunload", unloadCallback);
+		return () => window.removeEventListener("beforeunload", unloadCallback);
+	}, [])
+
 	return (
 		<>
 			<ManagerBar/>
@@ -221,7 +231,7 @@ export default function QuizEdit() {
 
 						<div className="viewArea">
 							<QuizFieldEdit quiz={quiz} updateQuiz={updateQuiz} selectedId={selectedID}
-										   setSelectId={setSelectedID} errors={errors} />
+										   setSelectId={setSelectedID} errors={errors}/>
 						</div>
 
 						<div className={"changesArea"}>
