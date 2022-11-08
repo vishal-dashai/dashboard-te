@@ -33,7 +33,7 @@ hr.solid {
   line-height: 34px;
   font-feature-settings: 'tnum' on, 'lnum' on;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
   height: 50px;
   resize: none;
   margin-left: 10px;
@@ -106,6 +106,7 @@ hr.solid {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  border: none;
 
   &:hover {
 	background: #cccdd0;

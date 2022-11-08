@@ -8,6 +8,7 @@ export default function ResultsTable({scores, config, searchKey}) {
 
 	const sortedData = useMemo(() => {
 		setLoading(true)
+		if (scores === null) return scores;
 		let sortableItems = [...scores];
 		if (config !== null) {
 			sortableItems = sortableItems.sort((a, b) => {
@@ -31,7 +32,7 @@ export default function ResultsTable({scores, config, searchKey}) {
 		<Table.Body>
 			{!isLoading &&
 				(
-					sortedData.length ? sortedData?.filter(a => {
+					sortedData?.length ? sortedData?.filter(a => {
 						if (searchKey) {
 							return a?.user_name?.toLowerCase().includes(searchKey.toLowerCase()) || a?.topic_name?.toLowerCase().includes(searchKey.toLowerCase());
 						}
@@ -53,7 +54,7 @@ export default function ResultsTable({scores, config, searchKey}) {
 								</Table.TextCell>
 							</Table.Row>
 						</div>
-					)) : <p></p>
+					)) : null
 				)
 			}
 		</Table.Body>);

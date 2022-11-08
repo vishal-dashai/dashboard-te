@@ -31,7 +31,7 @@ export default function ManagerBar() {
 						width="50"
 						height="50"
 						className="d-inline-block align-top"
-						alt=''/></Nav.Link>
+						alt='sinatra logo'/></Nav.Link>
 				</Navbar.Brand>
 				<Navbar.Toggle aria-controls="responsive-navbar-nav"/>
 				<Navbar.Collapse id="responsive-navbar-nav">

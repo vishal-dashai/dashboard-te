@@ -11,10 +11,10 @@ import {ChevronRightIcon, CrossIcon, Icon, Spinner} from "evergreen-ui";
 import TaskSquare from '../../../assets/svg/task-square.svg';
 import EditIcon from '../../../assets/svg/edit-2.svg';
 import {Modal} from "react-bootstrap";
-import {alphabet} from "../../../components/quiz/QuizFieldEditor";
 import {useMediaQuery} from "react-responsive";
 import {LiveQuiz} from "../../../api/quiz/Quiz";
 import {QuizConnection} from "../../../api/quiz/QuizConnection";
+import {alphabet} from "../../../components/quiz/QuizFieldEdit";
 
 export default function QuizView() {
 	const {user, profile} = useContext(AuthenticatedUserContext);

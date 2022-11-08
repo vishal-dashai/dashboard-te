@@ -37,12 +37,14 @@ function Choices({quiz, selectedId, updateQuiz}: ChoicesProps) {
 					}}>
 						<div className="pill">
 							<Bubble text={alphabet[idx]}/>
+							<label title={'answer text'}>
 							<textarea wrap={"off"} placeholder={"Enter answer here"} className={"choiceEdit"}
 									  value={ele.answerOptionText} onChange={(event) => {
 
 								quiz.questions[selectedId].answerOptions[idx].answerOptionText = event.target.value
 								updateQuiz()
 							}}/>
+							</label>
 							<Icon icon={CrossIcon}
 								  onClick={() => {
 
@@ -55,7 +57,7 @@ function Choices({quiz, selectedId, updateQuiz}: ChoicesProps) {
 								  }/>
 						</div>
 
-						<div className="checkArea" onClick={() => {
+						<button className="checkArea" onClick={() => {
 							quiz.questions[selectedId].answerOptions.forEach((a) => {
 								a.isCorrect = a.choiceId === ele.choiceId
 							})
@@ -67,7 +69,7 @@ function Choices({quiz, selectedId, updateQuiz}: ChoicesProps) {
 								border: '7px solid white',
 								borderRadius: 30,
 							}}/>}
-						</div>
+						</button>
 					</div>
 				)
 			})}
@@ -91,7 +93,8 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz, updateQuiz
 
 	return (
 		<div>
-			{errors && errors.errorQuestion === quiz.questions[selectedId] && <Alert variant={'danger'}>{errors.message}</Alert>}
+			{errors && errors.errorQuestion === quiz.questions[selectedId] &&
+				<Alert variant={'danger'}>{errors.message}</Alert>}
 
 			{(selectedId < quiz.questions.length && quiz.questions.length !== 0) &&
 				<div style={{
@@ -100,11 +103,14 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz, updateQuiz
 					flexDirection: 'column'
 				}}>
 					{/*<Bubble text={selectedID} scale={50}/>*/}
+					<label title={'question name'}>
 					<textarea className={"titleEdit"} placeholder={"Enter question here."}
 							  value={quiz.questions[selectedId].questionText} onChange={(event) => {
 						quiz.questions[selectedId].questionText = event.target.value;
 						updateQuiz()
 					}}/>
+					</label>
+
 					<hr className="solid"/>
 
 					<div style={{
@@ -113,8 +119,8 @@ export default function QuizFieldEdit({selectedId, setSelectId, quiz, updateQuiz
 						marginTop: 30,
 						gap: '250px'
 					}}>
-						<p className={"headerText"}>Choices</p>
-						<p className={"headerText"}>Correct Answer</p>
+						<h4 className={"headerText"}>Choices</h4>
+						<h4 className={"headerText"}>Correct Answer</h4>
 					</div>
 
 					<Choices quiz={quiz} selectedId={selectedId} updateQuiz={updateQuiz}/>
