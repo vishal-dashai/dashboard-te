@@ -8,7 +8,7 @@ import '../../src/assets/css/quiz_editor.scss'
 import ManagerBar from "../components/ManagerBar";
 import {ChevronUpIcon, CrossIcon, Icon, Spinner, TickIcon} from "evergreen-ui";
 import {useSearchParams} from "react-router-dom";
-import {Alert, Modal} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import {EditList} from "../components/quiz/EditList";
 import {IQuiz, LiveQuiz, Quiz} from "../api/quiz/Quiz";
 import TopicInfo from "../api/TopicInfo";
