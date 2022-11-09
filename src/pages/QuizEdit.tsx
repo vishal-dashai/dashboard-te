@@ -193,8 +193,12 @@ export default function QuizEdit() {
 	const loadQuizData = async () => {
 		setLoading(true)
 		QuizConnection.loadQuizByTopic(new TopicInfo(searchParams.get('n'), profile.restaurantId, searchParams.get('id'))).then((a) => {
-			setLiveQuizData(a);
-			setEditingQuiz(a.toEditable());
+			if (a !== null) {
+				setLiveQuizData(a);
+				setEditingQuiz(a.toEditable());
+			} else {
+				setEditingQuiz(new Quiz(searchParams.get('n') + ' Quiz', searchParams.get('id'), []))
+			}
 			setLoading(false)
 		})
 	}
