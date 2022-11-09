@@ -15,6 +15,7 @@ import {useMediaQuery} from "react-responsive";
 import {LiveQuiz} from "../../../api/quiz/Quiz";
 import {QuizConnection} from "../../../api/quiz/QuizConnection";
 import {alphabet} from "../../../components/quiz/QuizFieldEdit";
+import Incrementer from "../../../components/elements/Incrementer";
 
 export default function QuizView() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
@@ -22,6 +23,7 @@ export default function QuizView() {
 	const [viewing, setViewing] = useState<LiveQuiz>();
 	const [show, setShow] = useState(false);
 	const [isLoading, setLoading] = useState(false);
+	const [maxAttempts, setMaxAttempts] = useState(1);
 
 	const handleClose = () => {
 		setShow(false)
@@ -65,6 +67,12 @@ export default function QuizView() {
 		<>
 			<ManagerBar/>
 			<div>
+
+		{/*		<div className={'viewHeader'}>
+					<h5>Maximum Quiz Attempts: </h5>
+					<Incrementer value={maxAttempts} setValue={setMaxAttempts}/>
+
+				</div>*/}
 
 				<div className={'topics'}>
 

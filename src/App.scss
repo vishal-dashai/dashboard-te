@@ -634,7 +634,7 @@ img#purple {
 	  background: #b4b4b4;
 	}
 
-	&:disabled{
+	&:disabled {
 	  color: #5b5b5d;
 	  cursor: not-allowed;
 	}
@@ -698,4 +698,52 @@ img#purple {
   margin-top: 10px;
   gap: 10px;
 
+}
+
+.incrementerBox {
+  box-sizing: border-box;
+  height: 41px;
+  background: #FFFFFF;
+  border: 2px solid #B3BBCC;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  max-width: fit-content;
+
+  p {
+	font-family: 'Raleway', serif;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 26px;
+	text-align: center;
+	letter-spacing: -0.02em;
+	font-feature-settings: 'tnum' on, 'lnum' on;
+	color: #151F28;
+	min-width: 20px;
+  }
+
+  button {
+
+	background: none;
+	border: none;
+	transition: 0.7ms;
+
+	&:hover {
+	  color: rgba(0, 0, 0, 0.3)
+	}
+  }
+}
+
+.viewHeader {
+  background: #FFFFFF;
+  box-shadow: 0px 10px 35px -3px rgba(58, 70, 85, 0.08);
+  min-height: 80px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  flex-direction: row;
+  padding: 25px 10% 20px 20px;
 }

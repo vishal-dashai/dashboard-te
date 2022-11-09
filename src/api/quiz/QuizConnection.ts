@@ -5,7 +5,7 @@ import {Question} from "./Question";
 
 export class QuizConnection {
 
-	static async loadQuizByTopic(topic: TopicInfo): Promise<LiveQuiz> {
+	static async loadQuizByTopic(topic: TopicInfo): Promise<LiveQuiz | null> {
 		let quiz: ILiveQuiz = null;
 		await fetch(`${API}/getQuizByRestTopic?` + new URLSearchParams({
 			restaurantId: (topic.restaurant_id.toString()),
@@ -23,7 +23,7 @@ export class QuizConnection {
 			console.log("Quiz loading error")
 			console.log("ERROR: " + e)
 		})
-		return new LiveQuiz(quiz);
+		return quiz ? new LiveQuiz(quiz) : null;
 	}
 
 	static validateQuiz(edited: Quiz): { message: string, errorQuestion: Question } | null {
