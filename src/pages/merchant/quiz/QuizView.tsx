@@ -20,7 +20,7 @@ import Incrementer from "../../../components/elements/Incrementer";
 export default function QuizView() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
 	const [topics, setTopics] = useState<Array<TopicInfo>>([]);
-	const [viewing, setViewing] = useState<LiveQuiz>();
+	const [viewing, setViewing] = useState<LiveQuiz | null>(null);
 	const [show, setShow] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 	const [maxAttempts, setMaxAttempts] = useState(1);
@@ -68,7 +68,7 @@ export default function QuizView() {
 			<ManagerBar/>
 			<div>
 
-		{/*		<div className={'viewHeader'}>
+				{/*		<div className={'viewHeader'}>
 					<h5>Maximum Quiz Attempts: </h5>
 					<Incrementer value={maxAttempts} setValue={setMaxAttempts}/>
 
