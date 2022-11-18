@@ -6,10 +6,13 @@ import {Modal} from "react-bootstrap";
 import {CrossIcon, Icon, Spinner, TickIcon} from "evergreen-ui";
 import {useLocation} from "react-router-dom";
 import {ContentRequest} from "@thedashboardai/train-edu-front-end-api-wrapper";
+import {Popup} from "./components/Popup";
+import {PopupContext} from "./provider/PopupProvider";
 
 export default function Manager() {
 	const {user, setUser, setProfile} = useContext(AuthenticatedUserContext);
 	const location = useLocation();
+	const {popups} = useContext(PopupContext);
 
 	useEffect(() => {
 		const unsubscribeAuth = firebase.auth().onAuthStateChanged(async authenticatedUser => {
@@ -59,6 +62,7 @@ export default function Manager() {
 		<>
 			{/*{!user && localStorage.getItem("signedIn") ? <Login/> :*/}
 			<Outlet/>
+			{popups.map((data, idx) => <Popup popupData={data} key={idx}/>)}
 		</>
 	)
 }

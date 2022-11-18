@@ -9,6 +9,9 @@ import LoadingIndc from "../../components/elements/LoadingIndc";
 import {useFilePicker} from 'use-file-picker';
 import API from "../../api";
 import frame from '../../assets/wine.png';
+import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
+import {IPopup} from "../../components/Popup";
+import {useMediaQuery} from "react-responsive";
 
 export default function ContentEditor() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
@@ -18,6 +21,8 @@ export default function ContentEditor() {
 	const [topic, setTopic] = useState<ITopic>(null);
 	const [livePost, setLivePost] = useState<IPostContent>(null);
 	const [post, setPost] = useState<IPostContent>(null);
+	const {setPopups} = useContext(PopupContext) as PopupContextProps;
+	const isSmaller = useMediaQuery({query: '(max-width: 900px)'})
 
 	const [openFileSelector, {clear, filesContent, loading, errors}] = useFilePicker({
 		readAs: 'DataURL',
@@ -54,6 +59,14 @@ export default function ContentEditor() {
 		/*		if (true)
 					return;*/
 
+		const popup: IPopup = {
+			title: 'Uploading Content',
+			loadingText: 'Uploading Content',
+			subText: null,
+			isInProgress: true,
+		}
+		setPopups(a => [...a, popup])
+
 		if (id !== null) {
 			if (livePost.title !== post.title || livePost.description !== post.description) {
 				await fetch(`${API}/updateContentTextById/` + id, {
@@ -89,12 +102,6 @@ export default function ContentEditor() {
 			}
 			await setLivePost(post)
 		} else {
-/*			const blob = dataURItoBlob(filesContent[0].content);
-			let form = new FormData();
-			var file = new File([blob], filesContent[0].name, {lastModified: Date.now()})
-			console.log(file.name)
-			form.append('file', file);*/
-
 			const blob = dataURItoBlob(filesContent[0].content);
 			let form = new FormData();
 			form.append('file', blob);
@@ -107,7 +114,15 @@ export default function ContentEditor() {
 			}).catch((e) => {
 				console.log(e)
 			})
+
+			/*		const li = await ContentRequest.getPost(searchParams.get('id'))
+					await setPost(li)
+					await setLivePost(li)*/
 		}
+
+		setPopups(a => {
+			return a?.filter((b) => b.title !== popup.title)
+		})
 	}
 
 	useEffect(() => {
@@ -137,54 +152,28 @@ export default function ContentEditor() {
 			<ManagerBar/>
 			<div className="App">
 
-				<div className="content" style={{
-					flexDirection: 'row',
-					alignItems: 'flex-start',
-					width: '70%'
-				}}>
-
-					{/*	<div style={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						gap: 10,
-					}}>
-
-						<div style={{
-							borderRadius: 12,
-							backgroundColor: '#E7EAEF'
-						}} className={'catalogue'}>
-							<h4>Image Catalogue</h4>
-							<div className={'images'}>
-								<img alt={''}
-									 src={'https://images.unsplash.com/photo-1668067446629-307d4ef9e0f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=697&q=80'}/>
-								<img alt={''}
-									 src={'https://images.unsplash.com/photo-1668067446629-307d4ef9e0f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=697&q=80'}/>
-							</div>
-						</div>
-
-						<p style={{
-							fontWeight: 600,
-							fontSize: 16,
-							marginTop: 10,
-						}}>OR</p>
-						<button className={'nextButton'}>Browse Files</button>
-					</div>*/}
+				<div className="content">
 
 					{isLoading ? <LoadingIndc message={'Loading content'}/> :
 						<div style={{
-							flex: 1,
-							flexDirection: 'column'
+							flexDirection: 'column',
+							minWidth: '70%',
+							gap: isSmaller ? 10 : 40,
+							marginTop: 20,
+							marginRight: 20,
+							marginLeft: 20,
+							display: 'flex',
+							alignItems: 'center'
 						}}>
 							<div style={{
 								display: "flex",
-								flexDirection: 'row',
+								flexDirection: isSmaller ? 'column' : 'row',
 								alignItems: 'center',
-								justifyContent: 'space-between',
-								gap: 40,
+								justifyContent: isSmaller ? 'center' : 'space-between',
+								gap: isSmaller ? 10 : 40,
 								marginTop: 20,
 								marginLeft: 30,
-								width: '100%',
+								marginRight: 30,
 							}}>
 								<div>
 									<Breadcrumbs aria-label="breadcrumb">
@@ -213,7 +202,13 @@ export default function ContentEditor() {
 									}}/>
 								</div>
 
-								<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 30}}>
+								<div style={{
+									display: 'flex',
+									flexDirection: isSmaller ? 'row-reverse' : 'row',
+									alignItems: 'center',
+									gap: isSmaller ? 10 : 30,
+
+								}}>
 									<button className={'dangerButton'}><Icon icon={TrashIcon}
 																			 color={'#ffffff'}/>
 									</button>
@@ -225,12 +220,17 @@ export default function ContentEditor() {
 								</div>
 							</div>
 
-							<div className={'contentEditorArea'}>
+							<div className={'contentEditorArea'} style={{
+								flexDirection: isSmaller ? 'column' : 'row',
+								display: 'flex',
+								justifyContent: 'center',
+								width: '90%'
+							}}>
 								<div style={{
 									display: 'flex',
 									flexDirection: 'column',
 									alignItems: 'center',
-									gap: 10,
+									gap: isSmaller ? 5 : 10,
 								}}>
 
 									{filesContent.length > 0 && !loading && !errors.length ?

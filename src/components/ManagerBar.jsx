@@ -77,14 +77,14 @@ export default function ManagerBar() {
 								   id={location.pathname === '/merchant/upload' ? 'purple' : ''}>Upload Content</p>
 							</div>
 						</Nav.Link>
-						<Nav.Link href="/merchant/forms">
+		{/*				<Nav.Link href="/merchant/forms">
 							<div className={'linker'} id={location.pathname === '/merchant/forms' ? 'red' : ''}>
 								<img src={SendSquare} id={location.pathname === '/merchant/forms' ? 'red' : ''}
 									 alt=""/>
 								<p className={"linkerText"}
 								   id={location.pathname === '/merchant/forms' ? 'red' : ''}>Forms</p>
 							</div>
-						</Nav.Link>
+						</Nav.Link>*/}
 					</Nav>
 					<Nav>
 						<br/>

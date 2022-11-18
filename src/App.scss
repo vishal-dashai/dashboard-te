@@ -892,7 +892,7 @@ img#purple {
 	justify-content: space-between;
 
 	@media screen and (max-width: 950px) {
-		flex-direction: column;
+	  flex-direction: column;
 	}
   }
 
@@ -1000,6 +1000,10 @@ img#purple {
 	width: 268px;
 	height: 336px;
 	object-fit: cover;
+	@media screen and (max-width: 950px) {
+	  height: 236px;
+	  width: auto;
+	}
   }
 
   textarea {
@@ -1015,6 +1019,11 @@ img#purple {
 	&:focus {
 	  outline: none;
 	  border: 0.5px solid #b1b1b2;
+	}
+
+	@media screen and (max-width: 950px) {
+	  min-height: 250px;
+	  font-size: 16px;
 	}
   }
 }
@@ -1037,14 +1046,15 @@ img#purple {
   margin-top: 10px;
   background: rgba(0, 0, 0, 0);
   border-style: none;
-  //border-bottom: solid 1px;
   font-weight: bold;
   font-size: 40px;
   font-feature-settings: 'tnum' on, 'lnum' on;
   color: #151F28;
   resize: none;
+  max-width: 70vw;
+  height: 70px;
 
-  &:focus{
+  &:focus {
 	border: none;
 	outline: none;
   }
