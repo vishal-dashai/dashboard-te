@@ -1,25 +1,37 @@
 {
   "compilerOptions": {
-    "module": "system",
+    "module": "es2015",
+    "target": "es2015",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "outFile": "../../built/local/tsc.js",
     "sourceMap": true,
     "jsx": "react",
-    "moduleResolution": "Node16",
-
-
+    "moduleResolution": "node",
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "dist"
+    "outDir": "build",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noEmit": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "lib": ["DOM", "ESNext", "ES2015"],
+    "strict": false,
+    "rootDir": "src"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "node_modules/@georgesinatra/**.ts"
   ],
   "exclude": [
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js",
     "node_modules",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "build"
   ]
 }

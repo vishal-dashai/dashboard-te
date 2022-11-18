@@ -1,16 +1,15 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
 import './editable_list.scss';
-import {IQuiz, Quiz} from "../../api/quiz/Quiz";
 import {AddIcon, ChevronLeftIcon, CrossIcon, Icon} from 'evergreen-ui';
-import {Question} from "../../api/quiz/Question";
 import {Modal} from "react-bootstrap";
+import {IQuiz, Question} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 type EditableListProps = {
 	quiz: IQuiz;
 	updateQuiz: Function;
 	setSelectedId: Dispatch<SetStateAction<number>>;
 	selectedId: number;
-	errors: Question;
+	errors?: Question;
 };
 
 type DeleteModalProps = {
@@ -81,7 +80,9 @@ export const DeletePopup = ({
 	return (
 		<Modal
 			show={modalShow}
-			onHide={onHide}
+			onHide={() => {
+				onHide()
+			}}
 			size="lg"
 			aria-labelledby="contained-modal-title-vcenter"
 			centered

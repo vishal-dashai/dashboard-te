@@ -10,12 +10,9 @@ import {ChevronUpIcon, CrossIcon, Icon, Spinner, TickIcon} from "evergreen-ui";
 import {useSearchParams} from "react-router-dom";
 import {Modal} from "react-bootstrap";
 import {EditList} from "../components/quiz/EditList";
-import {IQuiz, LiveQuiz, Quiz} from "../api/quiz/Quiz";
-import TopicInfo from "../api/TopicInfo";
-import {QuizConnection} from "../api/quiz/QuizConnection";
 import QuizFieldEdit from "../components/quiz/QuizFieldEdit";
 import API from "../api";
-import {Question} from "../api/quiz/Question";
+import {ContentRequest, QuizConnection, Quiz, IQuiz, Question, LiveQuiz} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 type ConfirmationProps = {
 	quiz: IQuiz;
@@ -29,7 +26,7 @@ function ConfirmationPopup({show, onHide, publish, quiz, isUploading}: Confirmat
 	return (
 		<Modal
 			show={show}
-			onHide={onHide}
+			onHide={() => {onHide()}}
 			size="lg"
 			aria-labelledby="contained-modal-title-vcenter"
 			centered
@@ -192,10 +189,11 @@ export default function QuizEdit() {
 
 	const loadQuizData = async () => {
 		setLoading(true)
-		QuizConnection.loadQuizByTopic(new TopicInfo(searchParams.get('n'), profile.restaurantId, searchParams.get('id'))).then((a) => {
+		ContentRequest.getQuiz(profile.restaurantId, searchParams.get('id')).then((a) => {
 			if (a !== null) {
-				setLiveQuizData(a);
-				setEditingQuiz(a.toEditable());
+				const live = new LiveQuiz(a);
+				setLiveQuizData(live);
+				setEditingQuiz(live.toEditable());
 			} else {
 				setEditingQuiz(new Quiz(searchParams.get('n') + ' Quiz', searchParams.get('id'), []))
 			}

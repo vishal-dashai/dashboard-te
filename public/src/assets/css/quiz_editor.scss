@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+.quizEditor {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 50px;
+  margin-left: 150px;
+}
+
+.questionBox {
+  width: 310px;
+  height: 80vh;
+  background: #F3F4F7;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.viewArea {
+  width: 800px;
+  height: 70vh;
+  margin-top: 50px;
+  margin-left: 130px;
+  margin-right: 130px;
+  background: #fdfdfd;
+  border-radius: 12px;
+  padding: 10px 10px 10px 15px;
+}
+
+.quizNameEditor {
+  height: 70px;
+  margin: 10px;
+  font-family: 'Raleway', serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 34px;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+  color: #151F28;
+  resize: none;
+  background: rgba(0, 0, 0, 0);
+  border-style: none;
+  overflow: hidden;
+}
+
+.changesArea {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-bottom: 20px;
+}
+
+.confirmationModal{
+  background: #FFFFFF;
+  border-radius: 20px;
+}

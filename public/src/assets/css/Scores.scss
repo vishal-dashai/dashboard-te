@@ -1,0 +1,39 @@
+.searchArea {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  @media screen and (max-width: 850px) {
+	flex-direction: column;
+  }
+}
+
+.table {
+  font-family: 'Raleway', sans-serif !important;
+  background: rgba(243, 244, 247);
+  border: #C2C9D6 solid 2px;
+  width: 100%;
+}
+
+.tableHeader {
+  border-radius: 20px;
+  @media screen and (max-width: 850px) {
+	align-content: center;
+	justify-content: center;
+  }
+}
+
+.tableRow {
+}
+
+.headerCell {
+  @media screen and (max-width: 850px) {
+	width: fit-content;
+	max-width: fit-content;
+	margin: 0;
+	padding: 0;
+  }
+}

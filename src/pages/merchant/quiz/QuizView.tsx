@@ -3,58 +3,45 @@ import vector1 from '../../../assets/vector1.png'
 import vector2 from '../../../assets/vector2.png'
 import vector3 from '../../../assets/vector3.png'
 import '../../../assets/css/QuizViewer.scss';
-import {AuthenticatedUserContext} from "../../../provider/AuthenticatedUserProvider";
+import {AuthContextType, AuthenticatedUserContext} from "../../../provider/AuthenticatedUserProvider";
 import API from "../../../api";
-import TopicInfo from "../../../api/TopicInfo";
 import ManagerBar from "../../../components/ManagerBar";
-import {ChevronRightIcon, CrossIcon, Icon, Spinner} from "evergreen-ui";
+import {ChevronRightIcon, CrossIcon, Icon, SavedIcon, Spinner} from "evergreen-ui";
 import TaskSquare from '../../../assets/svg/task-square.svg';
 import EditIcon from '../../../assets/svg/edit-2.svg';
 import {Modal} from "react-bootstrap";
 import {useMediaQuery} from "react-responsive";
-import {LiveQuiz} from "../../../api/quiz/Quiz";
-import {QuizConnection} from "../../../api/quiz/QuizConnection";
 import {alphabet} from "../../../components/quiz/QuizFieldEdit";
 import Incrementer from "../../../components/elements/Incrementer";
+import {ContentRequest, ILiveQuiz, ITopic, LiveQuiz} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 export default function QuizView() {
-	const {user, profile} = useContext(AuthenticatedUserContext);
-	const [topics, setTopics] = useState<Array<TopicInfo>>([]);
+	const {user, profile} = useContext(AuthenticatedUserContext) as AuthContextType;
+	const [topics, setTopics] = useState<Array<ITopic>>([]);
 	const [viewing, setViewing] = useState<LiveQuiz | null>(null);
 	const [show, setShow] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 	const [maxAttempts, setMaxAttempts] = useState(1);
+	const [liveMaxAttempts, setLiveMaxAttempts] = useState(1);
 
 	const handleClose = () => {
 		setShow(false)
 		setViewing(null)
 	};
 
-	const handleShow = async (topic: TopicInfo) => {
+	const handleShow = async (topic: ITopic) => {
 		setShow(true)
-		await QuizConnection.loadQuizByTopic(topic).then((r: LiveQuiz) => {
-			setViewing(r)
+		await ContentRequest.getQuiz(topic.restaurant_id, topic.topicId).then((r: ILiveQuiz) => {
+			setViewing(new LiveQuiz(r))
 			console.log(viewing)
 		});
 	};
-
-	const loadTopics = async () => {
-		let tops: TopicInfo[] = []
-		await fetch(`${API}/getAllTopics/${profile.restaurantId}`).then(e => e.json()).then(data => {
-			for (let i in data) {
-				let top: TopicInfo = JSON.parse(JSON.stringify(data[i]));
-				if (top.name !== 'daily notes')
-					tops.push(top);
-			}
-		});
-		setTopics(tops)
-	}
 
 	useEffect(() => {
 		if (user !== null && profile !== null) {
 			const a = async () => {
 				setLoading(true)
-				await loadTopics()
+				setTopics(await ContentRequest.getAllTopics(profile.restaurantId))
 				setLoading(false)
 			}
 			a()
@@ -68,16 +55,33 @@ export default function QuizView() {
 			<ManagerBar/>
 			<div>
 
-				{/*		<div className={'viewHeader'}>
+				<div className={'viewHeader'}>
 					<h5>Maximum Quiz Attempts: </h5>
 					<Incrementer value={maxAttempts} setValue={setMaxAttempts}/>
 
-				</div>*/}
+					<button
+						onClick={async () => {
+							await fetch(`${API}/setOrUpdateQuizMaxAttempts/` + profile.restaurantId, {
+								method: 'PUT',
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								body: JSON.stringify({
+									maxQuizAttempts: maxAttempts
+								})
+							}).then((e) => {
+								setLiveMaxAttempts(maxAttempts)
+							})
+
+						}}
+						className={'pillButton'} id={(liveMaxAttempts === maxAttempts ? 'selected' : '')}>
+						<p>{liveMaxAttempts !== maxAttempts ? 'Save' : 'Saved'}</p>
+						<Icon icon={SavedIcon} color={(liveMaxAttempts === maxAttempts ? 'black' : 'white')}/></button>
+				</div>
 
 				<div className={'topics'}>
-
 					{isLoading ? <div className={'centerContent'}><h2>Loading</h2>
-						<Spinner/></div> : topics.map((a, i) => {
+						<Spinner/></div> : topics?.map((a, i) => {
 						return (
 							<div className={'topicSection'} key={i}>
 								<div style={{
