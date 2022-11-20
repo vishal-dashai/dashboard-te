@@ -58,7 +58,7 @@ export function Popup({popupData}: ConfirmationProps) {
 
 					<button
 						className="nextButton"
-						id={popupData.confirmType}
+						id={popupData?.confirmType}
 						onClick={() => {
 							popupData?.onConfirmed()
 						}}

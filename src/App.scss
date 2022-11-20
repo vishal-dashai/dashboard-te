@@ -647,6 +647,17 @@ img#purple {
   }
 }
 
+.nextButtonContentful {
+  @extend .nextButton;
+  width: auto;
+}
+
+.nextButtonBubbled {
+  @extend .nextButton;
+  width: auto;
+  border-radius: 70px;
+
+}
 
 .prevButton {
   padding: 18px 14px;
@@ -1015,6 +1026,7 @@ img#purple {
 	font-weight: 500;
 	font-size: 20px;
 	line-height: 33px;
+	color: black;
 
 	&:focus {
 	  outline: none;
@@ -1058,4 +1070,12 @@ img#purple {
 	border: none;
 	outline: none;
   }
+}
+
+.modal-header {
+  border: none;
+  align-self: center;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
 }

@@ -8,7 +8,7 @@ import vector3 from '../../assets/vector3.png'
 
 export default function Forms() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 
 	const loadTopics = async () => {
 	/*	let tops: TopicInfo[] = []

@@ -2,7 +2,6 @@ import React, {Fragment, useContext, useEffect, useState} from "react";
 import {AuthenticatedUserContext} from "../../provider/AuthenticatedUserProvider";
 import ManagerBar from "../../components/ManagerBar";
 import {Breadcrumbs, Link, Typography} from "@mui/material";
-import {Icon, TrashIcon} from "evergreen-ui";
 import {useSearchParams} from "react-router-dom";
 import {ContentRequest, IPostContent, ITopic} from "@thedashboardai/train-edu-front-end-api-wrapper";
 import LoadingIndc from "../../components/elements/LoadingIndc";
@@ -26,7 +25,7 @@ export default function ContentEditor() {
 
 	const [openFileSelector, {clear, filesContent, loading, errors}] = useFilePicker({
 		readAs: 'DataURL',
-		accept: 'image/*',
+		accept: ['.jpeg', '.jpg'],
 		multiple: false,
 		limitFilesConfig: {max: 1},
 		// minFileSize: 0.1, // in megabytes
@@ -54,10 +53,15 @@ export default function ContentEditor() {
 	}
 
 	const publishChanges = async () => {
-		const id: string | null = searchParams.get('id');
+		let id: string | null = searchParams.get('id');
 
-		/*		if (true)
-					return;*/
+		// convertPost(post)
+
+
+		if (post?.file_id !== null) {
+			id = post.file_id;
+		}
+		console.log(id)
 
 		const popup: IPopup = {
 			title: 'Uploading Content',
@@ -67,8 +71,10 @@ export default function ContentEditor() {
 		}
 		setPopups(a => [...a, popup])
 
-		if (id !== null) {
+		if (id !== null && livePost !== null) {
 			if (livePost.title !== post.title || livePost.description !== post.description) {
+				convertPost(post)
+
 				await fetch(`${API}/updateContentTextById/` + id, {
 					method: 'PUT',
 					headers: {
@@ -78,6 +84,13 @@ export default function ContentEditor() {
 						title: post.title,
 						description: post.description
 					})
+				}).then((r) => r.json()).then((a) => {
+					console.log(a)
+					const re: IPostContent = JSON.parse(JSON.stringify(a));
+					setLivePost(re)
+					setPost(re)
+				}).catch((e) => {
+					console.log(e)
 				})
 			}
 
@@ -94,8 +107,11 @@ export default function ContentEditor() {
 				await fetch(`${API}/updateContentImageById/` + id, {
 					method: 'PUT',
 					body: form
-				}).then((r) => {
-					console.log(r)
+				}).then((r) => r.json()).then((a) => {
+					console.log(a)
+					const re: IPostContent = JSON.parse(JSON.stringify(a));
+					setLivePost(re)
+					setPost(re)
 				}).catch((e) => {
 					console.log(e)
 				})
@@ -106,23 +122,68 @@ export default function ContentEditor() {
 			let form = new FormData();
 			form.append('file', blob);
 
+			convertPost(post)
+
 			await fetch(`${API}/uploadFile?title=${post.title}&description=${post.description}&chapter_number=${12}&topic_id=${searchParams.get('topic')}&restaurant_id=${profile.restaurantId}`, {
 				method: 'POST',
 				body: form
-			}).then((r) => {
-				console.log(r)
+			}).then((r) => r.json()).then((a) => {
+				console.log(a)
+				console.log('AAAAAAAAAAAAAAAAAAAAAA')
+				console.log(JSON.stringify(a))
+				const re: IPostContent = JSON.parse(JSON.stringify(a));
+				console.log(re.s3FileUrl)
+				console.log(re)
+
+				window.open('contentedit?topic=' + re.topic_id + '&id=' + re.file_id, '_self')
+
+				// setLivePost(re)
+				// setPost(re)
 			}).catch((e) => {
 				console.log(e)
 			})
-
-			/*		const li = await ContentRequest.getPost(searchParams.get('id'))
-					await setPost(li)
-					await setLivePost(li)*/
 		}
+		clear()
 
-		setPopups(a => {
-			return a?.filter((b) => b.title !== popup.title)
+		setPopups(a => a?.filter((b) => b.title !== popup.title))
+	}
+
+	function convertPost(post: IPostContent) {
+		let content = '';
+		let inList = false;
+		post.description.split('\n').forEach((s) => {
+			console.log(s + " | ")
+			if (s.startsWith('-')) {
+				if (!inList)
+					content += '<ul>'
+				inList = true
+				content += `<li>${s.substring(1)}</li>`
+			} else {
+				if (inList)
+					content += '</ul>'
+				if (s.length > 0)
+					content += `<p>${s}</p>`
+			}
 		})
+		post.description = content;
+		console.log(content)
+	}
+
+	function cleanPost(post: IPostContent){
+		let content = '';
+		post.description.split('<').forEach((s) => {
+			if(s.startsWith('p')){
+				content += s.substring(2) + '\n';
+			}
+			else if(s.startsWith('u')){
+
+			}
+			else if(s.startsWith('l')){
+				content += '-' + s.substring(3) + '\n';
+			}
+		})
+		console.log(content)
+		post.description = content
 	}
 
 	useEffect(() => {
@@ -132,6 +193,7 @@ export default function ContentEditor() {
 				await setTopic(await ContentRequest.getTopic(searchParams.get('topic')))
 				if (searchParams.has('id')) {
 					const li = await ContentRequest.getPost(searchParams.get('id'))
+					cleanPost(li)
 					await setPost(li)
 					await setLivePost(li)
 				} else {
@@ -209,9 +271,9 @@ export default function ContentEditor() {
 									gap: isSmaller ? 10 : 30,
 
 								}}>
-									<button className={'dangerButton'}><Icon icon={TrashIcon}
+									{/*	<button className={'dangerButton'}><Icon icon={TrashIcon}
 																			 color={'#ffffff'}/>
-									</button>
+									</button>*/}
 									<button className={'nextButton'} id={'blue'} onClick={() => {
 										publishChanges()
 									}
@@ -254,12 +316,26 @@ export default function ContentEditor() {
 									</button>
 								</div>
 
+								{/*<Editor
+										editorState={editorState}
+										toolbarClassName="toolbarClassName"
+										wrapperClassName="wrapperClassName"
+										editorClassName="editorClassName"
+										onEditorStateChange={this.onEditorStateChange}
+									/>*/}
 								<textarea placeholder={'Enter your content description'}
 										  defaultValue={post?.description} onChange={(e) => {
 									setPost(a => {
 										return {...a, description: e.target.value}
 									})
 								}}/>
+
+								{/*	<textarea placeholder={'Enter your content description'}
+										  defaultValue={post?.description} onChange={(e) => {
+									setPost(a => {
+										return {...a, description: e.target.value}
+									})
+								}}/>*/}
 							</div>
 						</div>}
 				</div>

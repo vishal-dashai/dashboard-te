@@ -7,11 +7,14 @@ import {useSearchParams} from "react-router-dom";
 import {ContentRequest, IPostContent, ITopic} from "@thedashboardai/train-edu-front-end-api-wrapper";
 import LoadingIndc from "../../components/elements/LoadingIndc";
 import {useMediaQuery} from "react-responsive";
+import {IPopup} from "../../components/Popup";
+import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
 
 export default function ContentViewer() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 	const [searchParams] = useSearchParams();
+	const {setPopups} = useContext(PopupContext) as PopupContextProps;
 
 	const [topic, setTopic] = useState<ITopic>(null);
 	const [posts, setPosts] = useState<IPostContent[] | null>(null);
@@ -42,7 +45,7 @@ export default function ContentViewer() {
 								display: "flex",
 								flexDirection: isSmaller ? 'column' : 'row',
 								alignItems: 'center',
-								gap: isSmaller ? 10: 40,
+								gap: isSmaller ? 10 : 40,
 								marginTop: 20,
 								marginRight: 20,
 								marginLeft: 20,
@@ -70,7 +73,8 @@ export default function ContentViewer() {
 
 								<button className={'nextButton'} id={'blue'} onClick={() => {
 									window.open('contentedit?topic=' + topic.topicId, '_self')
-								}}>Add New +</button>
+								}}>Add New +
+								</button>
 							</div>
 
 							<div className={'postsArea'}>
@@ -107,8 +111,23 @@ export default function ContentViewer() {
 																	}}
 															>Edit
 															</button>
-															<button className={'dangerButton'}><Icon icon={TrashIcon}
-																									 color={'#ffffff'}/>
+															<button className={'dangerButton'}
+																	onClick={() => {
+																		const popup: IPopup = {
+																			title: 'Delete "' + post.title + '"?',
+																			subText: 'Are you sure want to permanently delete this topic?',
+																			isInProgress: false,
+																			confirmType: 'warning',
+																			cancelText: 'Cancel',
+																			confirmText: 'Delete',
+																			onConfirmed: () => {
+
+																			}
+																		}
+																		setPopups(a => [...a, popup])
+																	}}
+															><Icon icon={TrashIcon}
+																   color={'#ffffff'}/>
 															</button>
 														</div>
 													</div>

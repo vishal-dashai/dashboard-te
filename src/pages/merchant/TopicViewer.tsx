@@ -7,7 +7,7 @@ import frame from '../../assets/img/Frame.png';
 
 export default function TopicViewer() {
 	const {user, profile} = useContext(AuthenticatedUserContext) as AuthContextType;
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 	const [topics, setTopics] = useState<ITopic[]>(null);
 
 	useEffect(() => {

@@ -14,7 +14,7 @@ export default function Scores() {
 	const [scores, setScores] = useState([]);
 	const [sortConfig, setSortConfig] = useState({key: "user_id", direction: "asc"});
 
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 	const [searchKey, setSearchKey] = useState('');
 
 	useEffect(() => {
