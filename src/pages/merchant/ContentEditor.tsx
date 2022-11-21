@@ -11,17 +11,16 @@ import frame from '../../assets/wine.png';
 import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
 import {IPopup} from "../../components/Popup";
 import {useMediaQuery} from "react-responsive";
+import TextEditor from "../../components/TextEditor";
 
-export function cleanPost(post: IPostContent){
+export function cleanPost(post: IPostContent) {
 	let content = '';
 	post.description.split('<').forEach((s) => {
-		if(s.startsWith('p')){
+		if (s.startsWith('p')) {
 			content += s.substring(2) + '\n';
-		}
-		else if(s.startsWith('u')){
+		} else if (s.startsWith('u')) {
 
-		}
-		else if(s.startsWith('l')){
+		} else if (s.startsWith('l')) {
 			content += '-' + s.substring(3) + '\n';
 		}
 	})
@@ -50,22 +49,16 @@ export default function ContentEditor() {
 	});
 
 	function dataURItoBlob(dataURI: string) {
-		// convert base64/URLEncoded data component to raw binary data held in a string
 		var byteString;
 		if (dataURI.split(',')[0].indexOf('base64') >= 0)
 			byteString = atob(dataURI.split(',')[1]);
 		else
 			byteString = unescape(dataURI.split(',')[1]);
-
-		// separate out the mime component
 		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-		// write the bytes of the string to a typed array
 		var ia = new Uint8Array(byteString.length);
 		for (var i = 0; i < byteString.length; i++) {
 			ia[i] = byteString.charCodeAt(i);
 		}
-
 		return new Blob([ia], {type: mimeString});
 	}
 
@@ -220,123 +213,138 @@ export default function ContentEditor() {
 						<div style={{
 							flexDirection: 'column',
 							minWidth: '70%',
-							gap: isSmaller ? 10 : 40,
+							gap: isSmaller ? 10 : 20,
 							marginTop: 20,
 							marginRight: 20,
 							marginLeft: 20,
 							display: 'flex',
 							alignItems: 'center'
 						}}>
-							<div style={{
-								display: "flex",
-								flexDirection: isSmaller ? 'column' : 'row',
-								alignItems: 'center',
-								justifyContent: isSmaller ? 'center' : 'space-between',
-								gap: isSmaller ? 10 : 40,
-								marginTop: 20,
-								marginLeft: 30,
-								marginRight: 30,
-							}}>
-								<div>
-									<Breadcrumbs aria-label="breadcrumb">
-										<Link
-											underline="hover"
-											color="inherit"
-											href="/merchant/content"
-										>
-											Your Content
-										</Link>
-										<Link
-											underline="hover"
-											color="inherit"
-											href={("/merchant/contentview?id=" + searchParams.get('topic'))}
-										>
-											{topic.name}
-										</Link>
-										<Typography color="text.primary">{post?.title}</Typography>
-									</Breadcrumbs>
 
-									<textarea className={"contentTitleEdit"} placeholder={"Enter content title"}
-											  defaultValue={post.title} onChange={(e) => {
-										setPost(a => {
-											return {...a, title: e.target.value}
-										})
-									}}/>
-								</div>
+							{!post ?
+								<>
+									<h1>Content failed to load. Please go back and try again.</h1>
+									<h4>If this error persists, contact us.</h4>
+									<button className={'nextButton'} id={'go'} onClick={() => {
+										window.open('/merchant/content', '_self')
+									}
+									}>Go Back
+									</button>
+								</> :
+								<>
+									<div style={{
+										display: "flex",
+										flexDirection: isSmaller ? 'column' : 'row',
+										alignItems: 'center',
+										justifyContent: isSmaller ? 'center' : 'space-between',
+										gap: isSmaller ? 10 : 40,
+										marginTop: 20,
+										marginLeft: 30,
+										marginRight: 30,
+									}}>
+										<div>
+											<Breadcrumbs aria-label="breadcrumb">
+												<Link
+													underline="hover"
+													color="inherit"
+													href="/merchant/content"
+												>
+													Your Content
+												</Link>
+												<Link
+													underline="hover"
+													color="inherit"
+													href={("/merchant/contentview?id=" + searchParams.get('topic'))}
+												>
+													{topic.name}
+												</Link>
+												<Typography color="text.primary">{post?.title}</Typography>
+											</Breadcrumbs>
 
-								<div style={{
-									display: 'flex',
-									flexDirection: isSmaller ? 'row-reverse' : 'row',
-									alignItems: 'center',
-									gap: isSmaller ? 10 : 30,
+											<textarea className={"contentTitleEdit"} placeholder={"Enter content title"}
+													  defaultValue={post.title} onChange={(e) => {
+												setPost(a => {
+													return {...a, title: e.target.value}
+												})
+											}}/>
+										</div>
 
-								}}>
-									{/*	<button className={'dangerButton'}><Icon icon={TrashIcon}
+										<div style={{
+											display: 'flex',
+											flexDirection: isSmaller ? 'row-reverse' : 'row',
+											alignItems: 'center',
+											gap: isSmaller ? 10 : 30,
+
+										}}>
+											{/*	<button className={'dangerButton'}><Icon icon={TrashIcon}
 																			 color={'#ffffff'}/>
 									</button>*/}
-									<button className={'nextButton'} id={'blue'} onClick={() => {
-										publishChanges()
-									}
-									}>Save Changes
-									</button>
-								</div>
-							</div>
+											<button className={'nextButton'} id={'blue'} onClick={() => {
+												publishChanges()
+											}
+											}>Save Changes
+											</button>
+										</div>
+									</div>
 
-							<div className={'contentEditorArea'} style={{
-								flexDirection: isSmaller ? 'column' : 'row',
-								display: 'flex',
-								justifyContent: 'center',
-								width: '90%'
-							}}>
-								<div style={{
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-									gap: isSmaller ? 5 : 10,
-								}}>
+									<div className={'contentEditorArea'} style={{
+										flexDirection: isSmaller ? 'column' : 'row',
+										display: 'flex',
+										justifyContent: 'center',
+										width: '90%'
+									}}>
+										<div style={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center',
+											gap: isSmaller ? 5 : 10,
+										}}>
 
-									{filesContent.length > 0 && !loading && !errors.length ?
-										filesContent.map((file, indx) => {
-											return (
-												<Fragment key={indx}>
-													<img alt={''}
-														 src={file.content}/>
-													<button className={'pillButton'} id={'selected'} onClick={() => {
-														clear()
-													}}>Remove Upload
-													</button>
-												</Fragment>)
-										}) :
+											{filesContent.length > 0 && !loading && !errors.length ?
+												filesContent.map((file, indx) => {
+													return (
+														<Fragment key={indx}>
+															<img alt={''}
+																 src={file.content}/>
+															<button className={'pillButton'} id={'selected'}
+																	onClick={() => {
+																		clear()
+																	}}>Remove Upload
+															</button>
+														</Fragment>)
+												}) :
 
-										<img alt={''} src={post?.s3FileUrl ?? frame}/>}
+												<img alt={''} src={post?.s3FileUrl ?? frame}/>}
 
-									<button className={'nextButton'} onClick={() => {
-										openFileSelector()
-									}}>Browse Files
-									</button>
-								</div>
+											<button className={'nextButton'} onClick={() => {
+												openFileSelector()
+											}}>Browse Files
+											</button>
+										</div>
 
-								{/*<Editor
+										{/*<Editor
 										editorState={editorState}
 										toolbarClassName="toolbarClassName"
 										wrapperClassName="wrapperClassName"
 										editorClassName="editorClassName"
 										onEditorStateChange={this.onEditorStateChange}
 									/>*/}
-								<textarea placeholder={'Enter your content description'}
-										  defaultValue={post?.description} onChange={(e) => {
-									setPost(a => {
-										return {...a, description: e.target.value}
-									})
-								}}/>
+										<TextEditor/>
+									{/*	<textarea placeholder={'Enter your content description'}
+												  defaultValue={post?.description} onChange={(e) => {
+											setPost(a => {
+												return {...a, description: e.target.value}
+											})
+										}}/>*/}
 
-								{/*	<textarea placeholder={'Enter your content description'}
+										{/*	<textarea placeholder={'Enter your content description'}
 										  defaultValue={post?.description} onChange={(e) => {
 									setPost(a => {
 										return {...a, description: e.target.value}
 									})
 								}}/>*/}
-							</div>
+									</div>
+								</>}
 						</div>}
 				</div>
 			</div>
