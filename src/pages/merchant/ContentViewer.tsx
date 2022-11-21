@@ -9,6 +9,8 @@ import LoadingIndc from "../../components/elements/LoadingIndc";
 import {useMediaQuery} from "react-responsive";
 import {IPopup} from "../../components/Popup";
 import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
+import {cleanPost} from "./ContentEditor";
+import API from "../../api";
 
 export default function ContentViewer() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
@@ -25,7 +27,9 @@ export default function ContentViewer() {
 			const a = async () => {
 				setLoading(true)
 				setTopic(await ContentRequest.getTopic(searchParams.get('id')))
-				setPosts(await ContentRequest.getContentForTopic(profile.restaurantId, searchParams.get('id')))
+				const valid = (await ContentRequest.getContentForTopic(profile.restaurantId, searchParams.get('id')))?.filter((a) => a.isActive)
+				valid.forEach((b) => cleanPost(b))
+				setPosts(valid)
 				setLoading(false)
 			}
 			a()
@@ -121,7 +125,13 @@ export default function ContentViewer() {
 																			cancelText: 'Cancel',
 																			confirmText: 'Delete',
 																			onConfirmed: () => {
-
+																				fetch(`${API}/deleteContentById/` + post.file_id, {
+																					method: 'PUT',
+																				}).then((a) => a.json()).then((b) => {
+																					console.log(b)
+																				})
+																				setPosts(posts.filter((p) => p.file_id !== post.file_id))
+																				setPopups(a => a?.filter((b) => b.title !== popup.title))
 																			}
 																		}
 																		setPopups(a => [...a, popup])

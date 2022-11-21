@@ -12,6 +12,23 @@ import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
 import {IPopup} from "../../components/Popup";
 import {useMediaQuery} from "react-responsive";
 
+export function cleanPost(post: IPostContent){
+	let content = '';
+	post.description.split('<').forEach((s) => {
+		if(s.startsWith('p')){
+			content += s.substring(2) + '\n';
+		}
+		else if(s.startsWith('u')){
+
+		}
+		else if(s.startsWith('l')){
+			content += '-' + s.substring(3) + '\n';
+		}
+	})
+	console.log(content)
+	post.description = content
+}
+
 export default function ContentEditor() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
 	const [isLoading, setLoading] = useState(true);
@@ -167,23 +184,6 @@ export default function ContentEditor() {
 		})
 		post.description = content;
 		console.log(content)
-	}
-
-	function cleanPost(post: IPostContent){
-		let content = '';
-		post.description.split('<').forEach((s) => {
-			if(s.startsWith('p')){
-				content += s.substring(2) + '\n';
-			}
-			else if(s.startsWith('u')){
-
-			}
-			else if(s.startsWith('l')){
-				content += '-' + s.substring(3) + '\n';
-			}
-		})
-		console.log(content)
-		post.description = content
 	}
 
 	useEffect(() => {
