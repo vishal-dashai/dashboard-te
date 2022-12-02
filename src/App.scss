@@ -1000,7 +1000,7 @@ img#purple {
 }
 
 
-.contentEditorArea {
+.contentEditorArea:not(.phonePreview) {
   padding: 30px;
   display: flex;
   flex-direction: row;
@@ -1078,4 +1078,13 @@ img#purple {
   width: 100%;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.phonePreview {
+	//background-image: ;
+
+  img {
+	width: auto;
+	height: 600px;
+  }
 }

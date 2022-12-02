@@ -48,7 +48,7 @@ export const FileArea = () => {
 			<FileUploader
 				acceptedMimeTypes={acceptedMimeTypes}
 				label="Upload Files"
-				description="You can upload up to 5 files. Files can be up to 50MB. You can upload .jpg and .pdf file formats."
+				description="Upload .pdf, .csv, .excel, .ppt, .doc, .docx, .jpeg, .png, .mp4 files. 1GB size limit per file"
 				disabled={files.length + fileRejections.length >= maxFiles}
 				maxSizeInBytes={maxSizeInBytes}
 				maxFiles={maxFiles}

@@ -12,6 +12,7 @@ import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
 import {IPopup} from "../../components/Popup";
 import {useMediaQuery} from "react-responsive";
 import TextEditor from "../../components/TextEditor";
+import preview from "../../assets/img/phone_preview.png"
 
 export function cleanPost(post: IPostContent) {
 	let content = '';
@@ -38,6 +39,7 @@ export default function ContentEditor() {
 	const [post, setPost] = useState<IPostContent>(null);
 	const {setPopups} = useContext(PopupContext) as PopupContextProps;
 	const isSmaller = useMediaQuery({query: '(max-width: 900px)'})
+	const [value, setValue] = useState<string>('');
 
 	const [openFileSelector, {clear, filesContent, loading, errors}] = useFilePicker({
 		readAs: 'DataURL',
@@ -66,6 +68,11 @@ export default function ContentEditor() {
 		let id: string | null = searchParams.get('id');
 
 		// convertPost(post)
+
+		console.log(value)
+
+		if (true)
+			return
 
 
 		if (post?.file_id !== null) {
@@ -329,13 +336,22 @@ export default function ContentEditor() {
 										editorClassName="editorClassName"
 										onEditorStateChange={this.onEditorStateChange}
 									/>*/}
-										<TextEditor/>
-									{/*	<textarea placeholder={'Enter your content description'}
+										{/*<div style={{
+											border: '1px solid black'
+										}}>
+											<TextEditor value={value} setValue={setValue}/>
+										</div>
+
+										<div className={'phonePreview'}>
+											<img src={preview} />
+										</div>
+*/}
+											<textarea placeholder={'Enter your content description'}
 												  defaultValue={post?.description} onChange={(e) => {
 											setPost(a => {
 												return {...a, description: e.target.value}
 											})
-										}}/>*/}
+										}}/>
 
 										{/*	<textarea placeholder={'Enter your content description'}
 										  defaultValue={post?.description} onChange={(e) => {

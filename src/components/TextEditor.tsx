@@ -1,11 +1,12 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {Dispatch, SetStateAction, useCallback, useMemo} from 'react'
 import isHotkey from 'is-hotkey'
 import {Editable, Slate, useSlate, withReact} from 'slate-react'
 import {BaseEditor, createEditor, Editor, Element as SlateElement, Transforms,} from 'slate'
 import {withHistory} from 'slate-history'
-import {Toolbar} from "@mui/material";
 import {Button} from "react-bootstrap";
-import {Icon} from "evergreen-ui";
+import {BoldIcon, Icon, ItalicIcon, ListIcon, NumberedListIcon, UnderlineIcon} from "evergreen-ui";
+import {Toolbar} from "@mui/material";
+import ToggleButton from "./elements/ToggleButton";
 
 const HOTKEYS = {
 	'mod+b': 'bold',
@@ -17,35 +18,39 @@ const HOTKEYS = {
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 
-const TextEditor = () => {
-	const renderElement = useCallback((props: JSX.IntrinsicAttributes & { attributes: any; children: any; element: any }) => <Element {...props} />, [])
-	const renderLeaf = useCallback((props: JSX.IntrinsicAttributes & { attributes: any; children: any; leaf: any }) => <Leaf {...props} />, [])
+const TextEditor = ({value, setValue}: { value: string, setValue: Dispatch<SetStateAction<string>> }) => {
+	const renderElement = useCallback((props: JSX.IntrinsicAttributes & { attributes: any; children: any; element: any }) =>
+		<Element {...props} />, [])
+	const renderLeaf = useCallback((props: JSX.IntrinsicAttributes & { attributes: any; children: any; leaf: any }) =>
+		<Leaf {...props} />, [])
 	const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
 	return (
-		<Slate editor={editor} value={initialValue}>
+		<Slate
+			editor={editor}
+			value={initialValue}
+			// @ts-ignore
+			onChange={va => {
+				const isAstChange = editor.operations.some((op: { type: string }) => 'set_selection' !== op.type)
+				if (isAstChange) {
+					setValue(JSON.stringify(va))
+				}
+			}}
+		>
 			<Toolbar>
-				<MarkButton format="bold" icon="format_bold"/>
-				<MarkButton format="italic" icon="format_italic"/>
-				<MarkButton format="underline" icon="format_underlined"/>
-				<MarkButton format="code" icon="code"/>
-				<BlockButton format="heading-one" icon="looks_one"/>
-				<BlockButton format="heading-two" icon="looks_two"/>
-				<BlockButton format="block-quote" icon="format_quote"/>
-				<BlockButton format="numbered-list" icon="format_list_numbered"/>
-				<BlockButton format="bulleted-list" icon="format_list_bulleted"/>
-				<BlockButton format="left" icon="format_align_left"/>
-				<BlockButton format="center" icon="format_align_center"/>
-				<BlockButton format="right" icon="format_align_right"/>
-				<BlockButton format="justify" icon="format_align_justify"/>
+				<MarkButton format="bold" icon={BoldIcon}/>
+				<MarkButton format="italic" icon={ItalicIcon}/>
+				<MarkButton format="underline" icon={UnderlineIcon}/>
+				<BlockButton format="numbered-list" icon={NumberedListIcon}/>
+				<BlockButton format="bulleted-list" icon={ListIcon}/>
 			</Toolbar>
 			<Editable
 				renderElement={renderElement}
 				renderLeaf={renderLeaf}
-				placeholder="Enter some rich text…"
+				placeholder="Enter your content here."
 				spellCheck
 				autoFocus
-				onKeyDown={event => {
+				onKeyDown={(event: { preventDefault: () => void }) => {
 					for (const hotkey in HOTKEYS) {
 						if (isHotkey(hotkey, event as any)) {
 							event.preventDefault()
@@ -95,7 +100,7 @@ const toggleBlock = (editor: BaseEditor, format: string) => {
 
 	if (!isActive && isList) {
 		// @ts-ignore
-		const block = { type: format, children: [] }
+		const block = {type: format, children: []}
 		Transforms.wrapNodes(editor, block)
 	}
 }
@@ -111,7 +116,7 @@ const toggleMark = (editor: BaseEditor, format: string) => {
 }
 
 const isBlockActive = (editor: BaseEditor, format: string, blockType = 'type') => {
-	const { selection } = editor
+	const {selection} = editor
 	if (!selection) return false
 
 	// @ts-ignore
@@ -135,8 +140,8 @@ const isMarkActive = (editor: BaseEditor, format: string) => {
 	return marks ? marks[format] === true : false
 }
 
-const Element = ({ attributes, children, element }: {attributes: any, children: any, element: any}) => {
-	const style = { textAlign: element.align }
+const Element = ({attributes, children, element}: { attributes: any, children: any, element: any }) => {
+	const style = {textAlign: element.align}
 	switch (element.type) {
 		case 'block-quote':
 			return (
@@ -183,7 +188,7 @@ const Element = ({ attributes, children, element }: {attributes: any, children: 
 	}
 }
 
-const Leaf = ({ attributes, children, leaf }: {attributes: any, children: any, leaf: any}) => {
+const Leaf = ({attributes, children, leaf}: { attributes: any, children: any, leaf: any }) => {
 	if (leaf.bold) {
 		children = <strong>{children}</strong>
 	}
@@ -203,28 +208,41 @@ const Leaf = ({ attributes, children, leaf }: {attributes: any, children: any, l
 	return <span {...attributes}>{children}</span>
 }
 
-const BlockButton = ({ format, icon }: {format: any, icon: any}) => {
+const BlockButton = ({format, icon}: { format: any, icon: any }) => {
 	const editor = useSlate()
 	return (
-		<Button
+		<ToggleButton
 			active={isBlockActive(
 				editor,
 				format,
 				TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
 			)}
-			onMouseDown={event => {
-				event.preventDefault()
+			onClick={() => {
 				toggleBlock(editor, format)
 			}}
+/*			onMouseDown={event => {
+				event.preventDefault()
+				toggleBlock(editor, format)
+			}}*/
 		>
 			<Icon icon={icon}/>
-		</Button>
+		</ToggleButton>
 	)
 }
 
-const MarkButton = ({ format, icon }: {format: any, icon: any}) => {
+const MarkButton = ({format, icon}: { format: any, icon: any }) => {
 	const editor = useSlate()
 	return (
+
+		/*
+				<button onMouseDown={event => {
+			event.preventDefault()
+			toggleMark(editor, format)
+		}}>
+			<Icon icon={icon}/>
+		</button>
+
+		 */
 		<Button
 			active={isMarkActive(editor, format)}
 			onMouseDown={event => {
@@ -240,39 +258,16 @@ const MarkButton = ({ format, icon }: {format: any, icon: any}) => {
 const initialValue = [
 	{
 		type: 'paragraph',
+		align: 'left',
 		children: [
-			{ text: 'This is editable ' },
-			{ text: 'rich', bold: true },
-			{ text: ' text, ' },
-			{ text: 'much', italic: true },
-			{ text: ' better than a ' },
-			{ text: '<textarea>', code: true },
-			{ text: '!' },
+			{text: 'This is editable '},
+			{text: 'rich', bold: true},
+			{text: ' text, '},
+			{text: 'much', italic: true},
+			{text: ' better than a '},
+			{text: '!'},
 		],
-	},
-	{
-		type: 'paragraph',
-		children: [
-			{
-				text:
-					"Since it's rich text, you can do things like turn a selection of text ",
-			},
-			{ text: 'bold', bold: true },
-			{
-				text:
-					', or add a semantically rendered block quote in the middle of the page, like this:',
-			},
-		],
-	},
-	{
-		type: 'block-quote',
-		children: [{ text: 'A wise quote.' }],
-	},
-	{
-		type: 'paragraph',
-		align: 'center',
-		children: [{ text: 'Try it out for yourself!' }],
-	},
+	}
 ]
 
 export default TextEditor
