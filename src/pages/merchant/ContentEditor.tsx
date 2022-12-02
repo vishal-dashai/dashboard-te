@@ -71,10 +71,6 @@ export default function ContentEditor() {
 
 		console.log(value)
 
-		if (true)
-			return
-
-
 		if (post?.file_id !== null) {
 			id = post.file_id;
 		}
