@@ -5,23 +5,31 @@ import reportWebVitals from './reportWebVitals';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/auth";
 import App from "./App";
-import {createBrowserRouter} from "react-router-dom";
-import NotFound from "./pages/NotFound";
-import Scores from "./pages/merchant/Scores";
 import {RouterProvider} from "react-router";
 import FIREBASE_CONFIG from "./firebaseconfig";
-import Login from "./pages/Login";
-import RequireAuth from "./components/RequireAuth";
-import RequireElevated from "./components/RequireElevated";
-import Onboard from "./pages/Onboard";
-import Updates from "./pages/Updates";
-import Forgot from "./pages/Forgot";
 import './App.scss';
-import Upload from "./pages/merchant/Upload";
+import {createBrowserRouter} from "react-router-dom";
+import NotFound from "./pages/NotFound";
+import RequireAuth from "./components/RequireAuth";
+import Scores from "./pages/merchant/Scores";
+import Login from "./pages/Login";
+import RequireElevated from "./components/RequireElevated";
 import QuizEdit from "./pages/QuizEdit";
 import QuizView from "./pages/merchant/quiz/QuizView";
+import Updates from "./pages/Updates";
+import Upload from "./pages/merchant/Upload";
+import TopicViewer from "./pages/merchant/TopicViewer";
+import ContentViewer from "./pages/merchant/ContentViewer";
+import ContentEditor from "./pages/merchant/ContentEditor";
+import Forms from "./pages/merchant/Forms";
+import Onboard from "./pages/Onboard";
+import Forgot from "./pages/Forgot";
+import Landing from "./pages/Landing";
 
-const router = createBrowserRouter([
+const app = firebase.initializeApp(FIREBASE_CONFIG);
+
+
+export const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <App/>,
@@ -36,10 +44,10 @@ const router = createBrowserRouter([
 				path: "home",
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
-			/*			{
-							path: "landing",
-							element: (<Landing/>)
-						},*/
+			{
+				path: "landing",
+				element: (<RequireAuth><Landing/></RequireAuth>)
+			},
 			{
 				path: "merchant/scores",
 				element: (<RequireAuth><Scores/></RequireAuth>)
@@ -61,6 +69,22 @@ const router = createBrowserRouter([
 				element: (<RequireElevated><Upload/></RequireElevated>)
 			},
 			{
+				path: "merchant/content",
+				element: (<RequireElevated><TopicViewer/></RequireElevated>)
+			},
+			{
+				path: "merchant/contentview",
+				element: (<RequireElevated><ContentViewer/></RequireElevated>)
+			},
+			{
+				path: "merchant/contentedit",
+				element: (<RequireElevated><ContentEditor/></RequireElevated>)
+			},
+			{
+				path: "merchant/forms",
+				element: (<RequireElevated><Forms/></RequireElevated>)
+			},
+			{
 				path: "onboard",
 				element: (<Onboard/>)
 			},
@@ -69,10 +93,8 @@ const router = createBrowserRouter([
 				element: (<Forgot/>)
 			}
 		]
-	},
+	}
 ]);
-
-const app = firebase.initializeApp(FIREBASE_CONFIG);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

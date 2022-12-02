@@ -2,10 +2,8 @@ import React, {Dispatch, SetStateAction, useState} from "react";
 import './quiz_field_editor.scss';
 import {AddIcon, Button, ChevronLeftIcon, ChevronRightIcon, CrossIcon, Icon, TickIcon} from "evergreen-ui";
 import Bubble from "../elements/Bubble";
-import {Quiz} from "../../api/quiz/Quiz";
-import {Answer} from "../../api/quiz/Answer";
-import {Question} from "../../api/quiz/Question";
 import {Alert} from "react-bootstrap";
+import {Quiz, Question, Answer} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
