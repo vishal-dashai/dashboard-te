@@ -61,7 +61,7 @@ export default function ManagerBar() {
 								   id={location.pathname.includes('quiz') ? 'purple' : ''}>Quiz Editor</p>
 							</div>
 						</Nav.Link>
-		{/*				<Nav.Link href="/merchant/updates">
+						{/*				<Nav.Link href="/merchant/updates">
 							<div className={'linker'} id={location.pathname === '/merchant/updates' ? 'green' : ''}>
 								<img src={Flash} id={location.pathname === '/merchant/updates' ? 'green' : ''}
 									 alt=""/>
@@ -69,22 +69,22 @@ export default function ManagerBar() {
 								   id={location.pathname === '/merchant/updates' ? 'green' : ''}>Daily Notes</p>
 							</div>
 						</Nav.Link>*/}
-						<Nav.Link href="/merchant/upload">
+	{/*					<Nav.Link href="/merchant/upload">
 							<div className={'linker'} id={location.pathname === '/merchant/upload' ? 'purple' : ''}>
 								<img src={SendSquare} id={location.pathname === '/merchant/upload' ? 'purple' : ''}
 									 alt=""/>
 								<p className={"linkerText"}
 								   id={location.pathname === '/merchant/upload' ? 'purple' : ''}>Upload Content</p>
 							</div>
-						</Nav.Link>
-		{/*				<Nav.Link href="/merchant/forms">
+						</Nav.Link>*/}
+						<Nav.Link href="/merchant/forms">
 							<div className={'linker'} id={location.pathname === '/merchant/forms' ? 'red' : ''}>
 								<img src={SendSquare} id={location.pathname === '/merchant/forms' ? 'red' : ''}
 									 alt=""/>
 								<p className={"linkerText"}
 								   id={location.pathname === '/merchant/forms' ? 'red' : ''}>Forms</p>
 							</div>
-						</Nav.Link>*/}
+						</Nav.Link>
 					</Nav>
 					<Nav>
 						<br/>

@@ -1081,10 +1081,22 @@ img#purple {
 }
 
 .phonePreview {
-	//background-image: ;
+  //background-image: ;
 
   img {
 	width: auto;
 	height: 600px;
+  }
+}
+
+.downloadButton {
+  padding: 9px 9px 4px;
+  background: #151F28;
+  border-radius: 100px;
+  transition: 0.2s;
+  border: none;
+
+  &:hover {
+	background: #565a62;
   }
 }
