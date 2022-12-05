@@ -1,38 +1,58 @@
-import React, {useContext, useEffect, useState} from "react";
+import React from "react";
 import {useMediaQuery} from "react-responsive";
-import {AuthenticatedUserContext} from "../../provider/AuthenticatedUserProvider";
 import ManagerBar from "../../components/ManagerBar";
-import vector1 from '../../assets/vector1.png'
-import vector2 from '../../assets/vector2.png'
-import vector3 from '../../assets/vector3.png'
+import {DownloadIcon, Icon} from "evergreen-ui";
+
+type IFile = {
+	name: string;
+	path: string;
+}
+
+const files: IFile[] = [
+	{
+		name: "IncidentReport.pdf",
+		path: '/files/IncidentReport.pdf'
+	},
+	{
+		name: "ActOfViolenceReport.pdf",
+		path: '/files/ActOfViolenceReport.pdf'
+	},
+	{
+		name: "EmployeeLog.pdf",
+		path: '/files/EmployeeLog.pdf'
+	},
+	{
+		name: "AlcoholWarningEnglish.pdf",
+		path: '/files/AlcoholWarningEnglish.pdf'
+	},
+	{
+		name: "AlcoholWarningSpanish.pdf",
+		path: '/files/AlcoholWarningSpanish.pdf'
+	},
+	{
+		name: "IncidentReport.pdf",
+		path: '/files/IncidentReport.pdf'
+	},
+	{
+		name: "IDLog.pdf",
+		path: '/files/IDLog.pdf'
+	},
+	{
+		name: "InspectionReport.pdf",
+		path: '/files/InspectionReport.pdf'
+	},
+	{
+		name: "SecurityAffidavit.pdf",
+		path: '/files/SecurityAffidavit.pdf'
+	},
+	{
+		name: "SecurityAttestationForm.pdf",
+		path: '/files/SecurityAttestationForm.pdf'
+	}
+];
+
 
 export default function Forms() {
-	const {user, profile} = useContext(AuthenticatedUserContext);
-	const [isLoading, setLoading] = useState(true);
-
-	const loadTopics = async () => {
-	/*	let tops: TopicInfo[] = []
-		await fetch(`${API}/getAllTopics/${profile.restaurantId}`).then(e => e.json()).then(data => {
-			for (let i in data) {
-				let top: TopicInfo = JSON.parse(JSON.stringify(data[i]));
-				if (top.name !== 'daily notes')
-					tops.push(top);
-			}
-		});
-		setTopics(tops)*/
-	}
-
-	useEffect(() => {
-		if (user !== null && profile !== null) {
-			const a = async () => {
-				setLoading(true)
-				await loadTopics()
-				setLoading(false)
-			}
-			a()
-		}
-	}, [user, profile])
-
 	const isSmaller = useMediaQuery({query: '(max-width: 1200px)'})
 
 	return (
@@ -45,40 +65,43 @@ export default function Forms() {
 				</div>
 
 				<div className="content">
-					<div style={{marginTop: 10}}>
+					<div className={'tileArea'}>
 
-						{/*<div style={{
-							display: 'flex',
-							flexDirection: 'column',
-							minHeight: '100%',
-							alignContent: 'center',
-							alignItems: 'center',
-							flex: '1 1 auto',
-							marginTop: 20,
-							gap: 20,
-						}}>
+						{files.map((a, i) => {
 
-							{!uploading && wasGood &&
-								<Alert intent={'success'} title={'Content uploaded successfully!'}/>}
-							{uploading ? <><h2>Uploading your content! Please do not close or refresh this page.</h2>
-								<Spinner/></> : <><Pane maxWidth={500} minWidth={200}>
-								<FileUpload files={files} setFiles={setFiles}/>
-							</Pane>
-
-								<Button iconAfter={TickIcon}
-										className="nextButton"
-										style={{background: '#44A8FF'}}
-										onClick={() => {
-											uploadContent()
-										}}
-								>{'Submit Content'}</Button></>}
-						</div>*/}
-
+							return (
+								<div style={{
+									backgroundColor: '#F3F4F7',
+									borderRadius: 12,
+									display: 'flex',
+									flexDirection: 'row',
+									justifyContent: 'space-between',
+									alignItems: 'center',
+									padding: '16px 24px',
+									width: 400,
+									height: 80,
+								}}>
+									<p style={{
+										color: 'black',
+										fontSize: 18,
+									}}>{a.name}</p>
+									<button className={'downloadButton'} onClick={() => {
+										fetch(a.path).then(response => {
+											response.blob().then(blob => {
+												const fileURL = window.URL.createObjectURL(blob);
+												let alink = document.createElement('a');
+												alink.href = fileURL;
+												alink.download = a.name;
+												alink.click();
+											})
+										})
+									}}>
+										<Icon icon={DownloadIcon} color={'white'} size={24}/>
+									</button>
+								</div>
+							)
+						})}
 					</div>
-
-					<img className="vector1" src={vector1} alt="design"/>
-					<img className="vector2" src={vector2} alt="design"/>
-					<img className="vector3" src={vector3} alt="design"/>
 				</div>
 			</div>
 		</>

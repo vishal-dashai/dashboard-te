@@ -3,13 +3,13 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import logo from '../assets/logo.png'
-import {Icon, LogOutIcon, Text} from "evergreen-ui";
+import {Icon, LogOutIcon} from "evergreen-ui";
 import {getAuth} from "firebase/auth";
 import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
 import DeviceMessage from '../assets/svg/device-message.svg';
 import SendSquare from '../assets/svg/send-square.svg';
 import EditIcon from '../assets/svg/edit.svg';
-import Flash from '../assets/svg/flash.svg';
+import NoteIcon from '../assets/svg/note.svg';
 import {useLocation} from "react-router-dom";
 
 export default function ManagerBar() {
@@ -61,7 +61,7 @@ export default function ManagerBar() {
 								   id={location.pathname.includes('quiz') ? 'purple' : ''}>Quiz Editor</p>
 							</div>
 						</Nav.Link>
-		{/*				<Nav.Link href="/merchant/updates">
+						{/*				<Nav.Link href="/merchant/updates">
 							<div className={'linker'} id={location.pathname === '/merchant/updates' ? 'green' : ''}>
 								<img src={Flash} id={location.pathname === '/merchant/updates' ? 'green' : ''}
 									 alt=""/>
@@ -69,22 +69,22 @@ export default function ManagerBar() {
 								   id={location.pathname === '/merchant/updates' ? 'green' : ''}>Daily Notes</p>
 							</div>
 						</Nav.Link>*/}
-						<Nav.Link href="/merchant/upload">
+	{/*					<Nav.Link href="/merchant/upload">
 							<div className={'linker'} id={location.pathname === '/merchant/upload' ? 'purple' : ''}>
 								<img src={SendSquare} id={location.pathname === '/merchant/upload' ? 'purple' : ''}
 									 alt=""/>
 								<p className={"linkerText"}
 								   id={location.pathname === '/merchant/upload' ? 'purple' : ''}>Upload Content</p>
 							</div>
-						</Nav.Link>
-		{/*				<Nav.Link href="/merchant/forms">
+						</Nav.Link>*/}
+						<Nav.Link href="/merchant/forms">
 							<div className={'linker'} id={location.pathname === '/merchant/forms' ? 'red' : ''}>
-								<img src={SendSquare} id={location.pathname === '/merchant/forms' ? 'red' : ''}
+								<img src={NoteIcon} id={location.pathname === '/merchant/forms' ? 'red' : ''}
 									 alt=""/>
 								<p className={"linkerText"}
 								   id={location.pathname === '/merchant/forms' ? 'red' : ''}>Forms</p>
 							</div>
-						</Nav.Link>*/}
+						</Nav.Link>
 					</Nav>
 					<Nav>
 						<br/>

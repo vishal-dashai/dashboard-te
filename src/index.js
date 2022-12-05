@@ -64,10 +64,10 @@ export const router = createBrowserRouter([
 				path: "merchant/updates",
 				element: (<RequireElevated><Updates/></RequireElevated>)
 			},
-			{
+/*			{
 				path: "merchant/upload",
 				element: (<RequireElevated><Upload/></RequireElevated>)
-			},
+			},*/
 			{
 				path: "merchant/content",
 				element: (<RequireElevated><TopicViewer/></RequireElevated>)
