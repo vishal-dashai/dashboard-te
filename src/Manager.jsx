@@ -44,11 +44,31 @@ export default function Manager() {
 	useEffect(() => {
 		async function fetchData() {
 			console.log(user)
-			if (user !== null) {
-				setProfile(await ContentRequest.getUserProfile(user.uid))
+			if (user != null) {
+				let token = await user.getIdToken()
+				console.log('Stuff below')
+				console.log(token)
+				console.log(user.uid)
+				setProfile(await ContentRequest.getUserProfile(token, user.uid))
+/*
+				await fetch(`${ContentRequest.API}/getUserProfileInfo/${user.uid}`,
+					{
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': token
+						},
+					}
+				).then(d => d.json()).then((data) => {
+					if (data?.status) return;
+					console.log(data)
+				}).catch((error) => {
+					console.error("Error occurred with a get request.")
+					console.log(error)
+				})*/
+
 			}
 		}
-
 		fetchData()
 	}, [user])
 

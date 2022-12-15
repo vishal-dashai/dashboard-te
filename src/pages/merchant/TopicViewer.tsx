@@ -14,7 +14,7 @@ export default function TopicViewer() {
 		if (user !== null && profile !== null) {
 			const a = async () => {
 				setLoading(true)
-				setTopics(await ContentRequest.getAllTopics(profile.restaurantId))
+				setTopics(await ContentRequest.getAllTopics(await user.getIdToken(), profile.restaurantId))
 				setLoading(false)
 			}
 			a()
@@ -38,7 +38,7 @@ export default function TopicViewer() {
 
 					<div className={'tileArea'}>
 						{isLoading ? <><Spinner/><strong>Loading topics...</strong></> :
-							(topics?.map((top, i) => {
+							(topics == null ? <p>Something went wrong</p> : topics?.map((top, i) => {
 								return (
 									<div className={'contentTile'} key={i} onClick={() => {
 										window.open('contentview?id=' + top.topicId, '_self')
