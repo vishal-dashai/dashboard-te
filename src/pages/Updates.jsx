@@ -7,12 +7,12 @@ import {AuthenticatedUserContext} from "../provider/AuthenticatedUserProvider";
 import ManagerBar from "../components/ManagerBar";
 import {Alert, Button, Spinner, Textarea, TickIcon} from "evergreen-ui";
 import API from "../api";
-import {ContentRequest} from "@thedashboardai/train-edu-front-end-api-wrapper";
+import {ContentRequest, ContentSender} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 export default function Updates() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
 	const [uploaded, setUploaded] = useState();
-	const [uploading, setUploading] = useState();
+	const [uploading, setUploading] = useState(false);
 
 	const [text, setText] = useState('' | null);
 
@@ -28,13 +28,8 @@ export default function Updates() {
 		ht += '</ul>';
 		console.log(ht)
 
-		await fetch(`${API}/updateDailyNote/${profile.restaurantId}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({note: ht})
-		}).catch((c) => console.log(c))
+		await ContentSender.updateDailyNote(await user.getIdToken(), profile.restaurantId, {note: ht});
+
 		await delay(3000)
 		setUploading(false)
 	}
@@ -44,7 +39,7 @@ export default function Updates() {
 	useEffect(() => {
 		if (user !== null && profile !== null) {
 			const ar = async () => {
-				setText(await ContentRequest.getAndStripNote(profile.restaurantId));
+				setText(await ContentRequest.getAndStripNote(await user.getIdToken(), profile.restaurantId));
 			}
 			ar()
 		}

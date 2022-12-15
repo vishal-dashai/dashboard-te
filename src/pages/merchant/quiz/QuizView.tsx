@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import '../../../assets/css/QuizViewer.scss';
 import {AuthContextType, AuthenticatedUserContext} from "../../../provider/AuthenticatedUserProvider";
-import API from "../../../api";
 import ManagerBar from "../../../components/ManagerBar";
 import {ChevronRightIcon, CrossIcon, Icon, SavedIcon, Spinner} from "evergreen-ui";
 import TaskSquare from '../../../assets/svg/task-square.svg';
@@ -10,7 +9,13 @@ import {Modal} from "react-bootstrap";
 import {useMediaQuery} from "react-responsive";
 import {alphabet} from "../../../components/quiz/QuizFieldEdit";
 import Incrementer from "../../../components/elements/Incrementer";
-import {ContentRequest, ILiveQuiz, ITopic, LiveQuiz} from "@thedashboardai/train-edu-front-end-api-wrapper";
+import {
+	ContentRequest,
+	ContentSender,
+	ILiveQuiz,
+	ITopic,
+	LiveQuiz
+} from "@thedashboardai/train-edu-front-end-api-wrapper";
 import LoadingIndc from "../../../components/elements/LoadingIndc";
 
 export default function QuizView() {
@@ -29,7 +34,7 @@ export default function QuizView() {
 
 	const handleShow = async (topic: ITopic) => {
 		setShow(true)
-		await ContentRequest.getQuiz(topic.restaurant_id, topic.topicId).then((r: ILiveQuiz) => {
+		await ContentRequest.getQuiz(await user.getIdToken(), topic.restaurant_id, topic.topicId).then((r: ILiveQuiz) => {
 			setViewing(new LiveQuiz(r))
 			console.log(viewing)
 		});
@@ -39,8 +44,9 @@ export default function QuizView() {
 		if (user !== null && profile !== null) {
 			const a = async () => {
 				setLoading(true)
-				setTopics(await ContentRequest.getAllTopics(profile.restaurantId))
-				const max = await ContentRequest.getMaxQuizAttempts(profile.restaurantId)
+				let token = await user.getIdToken()
+				setTopics(await ContentRequest.getAllTopics(token, profile.restaurantId))
+				const max = await ContentRequest.getMaxQuizAttempts(token, profile.restaurantId)
 				setLiveMaxAttempts(max)
 				setMaxAttempts(max)
 				setLoading(false)
@@ -64,18 +70,9 @@ export default function QuizView() {
 
 						<button
 							onClick={async () => {
-								await fetch(`${API}/setOrUpdateQuizMaxAttempts/` + profile.restaurantId, {
-									method: 'PUT',
-									headers: {
-										'Content-Type': 'application/json'
-									},
-									body: JSON.stringify({
-										maxQuizAttempts: maxAttempts
-									})
-								}).then((e) => {
+								ContentSender.updateMaxAttempts(await user.getIdToken(), profile.restaurantId, {maxQuizAttempts: maxAttempts}).then((i: boolean) => {
 									setLiveMaxAttempts(maxAttempts)
 								})
-
 							}}
 							className={'pillButton'} id={(liveMaxAttempts === maxAttempts ? 'selected' : '')}>
 							<p>{liveMaxAttempts !== maxAttempts ? 'Save' : 'Saved'}</p>

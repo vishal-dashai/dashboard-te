@@ -11,8 +11,16 @@ import {useSearchParams} from "react-router-dom";
 import {Modal} from "react-bootstrap";
 import {EditList} from "../components/quiz/EditList";
 import QuizFieldEdit from "../components/quiz/QuizFieldEdit";
-import API from "../api";
-import {ContentRequest, QuizConnection, Quiz, IQuiz, Question, LiveQuiz} from "@thedashboardai/train-edu-front-end-api-wrapper";
+import {
+	ContentRequest,
+	ContentSender,
+	IQuiz,
+	LiveQuiz,
+	Question,
+	Quiz,
+	QuizConnection,
+	IInitialQuestion
+} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 type ConfirmationProps = {
 	quiz: IQuiz;
@@ -26,7 +34,9 @@ function ConfirmationPopup({show, onHide, publish, quiz, isUploading}: Confirmat
 	return (
 		<Modal
 			show={show}
-			onHide={() => {onHide()}}
+			onHide={() => {
+				onHide()
+			}}
 			size="lg"
 			aria-labelledby="contained-modal-title-vcenter"
 			centered
@@ -114,17 +124,75 @@ export default function QuizEdit() {
 		console.log("LIVE DATA")
 		console.log(liveQuizData)
 		setUploading(true)
-		if (liveQuizData !== null && liveQuizData !== undefined) {
+
+		let token = await user.getIdToken()
+
+
+		if (liveQuizData != null) {
 			const result = QuizConnection.compareAndBuildData(liveQuizData, quiz)
-			await fetch(`${API}/updateQuestions/` + liveQuizData.quizId, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(result)
-			})
+			await ContentSender.updateQuizQuestions(token, liveQuizData.quizId, result)
 		} else {
-			await fetch(`${API}/addQuizByRestTopic?restaurantId=${profile.restaurantId}`, {
+
+			await ContentSender.addQuiz(token, profile.restaurantId, {
+				restaurantId: profile.restaurantId,
+				topicId: searchParams.get('id'),
+				name: decodeURIComponent(searchParams.get('n')) + 'Quiz',
+				totalQuestions: quiz.questions.length,
+				totalScore: quiz.questions.length
+			}).then(async r => {
+				console.log('RESULT FROM ADDING')
+				console.log(r)
+				let quizId = r.quizId;
+
+				let totalData: IInitialQuestion[] = []
+
+				quiz.questions.forEach((ele) => {
+					let options: { answerOptionText: any; isCorrect: boolean; }[] = []
+					ele.answerOptions.forEach((cho) => options.push({
+						answerOptionText: cho.answerOptionText,
+						isCorrect: cho?.isCorrect ?? false
+					}))
+
+					if (options.length !== 0) {
+						totalData.push({
+							questionText: ele.questionText,
+							answerOptions: options
+						})
+					}
+				});
+
+				console.log('CREATE QUESTIONS TO BE UPLOADED')
+				console.log(quiz.questions)
+				console.log("TOTAL DATA")
+				console.log(totalData)
+
+				/*
+								await fetch(`${API}/createAllQuestions/${quizId}`, {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify({"questions": totalData})
+								}).then(e => e.json()).then(r => {
+									console.log({"questions": totalData})
+									console.log(r)
+									// alert("Quiz was uploaded!")
+								}).catch(err => {
+									console.log("error")
+									console.log(err)
+								})
+
+				*/
+
+				await ContentSender.createInitialQuestions(token, quizId, {questions: totalData}).then(r => {
+					console.log({"questions": totalData})
+					console.log(r)
+				})
+
+			})
+
+
+			/*await fetch(`${API}/addQuizByRestTopic?restaurantId=${profile.restaurantId}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -180,7 +248,7 @@ export default function QuizEdit() {
 
 			}).catch(err => {
 				console.log("error")
-			})
+			})*/
 		}
 		await loadQuizData();
 		setUploading(false)
@@ -189,7 +257,7 @@ export default function QuizEdit() {
 
 	const loadQuizData = async () => {
 		setLoading(true)
-		ContentRequest.getQuiz(profile.restaurantId, searchParams.get('id')).then((a) => {
+		ContentRequest.getQuiz(await user.getIdToken(), profile.restaurantId, searchParams.get('id')).then((a) => {
 			if (a !== null) {
 				const live = new LiveQuiz(a);
 				setLiveQuizData(live);

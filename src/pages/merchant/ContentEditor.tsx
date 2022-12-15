@@ -3,16 +3,13 @@ import {AuthenticatedUserContext} from "../../provider/AuthenticatedUserProvider
 import ManagerBar from "../../components/ManagerBar";
 import {Breadcrumbs, Link, Typography} from "@mui/material";
 import {useSearchParams} from "react-router-dom";
-import {ContentRequest, IPostContent, ITopic} from "@thedashboardai/train-edu-front-end-api-wrapper";
+import {ContentRequest, ContentSender, IPostContent, ITopic} from "@thedashboardai/train-edu-front-end-api-wrapper";
 import LoadingIndc from "../../components/elements/LoadingIndc";
 import {useFilePicker} from 'use-file-picker';
-import API from "../../api";
 import frame from '../../assets/wine.png';
 import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
 import {IPopup} from "../../components/Popup";
 import {useMediaQuery} from "react-responsive";
-import TextEditor from "../../components/TextEditor";
-import preview from "../../assets/img/phone_preview.png"
 
 export function cleanPost(post: IPostContent) {
 	let content = '';
@@ -83,51 +80,32 @@ export default function ContentEditor() {
 			isInProgress: true,
 		}
 		setPopups(a => [...a, popup])
+		console.log('Uploading the new content.')
+
+		let token = await user.getIdToken();
 
 		if (id !== null && livePost !== null) {
 			if (livePost.title !== post.title || livePost.description !== post.description) {
 				convertPost(post)
 
-				await fetch(`${API}/updateContentTextById/` + id, {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						title: post.title,
-						description: post.description
-					})
-				}).then((r) => r.json()).then((a) => {
-					console.log(a)
-					const re: IPostContent = JSON.parse(JSON.stringify(a));
+				await ContentSender.updatePostContent(token, id, {
+					title: post.title,
+					description: post.description
+				}).then((re: IPostContent) => {
 					setLivePost(re)
 					setPost(re)
-				}).catch((e) => {
-					console.log(e)
-				})
+				});
 			}
 
 			if (filesContent.length > 0) {
-				console.log(filesContent[0].content)
-
 				const blob = dataURItoBlob(filesContent[0].content);
-				// const resultFile = new File([blob],  filesContent[0].name);
-
-				// const blob = await (await fetch(filesContent[0].content)).blob();
 				let form = new FormData();
 				form.append('file', blob);
 
-				await fetch(`${API}/updateContentImageById/` + id, {
-					method: 'PUT',
-					body: form
-				}).then((r) => r.json()).then((a) => {
-					console.log(a)
-					const re: IPostContent = JSON.parse(JSON.stringify(a));
+				await ContentSender.updatePostImage(token, id, form).then((re: IPostContent) => {
 					setLivePost(re)
 					setPost(re)
-				}).catch((e) => {
-					console.log(e)
-				})
+				});
 			}
 			await setLivePost(post)
 		} else {
@@ -137,23 +115,8 @@ export default function ContentEditor() {
 
 			convertPost(post)
 
-			await fetch(`${API}/uploadFile?title=${post.title}&description=${post.description}&chapter_number=${12}&topic_id=${searchParams.get('topic')}&restaurant_id=${profile.restaurantId}`, {
-				method: 'POST',
-				body: form
-			}).then((r) => r.json()).then((a) => {
-				console.log(a)
-				console.log('AAAAAAAAAAAAAAAAAAAAAA')
-				console.log(JSON.stringify(a))
-				const re: IPostContent = JSON.parse(JSON.stringify(a));
-				console.log(re.s3FileUrl)
-				console.log(re)
-
+			await ContentSender.createNewContent(token, post.title, post.description, 12, searchParams.get('topic'), profile.restaurantId, form).then(re => {
 				window.open('contentedit?topic=' + re.topic_id + '&id=' + re.file_id, '_self')
-
-				// setLivePost(re)
-				// setPost(re)
-			}).catch((e) => {
-				console.log(e)
 			})
 		}
 		clear()
@@ -186,9 +149,10 @@ export default function ContentEditor() {
 		if (user !== null && profile !== null) {
 			const a = async () => {
 				setLoading(true)
-				await setTopic(await ContentRequest.getTopic(searchParams.get('topic')))
+				let token = await user.getIdToken()
+				await setTopic(await ContentRequest.getTopic(token, searchParams.get('topic')))
 				if (searchParams.has('id')) {
-					const li = await ContentRequest.getPost(searchParams.get('id'))
+					const li = await ContentRequest.getPost(token, searchParams.get('id'))
 					cleanPost(li)
 					await setPost(li)
 					await setLivePost(li)
@@ -342,7 +306,7 @@ export default function ContentEditor() {
 											<img src={preview} />
 										</div>
 */}
-											<textarea placeholder={'Enter your content description'}
+										<textarea placeholder={'Enter your content description'}
 												  defaultValue={post?.description} onChange={(e) => {
 											setPost(a => {
 												return {...a, description: e.target.value}

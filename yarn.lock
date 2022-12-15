@@ -2523,10 +2523,10 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@thedashboardai/train-edu-front-end-api-wrapper@1.0.9":
-  version "1.0.9"
-  resolved "https://npm.pkg.github.com/download/@thedashboardai/train-edu-front-end-api-wrapper/1.0.9/cebacf0503cf317f3930007bf3f83e4f294d4684"
-  integrity sha512-PrBPpawKQz12ewwXIm0/lH9Q4q8F1KmvOKt6WmFRsElxydZrDULOZAvaCCveN5CzWrptFRC47WVj+XaPCLX6vA==
+"@thedashboardai/train-edu-front-end-api-wrapper@1.0.35":
+  version "1.0.35"
+  resolved "https://npm.pkg.github.com/download/@thedashboardai/train-edu-front-end-api-wrapper/1.0.35/8da649e2ef5b39ff96dfaa366b36112626f88be2#8da649e2ef5b39ff96dfaa366b36112626f88be2"
+  integrity sha512-7+lBdqD2mPQSpzgKkld8JvNeFGijaXI4XLOmEFfMaGnHeRdCWh6R+mY5Rm1iWRNa9oQ/FjXzsDP+ljKygnIBbg==
   dependencies:
     "@babel/preset-react" "^7.18.6"
     babel-plugin-transform-export-extensions "^6.22.0"
