@@ -14,7 +14,8 @@ export default function TopicViewer() {
 		if (user !== null && profile !== null) {
 			const a = async () => {
 				setLoading(true)
-				setTopics(await ContentRequest.getAllTopics(await user.getIdToken(), profile.restaurantId))
+				let token = await user.getIdToken();
+				setTopics(await ContentRequest.getAllTopics(token, profile.restaurantId))
 				setLoading(false)
 			}
 			a()
