@@ -1100,3 +1100,41 @@ img#purple {
 	background: #565a62;
   }
 }
+
+.collapseArea {
+
+  width: 500px;
+  max-width: 500px;
+  padding: 10px;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+
+  p {
+	font-family: 'Raleway', serif;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 15px;
+	line-height: 26px;
+  }
+
+}
+
+.clickableSection {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  h5 {
+	font-family: 'Raleway', serif;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 15px;
+	line-height: 22px;
+  }
+
+}

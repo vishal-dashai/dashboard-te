@@ -25,6 +25,7 @@ import Forms from "./pages/merchant/Forms";
 import Onboard from "./pages/Onboard";
 import Forgot from "./pages/Forgot";
 import Landing from "./pages/Landing";
+import FAQ from "./pages/FAQ";
 
 const app = firebase.initializeApp(FIREBASE_CONFIG);
 
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
 			{
 				path: "landing",
 				element: (<RequireAuth><Landing/></RequireAuth>)
+			},
+			{
+				path: "faq",
+				element: (<FAQ/>)
 			},
 			{
 				path: "merchant/scores",
