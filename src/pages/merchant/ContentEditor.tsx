@@ -26,16 +26,28 @@ export function cleanPost(post: IPostContent) {
 	post.description = content
 }
 
+
+const CatalogueImages = [
+	require('../../assets/img/catalogue/catalogue_image_1.jpg'),
+	require('../../assets/img/catalogue/catalogue_image_2.jpg'),
+	require('../../assets/img/catalogue/catalogue_image_3.jpg'),
+	require('../../assets/img/catalogue/catalogue_image_4.jpg'),
+	require('../../assets/img/catalogue/catalogue_image_5.jpg'),
+	require('../../assets/img/catalogue/catalogue_image_6.jpg')
+]
+
 export default function ContentEditor() {
 	const {user, profile} = useContext(AuthenticatedUserContext);
 	const [isLoading, setLoading] = useState(true);
 	const [searchParams] = useSearchParams();
 
 	const [topic, setTopic] = useState<ITopic>(null);
+	const [selectedImageId, setSelectedImageId] = useState<number>(0);
 	const [livePost, setLivePost] = useState<IPostContent>(null);
 	const [post, setPost] = useState<IPostContent>(null);
 	const {setPopups} = useContext(PopupContext) as PopupContextProps;
 	const isSmaller = useMediaQuery({query: '(max-width: 900px)'})
+	const isSmallest = useMediaQuery({query: '(max-width: 1200px)'})
 	const [value, setValue] = useState<string>('');
 
 	const [openFileSelector, {clear, filesContent, loading, errors}] = useFilePicker({
@@ -46,6 +58,13 @@ export default function ContentEditor() {
 		// minFileSize: 0.1, // in megabytes
 		maxFileSize: 50,
 	});
+
+	useEffect(() => {
+		if (filesContent.length) {
+			setSelectedImageId(-1)
+		}
+
+	}, [filesContent])
 
 	function dataURItoBlob(dataURI: string) {
 		var byteString;
@@ -97,8 +116,18 @@ export default function ContentEditor() {
 				});
 			}
 
-			if (filesContent.length > 0) {
-				const blob = dataURItoBlob(filesContent[0].content);
+			if (filesContent.length > 0 || selectedImageId !== -1) {
+				let blob = null;
+
+				if (selectedImageId === -1) {
+					blob = dataURItoBlob(filesContent[0].content);
+				} else {
+					const a = await fetch(CatalogueImages[selectedImageId]).then(r => r.blob());
+					blob = a
+				}
+
+				console.log(blob)
+
 				let form = new FormData();
 				form.append('file', blob);
 
@@ -109,7 +138,25 @@ export default function ContentEditor() {
 			}
 			await setLivePost(post)
 		} else {
-			const blob = dataURItoBlob(filesContent[0].content);
+
+			let blob = null;
+
+			if (selectedImageId === -1) {
+				blob = dataURItoBlob(filesContent[0].content);
+			} else {
+				const a = await fetch(CatalogueImages[selectedImageId]).then(r => r.blob());
+				let dataUrl = await new Promise(resolve => {
+					let reader = new FileReader();
+					reader.onload = () => resolve(reader.result);
+					reader.readAsDataURL(a);
+				});
+
+				console.log(dataUrl)
+
+				// @ts-ignore
+				blob = dataURItoBlob(dataUrl);
+			}
+
 			let form = new FormData();
 			form.append('file', blob);
 
@@ -153,10 +200,12 @@ export default function ContentEditor() {
 				await setTopic(await ContentRequest.getTopic(token, searchParams.get('topic')))
 				if (searchParams.has('id')) {
 					const li = await ContentRequest.getPost(token, searchParams.get('id'))
+					setSelectedImageId(-1)
 					cleanPost(li)
 					await setPost(li)
 					await setLivePost(li)
 				} else {
+					setSelectedImageId(0)
 					let ps = {
 						title: null as string,
 						description: ''
@@ -177,126 +226,172 @@ export default function ContentEditor() {
 				<div className="content">
 
 					{isLoading ? <LoadingIndc message={'Loading content'}/> :
+
 						<div style={{
-							flexDirection: 'column',
-							minWidth: '70%',
-							gap: isSmaller ? 10 : 20,
-							marginTop: 20,
-							marginRight: 20,
-							marginLeft: 20,
 							display: 'flex',
-							alignItems: 'center'
+							flexDirection: isSmallest ? 'column-reverse' : 'row',
+							width: '100%'
 						}}>
+							<div style={{
+								display: 'flex',
+								flexDirection: 'column',
+								alignItems: 'center',
+								gap: 10,
+								marginTop: 30,
+							}}>
+								<div style={{
+									borderRadius: 12,
+									backgroundColor: '#E7EAEF'
+								}} className={'catalogue'}>
+									<h4>Image Catalogue</h4>
+									<div className={'images'}>
+										{CatalogueImages.map((a, i) => {
+												return (<img src={a} key={i} id={selectedImageId === i ? 'selected' : ''}
+															 onClick={() => {
+																 if (selectedImageId === i) {
+																	 setSelectedImageId(-1)
+																 } else {
+																	 setSelectedImageId(i)
+																 }
+															 }
+															 }/>)
+											}
+										)}
+									</div>
+								</div>
+								{/*				<p style={{
+									fontWeight: 600,
+									fontSize: 16,
+									marginTop: 10,
+								}}>OR</p>
+								<button className={'nextButton'}>Browse Files</button>*/}
+							</div>
 
-							{!post ?
-								<>
-									<h1>Content failed to load. Please go back and try again.</h1>
-									<h4>If this error persists, contact us.</h4>
-									<button className={'nextButton'} id={'go'} onClick={() => {
-										window.open('/merchant/content', '_self')
-									}
-									}>Go Back
-									</button>
-								</> :
-								<>
-									<div style={{
-										display: "flex",
-										flexDirection: isSmaller ? 'column' : 'row',
-										alignItems: 'center',
-										justifyContent: isSmaller ? 'center' : 'space-between',
-										gap: isSmaller ? 10 : 40,
-										marginTop: 20,
-										marginLeft: 30,
-										marginRight: 30,
-									}}>
-										<div>
-											<Breadcrumbs aria-label="breadcrumb">
-												<Link
-													underline="hover"
-													color="inherit"
-													href="/merchant/content"
-												>
-													Your Content
-												</Link>
-												<Link
-													underline="hover"
-													color="inherit"
-													href={("/merchant/contentview?id=" + searchParams.get('topic'))}
-												>
-													{topic.name}
-												</Link>
-												<Typography color="text.primary">{post?.title}</Typography>
-											</Breadcrumbs>
-
-											<textarea className={"contentTitleEdit"} placeholder={"Enter content title"}
-													  defaultValue={post.title} onChange={(e) => {
-												setPost(a => {
-													return {...a, title: e.target.value}
-												})
-											}}/>
-										</div>
-
+							<div style={{
+								flexDirection: 'column',
+								minWidth: '70%',
+								gap: isSmaller ? 10 : 20,
+								marginTop: 20,
+								marginRight: 20,
+								marginLeft: 20,
+								display: 'flex',
+								alignItems: 'center'
+							}}>
+								{!post ?
+									<>
+										<h1>Content failed to load. Please go back and try again.</h1>
+										<h4>If this error persists, contact us.</h4>
+										<button className={'nextButton'} id={'go'} onClick={() => {
+											window.open('/merchant/content', '_self')
+										}
+										}>Go Back
+										</button>
+									</> :
+									<>
 										<div style={{
-											display: 'flex',
-											flexDirection: isSmaller ? 'row-reverse' : 'row',
+											display: "flex",
+											flexDirection: isSmaller ? 'column' : 'row',
 											alignItems: 'center',
-											gap: isSmaller ? 10 : 30,
-
+											justifyContent: isSmaller ? 'center' : 'space-between',
+											gap: isSmaller ? 10 : 40,
+											marginTop: 20,
+											marginLeft: 30,
+											marginRight: 30,
 										}}>
-											{/*	<button className={'dangerButton'}><Icon icon={TrashIcon}
+											<div>
+												<Breadcrumbs aria-label="breadcrumb">
+													<Link
+														underline="hover"
+														color="inherit"
+														href="/merchant/content"
+													>
+														Your Content
+													</Link>
+													<Link
+														underline="hover"
+														color="inherit"
+														href={("/merchant/contentview?id=" + searchParams.get('topic'))}
+													>
+														{topic.name}
+													</Link>
+													<Typography color="text.primary">{post?.title}</Typography>
+												</Breadcrumbs>
+
+												<textarea className={"contentTitleEdit"}
+														  placeholder={"Enter content title"}
+														  defaultValue={post.title} onChange={(e) => {
+													setPost(a => {
+														return {...a, title: e.target.value}
+													})
+												}}/>
+											</div>
+
+											<div style={{
+												display: 'flex',
+												flexDirection: isSmallest ? 'column' : 'row',
+												alignItems: 'center',
+												gap: isSmaller ? 10 : 30,
+
+											}}>
+												{/*	<button className={'dangerButton'}><Icon icon={TrashIcon}
 																			 color={'#ffffff'}/>
 									</button>*/}
-											<button className={'nextButton'} id={'blue'} onClick={() => {
-												publishChanges()
-											}
-											}>Save Changes
-											</button>
+												<button className={'nextButton'} id={'blue'} onClick={() => {
+													publishChanges()
+												}
+												}>Save Changes
+												</button>
+											</div>
 										</div>
-									</div>
 
-									<div className={'contentEditorArea'} style={{
-										flexDirection: isSmaller ? 'column' : 'row',
-										display: 'flex',
-										justifyContent: 'center',
-										width: '90%'
-									}}>
-										<div style={{
+
+										<div className={'contentEditorArea'} style={{
+											flexDirection: isSmaller ? 'column' : 'row',
 											display: 'flex',
-											flexDirection: 'column',
-											alignItems: 'center',
-											gap: isSmaller ? 5 : 10,
+											justifyContent: 'center',
+											alignItems: isSmaller ? 'center' :  'flex-start',
+											width: '100%'
 										}}>
 
-											{filesContent.length > 0 && !loading && !errors.length ?
-												filesContent.map((file, indx) => {
-													return (
-														<Fragment key={indx}>
-															<img alt={''}
-																 src={file.content}/>
-															<button className={'pillButton'} id={'selected'}
-																	onClick={() => {
-																		clear()
-																	}}>Remove Upload
-															</button>
-														</Fragment>)
-												}) :
+											<div style={{
+												display: 'flex',
+												flexDirection: 'column',
+												alignItems: 'center',
+												gap: isSmaller ? 5 : 10,
+											}}>
 
-												<img alt={''} src={post?.s3FileUrl ?? frame}/>}
+												{filesContent.length > 0 && !loading && !errors.length ?
+													filesContent.map((file, indx) => {
+														return (
+															<Fragment key={indx}>
+																<img alt={''}
+																	 src={selectedImageId !== -1 ? CatalogueImages[selectedImageId] : file.content}/>
+																<button className={'pillButton'} id={'selected'}
+																		onClick={() => {
+																			setSelectedImageId(0)
+																			clear()
+																		}}>Remove Upload
+																</button>
+															</Fragment>)
+													}) :
 
-											<button className={'nextButton'} onClick={() => {
-												openFileSelector()
-											}}>Browse Files
-											</button>
-										</div>
+													<img alt={''}
+														 src={selectedImageId !== -1 ? CatalogueImages[selectedImageId] : (post?.s3FileUrl ?? frame)}/>}
 
-										{/*<Editor
+												<button className={'nextButton'} onClick={() => {
+													openFileSelector()
+												}}>Upload File
+												</button>
+											</div>
+
+											{/*<Editor
 										editorState={editorState}
 										toolbarClassName="toolbarClassName"
 										wrapperClassName="wrapperClassName"
 										editorClassName="editorClassName"
 										onEditorStateChange={this.onEditorStateChange}
 									/>*/}
-										{/*<div style={{
+											{/*<div style={{
 											border: '1px solid black'
 										}}>
 											<TextEditor value={value} setValue={setValue}/>
@@ -306,21 +401,25 @@ export default function ContentEditor() {
 											<img src={preview} />
 										</div>
 */}
-										<textarea placeholder={'Enter your content description'}
-												  defaultValue={post?.description} onChange={(e) => {
-											setPost(a => {
-												return {...a, description: e.target.value}
-											})
-										}}/>
+											<textarea placeholder={'Enter your content description'}
+													  style={{
+														  height: '100%'
+													  }}
+													  defaultValue={post?.description} onChange={(e) => {
+												setPost(a => {
+													return {...a, description: e.target.value}
+												})
+											}}/>
 
-										{/*	<textarea placeholder={'Enter your content description'}
+											{/*	<textarea placeholder={'Enter your content description'}
 										  defaultValue={post?.description} onChange={(e) => {
 									setPost(a => {
 										return {...a, description: e.target.value}
 									})
 								}}/>*/}
-									</div>
-								</>}
+										</div>
+									</>}
+							</div>
 						</div>}
 				</div>
 			</div>

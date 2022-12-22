@@ -10,48 +10,18 @@ import {ChevronDownIcon, ChevronUpIcon, Icon, SearchInput} from "evergreen-ui";
 import faqContent from '../assets/data/faq.json';
 import Collapse from 'react-bootstrap/Collapse';
 import {Divider} from "@mui/material";
+import NavigationBar from "../components/NavigationBar";
 
 export default function FAQ() {
 	const [isLoading, setLoading] = useState(true);
 	const location = useLocation();
 	const [searchKey, setSearchKey] = useState<string>('');
 
-
 	return (
 		<>
 			<div className="App">
 
-				<Navbar collapseOnSelect expand="xxl">
-					<Container>
-						<Navbar.Brand>
-							{/*<Nav.Link href="home"><img
-						src={logo}
-						width="50"
-						height="50"
-						className="d-inline-block align-top"
-						alt=''/></Nav.Link>*/}
-							<Nav.Link><img
-								src={logo}
-								width="50"
-								height="50"
-								className="d-inline-block align-top"
-								alt='sinatra logo'/></Nav.Link>
-						</Navbar.Brand>
-						<Navbar.Toggle aria-controls="responsive-navbar-nav"/>
-						<Navbar.Collapse id="responsive-navbar-nav">
-							<Nav className="me-auto">
-								<Nav.Link href="/faq">
-									<div className={'linker'} id={location.pathname === '/faq' ? 'red' : ''}>
-										<img id={location.pathname === '/faq' ? 'red' : ''} src={DeviceMessage}
-											 alt=""/>
-										<p id={location.pathname === '/faq' ? 'red' : ''}
-										   className={"linkerText"}>FAQ</p>
-									</div>
-								</Nav.Link>
-							</Nav>
-						</Navbar.Collapse>
-					</Container>
-				</Navbar>
+				<NavigationBar/>
 
 				<div className="content">
 
@@ -67,7 +37,13 @@ export default function FAQ() {
 						/>
 					</div>
 
-					{faqContent.groups.map((a, i) => {
+					{faqContent.groups.filter((r) => {
+
+						if(r.content.filter(b => b.title.toLowerCase().includes(searchKey.toLowerCase())).length !== 0)
+							return true
+
+						return false;
+					}).map((a, i) => {
 						return (
 							<div style={{}}>
 								<h4 style={{
@@ -75,7 +51,11 @@ export default function FAQ() {
 									fontSize: 18,
 								}}>{a.title}</h4>
 								{
-									a.content.map((b: any, c: number) => {
+									a.content.filter(r => {
+										if(r.title.toLowerCase().includes(searchKey.toLowerCase()))
+											return true
+										return false
+									}).map((b: any, c: number) => {
 										return (
 											<>
 												<CollpaseArea content={b}/>

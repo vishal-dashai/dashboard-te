@@ -80,6 +80,62 @@ export default function ContentViewer() {
 									window.open('contentedit?topic=' + topic.topicId, '_self')
 								}}>Add New +
 								</button>
+
+								<button className={'wireButton'}
+										onClick={() => {
+											let title: string = topic.name;
+
+											const popup: IPopup = {
+												title: 'Edit Topic',
+												subText: 'Enter the new name of this topic.',
+												isInProgress: false,
+												confirmType: 'blue',
+												cancelText: 'Cancel',
+												confirmText: 'Confirm',
+												body: <>
+												<textarea
+													className={"contentTitleEdit"}
+													placeholder={"Enter new topic title"}
+													defaultValue={title}
+													onChange={(e) => {
+														title = e.target.value;
+													}}/>
+												</>,
+												onConfirmed: async () => {
+													const token = await user.getIdToken()
+													await ContentSender.updateTopicName(token, topic.topicId, {topicName: title})
+													setPopups(a => a?.filter((b) => b.title !== popup.title))
+												}
+											}
+											setPopups(a => [...a, popup])
+										}}
+								>Edit Topic
+								</button>
+
+								<button
+									className={'dangerButton'}
+									onClick={() => {
+										const popup: IPopup = {
+											title: 'Delete "' + topic.name + '"?',
+											subText: 'Are you sure want to permanently delete this topic? Deleting this will also permanently delete all posts in this section.',
+											isInProgress: false,
+											confirmType: 'warning',
+											cancelText: 'Cancel',
+											confirmText: 'Delete',
+											onConfirmed: async () => {
+												/*ContentSender.deleteContentById(await user.getIdToken(), post.file_id).then(() => {
+													setPosts(posts.filter((p) => p.file_id !== post.file_id))
+												})*/
+												setPopups(a => a?.filter((b) => b.title !== popup.title))
+											}
+										}
+										setPopups(a => [...a, popup])
+									}}
+								>
+									<p>Delete Topic</p>
+									<Icon icon={TrashIcon}
+										  color={'#ffffff'}/>
+								</button>
 							</div>
 
 							<div className={'postsArea'}>
@@ -121,7 +177,7 @@ export default function ContentViewer() {
 																	onClick={() => {
 																		const popup: IPopup = {
 																			title: 'Delete "' + post.title + '"?',
-																			subText: 'Are you sure want to permanently delete this topic?',
+																			subText: 'Are you sure want to permanently delete this content?',
 																			isInProgress: false,
 																			confirmType: 'warning',
 																			cancelText: 'Cancel',

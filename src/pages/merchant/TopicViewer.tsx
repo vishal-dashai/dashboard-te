@@ -1,24 +1,28 @@
 import React, {useContext, useEffect, useState} from "react";
 import {AuthContextType, AuthenticatedUserContext} from "../../provider/AuthenticatedUserProvider";
 import ManagerBar from "../../components/ManagerBar";
-import {ContentRequest, ITopic} from "@thedashboardai/train-edu-front-end-api-wrapper";
+import {ContentRequest, ContentSender, ITopic} from "@thedashboardai/train-edu-front-end-api-wrapper";
 import {Spinner} from "evergreen-ui";
 import frame from '../../assets/img/Frame.png';
+import {IPopup} from "../../components/Popup";
+import {PopupContext, PopupContextProps} from "../../provider/PopupProvider";
 
 export default function TopicViewer() {
 	const {user, profile} = useContext(AuthenticatedUserContext) as AuthContextType;
 	const [isLoading, setLoading] = useState(true);
 	const [topics, setTopics] = useState<ITopic[]>(null);
+	const {setPopups} = useContext<PopupContextProps>(PopupContext)
+
+	async function loadTopics() {
+		setLoading(true)
+		let token = await user.getIdToken();
+		setTopics(await ContentRequest.getAllTopics(token, profile.restaurantId))
+		setLoading(false)
+	}
 
 	useEffect(() => {
 		if (user !== null && profile !== null) {
-			const a = async () => {
-				setLoading(true)
-				let token = await user.getIdToken();
-				setTopics(await ContentRequest.getAllTopics(token, profile.restaurantId))
-				setLoading(false)
-			}
-			a()
+			loadTopics()
 		}
 	}, [user, profile])
 
@@ -35,6 +39,36 @@ export default function TopicViewer() {
 
 					<div className={'tileHeader'}>
 						<h3>Select a Topic to edit:</h3>
+
+						<button className={'nextButton'} id={'blue'} onClick={() => {
+							let title: string = '';
+
+							const popup: IPopup = {
+								title: 'Add Topic',
+								subText: 'Enter the name of the topic you want to add.',
+								isInProgress: false,
+								confirmType: 'blue',
+								cancelText: 'Cancel',
+								confirmText: 'Add',
+								body: <>
+								<textarea
+									className={"contentTitleEdit"}
+									placeholder={"Enter topic title"}
+									defaultValue={title}
+									onChange={(e) => {
+										title = e.target.value;
+									}}/>
+								</>,
+								onConfirmed: async () => {
+									const token = await user.getIdToken()
+									await ContentSender.addTopic(token, profile.restaurantId, [title])
+									await loadTopics()
+									setPopups(a => a?.filter((b) => b.title !== popup.title))
+								}
+							}
+							setPopups(a => [...a, popup])
+						}}>Add New +
+						</button>
 					</div>
 
 					<div className={'tileArea'}>

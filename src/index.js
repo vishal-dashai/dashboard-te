@@ -36,7 +36,9 @@ export const router = createBrowserRouter([
 		element: <App/>,
 		errorElement: <NotFound/>,
 		children: [
-			{index: true, element: <RequireAuth children={<Scores/>}><Scores/></RequireAuth>},
+			{
+				element: <RequireAuth children={<Scores/>}><Scores/></RequireAuth>
+			},
 			{
 				path: "login",
 				element: <Login/>
@@ -46,8 +48,8 @@ export const router = createBrowserRouter([
 				element: (<RequireAuth><Scores/></RequireAuth>)
 			},
 			{
-				path: "landing",
-				element: (<RequireAuth><Landing/></RequireAuth>)
+				index: true,
+				element: (<Landing/>)
 			},
 			{
 				path: "faq",
@@ -69,10 +71,10 @@ export const router = createBrowserRouter([
 				path: "merchant/updates",
 				element: (<RequireElevated><Updates/></RequireElevated>)
 			},
-/*			{
-				path: "merchant/upload",
-				element: (<RequireElevated><Upload/></RequireElevated>)
-			},*/
+			/*			{
+							path: "merchant/upload",
+							element: (<RequireElevated><Upload/></RequireElevated>)
+						},*/
 			{
 				path: "merchant/content",
 				element: (<RequireElevated><TopicViewer/></RequireElevated>)

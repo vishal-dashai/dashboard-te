@@ -11,6 +11,8 @@ import SendSquare from '../assets/svg/send-square.svg';
 import EditIcon from '../assets/svg/edit.svg';
 import NoteIcon from '../assets/svg/note.svg';
 import {useLocation} from "react-router-dom";
+import {IPopup} from "./Popup";
+import {ContentSender} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 export default function ManagerBar() {
 	const {user} = useContext(AuthenticatedUserContext);
@@ -84,6 +86,15 @@ export default function ManagerBar() {
 								<p className={"linkerText"}
 								   id={location.pathname === '/merchant/forms' ? 'red' : ''}>Forms</p>
 							</div>
+						</Nav.Link>
+
+						<Nav.Link href="/faq">
+							<button className={'wireButton'}
+									onClick={() => {
+
+									}}
+							>FAQ
+							</button>
 						</Nav.Link>
 					</Nav>
 					<Nav>
