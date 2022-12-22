@@ -93,17 +93,27 @@ export default function ContentViewer() {
 												cancelText: 'Cancel',
 												confirmText: 'Confirm',
 												body: <>
-												<textarea
-													className={"contentTitleEdit"}
-													placeholder={"Enter new topic title"}
-													defaultValue={title}
-													onChange={(e) => {
-														title = e.target.value;
-													}}/>
+													<input
+														className={"contentTitleEdit"}
+														placeholder={"Enter new topic title"}
+														defaultValue={title}
+														onKeyDown={(k) => {
+															if (k.key === 'Enter') {
+																popup.onConfirmed()
+															}
+														}
+														}
+														onChange={(e) => {
+															title = e.target.value;
+															if (title.includes('\n')) title = title.replace('\n', '')
+														}}/>
 												</>,
 												onConfirmed: async () => {
 													const token = await user.getIdToken()
-													await ContentSender.updateTopicName(token, topic.topicId, {topicName: title})
+													const b = await ContentSender.updateTopicName(token, topic.topicId, {topicName: title})
+													if (b) {
+														topic.name = title;
+													}
 													setPopups(a => a?.filter((b) => b.title !== popup.title))
 												}
 											}
@@ -123,9 +133,8 @@ export default function ContentViewer() {
 											cancelText: 'Cancel',
 											confirmText: 'Delete',
 											onConfirmed: async () => {
-												/*ContentSender.deleteContentById(await user.getIdToken(), post.file_id).then(() => {
-													setPosts(posts.filter((p) => p.file_id !== post.file_id))
-												})*/
+												const token = await user.getIdToken()
+												await ContentSender.deleteTopic(token, topic.topicId)
 												setPopups(a => a?.filter((b) => b.title !== popup.title))
 											}
 										}
