@@ -1,0 +1,65 @@
+{
+  "groups": [
+    {
+      "title": "Training App",
+      "content": [
+        {
+          "title": "How to sign up?",
+          "description": "Download the Sinatra Training App from iOS or Android",
+          "image": "graphic/download_graphic.png"
+        },
+        {
+          "title": "I forgot my password, now what?",
+          "description": "Click “forgot password” on the login screen, and you’ll receive an email from Sinatra with next steps to proceed. Simply follow the flow to set a new password.",
+          "image": "graphic/forgot_graphic.png"
+        },
+        {
+          "title": "What are best practices?",
+          "description": ""
+        },
+        {
+          "title": "How do I take a quiz?",
+          "description": ""
+        },
+        {
+          "title": "How do I view my scores?",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "title": "For Managers",
+      "content": [
+        {
+          "title": "How do employees find their sign up key?",
+          "description": "In the Sinatra Training App, you can find an employee sign up key under your profile."
+        }
+      ]
+    },
+    {
+      "title": "Admin Dashboard",
+      "content": [
+        {
+          "title": "How do I access the dashboard?",
+          "description": ""
+        },
+        {
+          "title": "What are my login credentials?",
+          "description": "Your login to the admin dashboard is the same one you used for the registering on the mobile app."
+        },
+        {
+          "title": "What is the employee log?",
+          "description": ""
+        },
+        {
+          "title": "How do I grant manager access?",
+          "description": ""
+        },
+        {
+          "title": "How to download & access forms?",
+          "description": "Once you're in the admin dashboard, all forms are accessible through he FAQ tab and can be immediately downloaded!"
+        }
+      ]
+    }
+  ]
+}

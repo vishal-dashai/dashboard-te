@@ -18,10 +18,15 @@ export default function Scores() {
 	const [searchKey, setSearchKey] = useState('');
 
 	useEffect(() => {
-		if (user !== null && profile !== null) {
+		if (user != null && profile != null) {
 			const a = async () => {
 				setLoading(true)
-				setScores(await ContentRequest.getAllScores(profile.restaurantId))
+				let token = await user.getIdToken()
+				console.log(token)
+				let sc = await ContentRequest.getAllScores(token, profile.restaurantId)
+				//console.log(sc)
+				//console.log('AAAAAAAAAAAAAAAAAAAAAA')
+				setScores(sc)
 				setLoading(false)
 			}
 			a()

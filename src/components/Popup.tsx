@@ -13,6 +13,8 @@ export type IPopup = {
 	loadingText?: string;
 	isInProgress?: boolean;
 
+	body?: React.ReactNode;
+
 	onConfirmed?: Function;
 }
 
@@ -43,6 +45,7 @@ export function Popup({popupData}: ConfirmationProps) {
 			</Modal.Header>
 				<Modal.Body>
 					<p>{popupData.subText}</p>
+					{popupData.body}
 				</Modal.Body>
 				<Modal.Footer>
 					<button

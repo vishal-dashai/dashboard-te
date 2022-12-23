@@ -1,5 +1,5 @@
 import React from "react";
-import {ChevronRightIcon, Icon} from "evergreen-ui";
+import {AddIcon, ChevronRightIcon, EditIcon, Icon} from "evergreen-ui";
 import '../assets/css/Landing.scss';
 
 import cu1 from '../assets/img/cu1.png';
@@ -16,6 +16,7 @@ import inf3 from '../assets/img/Group 36361.png';
 import NavigationBar from "../components/NavigationBar";
 import {LogoInstagram, LogoLinkedin} from "react-ionicons";
 import {useMediaQuery} from 'react-responsive'
+import {Fab} from "@mui/material";
 
 
 const ComingSoonMobile = () => {
@@ -196,6 +197,16 @@ const Landing = () => {
 				</section>
 
 			</div>
+
+		{/*	<div style={{
+				position: 'fixed',
+				top: '90%',
+				left: '95%'
+			}}>
+				<Fab color="secondary" aria-label="edit">
+					<EditIcon />
+				</Fab>
+			</div>*/}
 		</>
 	)
 }

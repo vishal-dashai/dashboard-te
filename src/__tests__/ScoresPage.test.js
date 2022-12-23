@@ -45,7 +45,6 @@ describe('Scores Page Test Suite', () => {
 		expect(screen.queryAllByText('beverage')).toEqual([])
 	})
 
-
 	test('Search test caps', async () => {
 		let scores = await ContentRequest.getAllScores(profile.restaurantId)
 

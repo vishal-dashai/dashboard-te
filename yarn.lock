@@ -2523,10 +2523,10 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@thedashboardai/train-edu-front-end-api-wrapper@1.0.9":
-  version "1.0.9"
-  resolved "https://npm.pkg.github.com/download/@thedashboardai/train-edu-front-end-api-wrapper/1.0.9/cebacf0503cf317f3930007bf3f83e4f294d4684"
-  integrity sha512-PrBPpawKQz12ewwXIm0/lH9Q4q8F1KmvOKt6WmFRsElxydZrDULOZAvaCCveN5CzWrptFRC47WVj+XaPCLX6vA==
+"@thedashboardai/train-edu-front-end-api-wrapper@1.0.46":
+  version "1.0.46"
+  resolved "https://npm.pkg.github.com/download/@thedashboardai/train-edu-front-end-api-wrapper/1.0.46/00e9a0ced7987be19edfa390bfb97fd269ccd41b#00e9a0ced7987be19edfa390bfb97fd269ccd41b"
+  integrity sha512-WNeiZXCC6DE9iT8Nnwbg3hnQ5qNHPUbowierwJPdNhhtoWP/1pWQPBziuIxAHEv/z1IYToET0CxHL1CUFlzk3g==
   dependencies:
     "@babel/preset-react" "^7.18.6"
     babel-plugin-transform-export-extensions "^6.22.0"
@@ -2799,6 +2799,13 @@
   version "1.2.4"
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.4.tgz"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
+
+"@types/react-collapse@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-collapse/-/react-collapse-5.0.1.tgz#078ea1ad15e00ba2063f2e4d8d6760c9375a2023"
+  integrity sha512-Iq3OrqvzCIP0DmAawU4T2VKH6XAplbjo/D7Qk14mcfQ92plU+OrA2SF10r2XrcFg1Wvya/5f8w1vS29RVpdoLQ==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-dom@^18.0.0", "@types/react-dom@^18.0.6":
   version "18.0.8"
@@ -8860,6 +8867,13 @@ react-bootstrap@^2.5.0:
     react-transition-group "^4.4.2"
     uncontrollable "^7.2.1"
     warning "^4.0.3"
+
+react-collapsed@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/react-collapsed/-/react-collapsed-3.6.0.tgz#884a88f0cd2ddf3f857ef651460bf3fb47700a9d"
+  integrity sha512-QqtogOGl5hM9L7j7rlMCYxm4jD8Ovr8voqyYS1g5ltADhUNvxbbgtJ5MwRiajJ0DmYFOZHShpnSPz4wvJaOiKA==
+  dependencies:
+    tiny-warning "^1.0.3"
 
 react-dev-utils@^12.0.1:
   version "12.0.1"
