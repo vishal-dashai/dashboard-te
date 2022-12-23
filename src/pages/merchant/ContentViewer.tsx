@@ -134,8 +134,11 @@ export default function ContentViewer() {
 											confirmText: 'Delete',
 											onConfirmed: async () => {
 												const token = await user.getIdToken()
-												await ContentSender.deleteTopic(token, topic.topicId)
+												const b = await ContentSender.deleteTopic(token, topic.topicId)
 												setPopups(a => a?.filter((b) => b.title !== popup.title))
+												if(b){
+													window.open('content', '_self')
+												}
 											}
 										}
 										setPopups(a => [...a, popup])

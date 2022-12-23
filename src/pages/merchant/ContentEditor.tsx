@@ -111,6 +111,7 @@ export default function ContentEditor() {
 					title: post.title,
 					description: post.description
 				}).then((re: IPostContent) => {
+					cleanPost(re)
 					setLivePost(re)
 					setPost(re)
 				});
@@ -132,6 +133,7 @@ export default function ContentEditor() {
 				form.append('file', blob);
 
 				await ContentSender.updatePostImage(token, id, form).then((re: IPostContent) => {
+					cleanPost(re)
 					setLivePost(re)
 					setPost(re)
 				});
@@ -405,7 +407,8 @@ export default function ContentEditor() {
 													  style={{
 														  height: '100%'
 													  }}
-													  defaultValue={post?.description} onChange={(e) => {
+													  value={post?.description}
+													  onChange={(e) => {
 												setPost(a => {
 													return {...a, description: e.target.value}
 												})
