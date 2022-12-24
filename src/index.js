@@ -26,6 +26,7 @@ import Onboard from "./pages/Onboard";
 import Forgot from "./pages/Forgot";
 import Landing from "./pages/Landing";
 import FAQ from "./pages/FAQ";
+import EmployeeLog from "./pages/merchant/EmployeeLog";
 
 const app = firebase.initializeApp(FIREBASE_CONFIG);
 
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
 			{
 				path: "merchant/scores",
 				element: (<RequireAuth><Scores/></RequireAuth>)
+			},
+			{
+				path: "merchant/employees",
+				element: (<RequireAuth><EmployeeLog/></RequireAuth>)
 			},
 			{
 				path: "merchant/quizeditor",
