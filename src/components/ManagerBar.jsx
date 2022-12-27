@@ -11,8 +11,6 @@ import SendSquare from '../assets/svg/send-square.svg';
 import EditIcon from '../assets/svg/edit.svg';
 import NoteIcon from '../assets/svg/note.svg';
 import {useLocation} from "react-router-dom";
-import {IPopup} from "./Popup";
-import {ContentSender} from "@thedashboardai/train-edu-front-end-api-wrapper";
 
 export default function ManagerBar() {
 	const {user} = useContext(AuthenticatedUserContext);
@@ -63,14 +61,14 @@ export default function ManagerBar() {
 								   id={location.pathname.includes('quiz') ? 'purple' : ''}>Quiz Editor</p>
 							</div>
 						</Nav.Link>
-						{/*				<Nav.Link href="/merchant/updates">
-							<div className={'linker'} id={location.pathname === '/merchant/updates' ? 'green' : ''}>
-								<img src={Flash} id={location.pathname === '/merchant/updates' ? 'green' : ''}
+						<Nav.Link href="/merchant/employees">
+							<div className={'linker'} id={location.pathname === '/merchant/employees' ? 'green' : ''}>
+								<img src={NoteIcon} id={location.pathname === '/merchant/employees' ? 'green' : ''}
 									 alt=""/>
 								<p className={"linkerText"}
-								   id={location.pathname === '/merchant/updates' ? 'green' : ''}>Daily Notes</p>
+								   id={location.pathname === '/merchant/employees' ? 'green' : ''}>Employee Log</p>
 							</div>
-						</Nav.Link>*/}
+						</Nav.Link>
 	{/*					<Nav.Link href="/merchant/upload">
 							<div className={'linker'} id={location.pathname === '/merchant/upload' ? 'purple' : ''}>
 								<img src={SendSquare} id={location.pathname === '/merchant/upload' ? 'purple' : ''}
