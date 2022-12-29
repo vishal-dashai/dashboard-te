@@ -1163,6 +1163,13 @@ img#purple {
   gap: 10px;
   display: flex;
   flex-direction: column;
+  align-self: center;
+  justify-content: center;
+  align-items: center;
+
+  @media screen and (max-width: 950px) {
+	width: 100%;
+  }
 
   p {
 	font-family: 'Raleway', serif;
@@ -1176,12 +1183,17 @@ img#purple {
 
 .clickableSection {
 
+  width: 500px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
   padding-left: 10px;
   padding-right: 10px;
+
+  @media screen and (max-width: 950px) {
+	width: 100%;
+  }
 
   h5 {
 	font-family: 'Raleway', serif;
