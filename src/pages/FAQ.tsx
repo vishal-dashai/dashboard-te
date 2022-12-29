@@ -37,36 +37,39 @@ export default function FAQ() {
 						/>
 					</div>
 
-					{faqContent.groups.filter((r) => {
 
-						if(r.content.filter(b => b.title.toLowerCase().includes(searchKey.toLowerCase())).length !== 0)
-							return true
+					<div>
+						{faqContent.groups.filter((r) => {
 
-						return false;
-					}).map((a, i) => {
-						return (
-							<div style={{}}>
-								<h4 style={{
-									fontWeight: 700,
-									fontSize: 18,
-								}}>{a.title}</h4>
-								{
-									a.content.filter(r => {
-										if(r.title.toLowerCase().includes(searchKey.toLowerCase()))
-											return true
-										return false
-									}).map((b: any, c: number) => {
-										return (
-											<>
-												<CollpaseArea content={b}/>
-												<Divider light/>
-											</>
-										)
-									})
-								}
-							</div>
-						)
-					})}
+							if (r.content.filter(b => b.title.toLowerCase().includes(searchKey.toLowerCase())).length !== 0)
+								return true
+
+							return false;
+						}).map((a, i) => {
+							return (
+								<div style={{marginBottom: '20px'}}>
+									<h4 style={{
+										fontWeight: 700,
+										fontSize: 18,
+									}}>{a.title}</h4>
+									{
+										a.content.filter(r => {
+											if (r.title.toLowerCase().includes(searchKey.toLowerCase()))
+												return true
+											return false
+										}).map((b: any, c: number) => {
+											return (
+												<>
+													<CollpaseArea content={b}/>
+													<Divider light/>
+												</>
+											)
+										})
+									}
+								</div>
+							)
+						})}
+					</div>
 
 				</div>
 			</div>
