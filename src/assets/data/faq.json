@@ -15,15 +15,15 @@
         },
         {
           "title": "What are best practices?",
-          "description": ""
+          "description": "Our best practices content is curated from the pioneers of restaurant service caretakers including ALIC, SGWS and other compliance rules that restaurants should follow for better, safer and faster work environment. "
         },
         {
           "title": "How do I take a quiz?",
-          "description": ""
+          "description": "Each content topic has a quiz button at the bottom of the page. Click “Take Quiz” button to take the quiz, if there is no quiz for a certain topic then button will say “No quiz”."
         },
         {
           "title": "How do I view my scores?",
-          "description": ""
+          "description": "Go to your profile by clicking the profile icon at the top right corner, you quiz results are displayed there."
         }
       ]
     },
@@ -41,7 +41,7 @@
       "content": [
         {
           "title": "How do I access the dashboard?",
-          "description": ""
+          "description": "There are multiple ways, simplest is to go to the sinata website and click the blue “Merchant login” button. Another way is to directly go to the url “https://sinatra.ai/login”."
         },
         {
           "title": "What are my login credentials?",
@@ -49,11 +49,11 @@
         },
         {
           "title": "What is the employee log?",
-          "description": ""
+          "description": "Here you can see the complete list of all the employees belonging to you organization and manage their access roles as a manager. You can make an employee a manager by simply clicking on the switch button opposite to their name, it will turn blue, to reovke the access use the same button, it will switch the color back to grey."
         },
         {
           "title": "How do I grant manager access?",
-          "description": ""
+          "description": "Go to the “Employee log” tab. You can make an employee a manager by simply clicking on the switch button opposite to their name, it will turn blue, to reovke the access use the same button, it will switch the color back to grey."
         },
         {
           "title": "How to download & access forms?",
